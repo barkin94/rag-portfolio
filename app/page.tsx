@@ -1,115 +1,24 @@
-'use client';
-
-import { useCallback, useReducer } from "react";
-import { Input } from "./components/input";
-import { ChatHistory, Message } from "./components/chat-history";
-
-type ChatState = {
-  messages: Message[];
-  streamingMessage: {
-    loading: boolean;
-    content: string;
-  }
-}
-
-type ChatAction =
-  | { type: 'START_RESPONSE' }
-  | { type: 'CHUNK_RETRIEVED'; payload: string }
-  | { type: 'DONE_RETRIEVING' }
-  | { type: 'SEND_MESSAGE'; payload: string };
-
-
-function chatReducer(state: ChatState, action: ChatAction): ChatState {
-  switch (action.type) {
-    case 'START_RESPONSE':
-      return {
-        ...state,
-        streamingMessage: {
-          ...state.streamingMessage,
-          content: ''
-        },
-      };
-
-    case 'CHUNK_RETRIEVED':
-      return {
-        ...state,
-        streamingMessage: {
-          content: state.streamingMessage.content + action.payload,
-          loading: false
-        },
-      };
-
-    case 'DONE_RETRIEVING':
-      return {
-        ...state,
-        messages: [
-          ...state.messages,
-          { content: state.streamingMessage.content, owner: 'ai' },
-        ],
-        streamingMessage: {
-          ...state.streamingMessage,
-          content: ''
-        },
-      };
-
-    case 'SEND_MESSAGE':
-      return {
-        ...state,
-        streamingMessage: {
-          ...state.streamingMessage,
-          loading: true,
-        },
-        messages: [
-          ...state.messages,
-          { content: action.payload, owner: 'user' },
-        ],
-      };
-
-    default:
-      throw new Error(`Unknown action: ${action}`);
-  }
-}
+import Chat from "./_components/Chat/Chat";
+import Profile from "./_components/Profile";
 
 export default function Home() {
-  const [state, dispatch] = useReducer(chatReducer, {
-    messages: [],
-    streamingMessage: {
-      content: '',
-      loading: false
-    },
-  });
-
-  const handleSendClicked = useCallback((input: string) => {
-    dispatch({ type: 'SEND_MESSAGE', payload: input });
-  }, []);
-
-  const handleResponse = useCallback(() => {
-    dispatch({ type: 'START_RESPONSE' });
-  }, []);
-
-  const handleResponseChunkRetrieved = useCallback((chunk: string) => {
-    dispatch({ type: 'CHUNK_RETRIEVED', payload: chunk });
-  }, []);
-
-  const handleResponseChunkRetrievalDone = useCallback(() => {
-    dispatch({ type: 'DONE_RETRIEVING' });
-  }, []);
-
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <ChatHistory
-          initialMessages={state.messages}
-          streamedMessage={state.streamingMessage.content}
-          loading={state.streamingMessage.loading}
-          />
-        <Input
-          onSendClicked={handleSendClicked}
-          onResponse={handleResponse}
-          onResponseChunkRetrieved={handleResponseChunkRetrieved}
-          onResponseChunkRetrievalDone={handleResponseChunkRetrievalDone}
-          />
+    <div className="container mx-auto px-4 py-8">
+      {/* <header className="flex justify-between items-center py-6 mb-16"> */}
+      {/*   <div className="text-2xl font-bold text-white">Portfolio</div> */}
+      {/*   <nav className="hidden md:flex space-x-8"> */}
+      {/*     <a href="/" className="text-white font-medium hover:text-blue-200 transition-colors">Home</a> */}
+      {/*     <a href="/projects" className="text-white font-medium hover:text-blue-200 transition-colors">Projects</a> */}
+      {/*     <a href="/chat" className="text-white font-medium hover:text-blue-200 transition-colors">Chat</a> */}
+      {/*     <a href="/contact" className="text-white font-medium hover:text-blue-200 transition-colors">Contact</a> */}
+      {/*   </nav> */}
+      {/* </header> */}
+
+      <main>
+        <Profile />
+        <Chat />
       </main>
     </div>
-  );
+
+  )
 }

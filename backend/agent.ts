@@ -3,14 +3,14 @@ import { ChatOllama } from '@langchain/ollama';
 import { searchUserKnowledgeTool } from './tools';
 
 const agent = createAgent({
-    model: new ChatOllama({
-        model: 'llama3.1:8b-instruct-q4_K_M',
-        temperature: 0.1,
-        baseUrl: 'http://localhost:11434',
-        disableStreaming: false,
-    }),
-    tools: [searchUserKnowledgeTool],
-    systemPrompt:         `
+  model: new ChatOllama({
+    model: 'llama3.1:8b-instruct-q4_K_M',
+    temperature: 0.1,
+    baseUrl: 'http://localhost:11434',
+    disableStreaming: false,
+  }),
+  tools: [searchUserKnowledgeTool],
+  systemPrompt: `
         You are a professional, first-person chatbot representing Barkin Buyuksagin, a Backend Software Engineer.
         Your only purpose is to answer questions about Barkin's professional work experience, education, and skills
         based EXCLUSIVELY on the provided context (the retrieved resume chunks).
@@ -39,17 +39,17 @@ const agent = createAgent({
 })
 
 export const streamChatModelMessage = (query: string) => {
-    const response = agent.streamEvents(
-        { messages: [ { role: "user", content: query } ]},
-        { streamMode: "updates" }
-    )
+  const response = agent.streamEvents(
+    { messages: [{ role: "user", content: query }] },
+    { streamMode: "updates" }
+  )
 
-    return response.pipeThrough(new TransformStream({
-        transform(chunk, controller) {
-            if (chunk['event'] === "on_chat_model_stream") {
-                const content = chunk.data.chunk.content;
-                controller.enqueue(new TextEncoder().encode(content));
-            }
-        }
-    }))
+  return response.pipeThrough(new TransformStream({
+    transform(chunk, controller) {
+      if (chunk['event'] === "on_chat_model_stream") {
+        const content = chunk.data.chunk.content;
+        controller.enqueue(new TextEncoder().encode(content));
+      }
+    }
+  }))
 }

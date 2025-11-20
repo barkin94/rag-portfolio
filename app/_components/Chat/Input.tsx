@@ -5,7 +5,7 @@ import { useState } from "react";
 
 interface InputProps {
   onSendClicked: (input: string) => void
-  onResponse:() => void
+  onResponse: () => void
   onResponseChunkRetrieved: (chunk: string) => void
   onResponseChunkRetrievalDone: () => void
 }
@@ -14,7 +14,7 @@ export const Input: React.FC<InputProps> = ({
   onResponseChunkRetrieved, onSendClicked, onResponse, onResponseChunkRetrievalDone
 }) => {
   const [inputValue, setInputValue] = useState('')
-  
+
   const handleSend = async () => {
     const prompt = inputValue.trim()
 
@@ -39,7 +39,7 @@ export const Input: React.FC<InputProps> = ({
 
       const decoder = new TextDecoder();
       const reader = response.body!.getReader()
-          
+
       while (true) {
         const { done, value } = await reader.read()
         if (done) {
@@ -52,40 +52,40 @@ export const Input: React.FC<InputProps> = ({
         onResponseChunkRetrieved(chunk)
       }
 
-    } catch {}
+    } catch { }
   }
 
   return (
     // Fixed container at the bottom
-    <div className="fixed bottom-0 left-0 right-0 p-4 bg-white dark:bg-gray-800 shadow-2xl border-t border-gray-200 dark:border-gray-700 transition duration-300">
+    <div className="w-full bottom-0 left-0 right-0 p-4 bg-white dark:bg-gray-800 shadow-2xl border-t border-gray-200 dark:border-gray-700 transition duration-300">
       <div className="max-w-4xl mx-auto flex items-end">
         <textarea
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            //onKeyDown={handleKeyPress}
-            placeholder="Ask me anything..."
-            className="flex-grow resize-none overflow-y-auto p-4 mr-3 text-base 
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          //onKeyDown={handleKeyPress}
+          placeholder="Ask me anything..."
+          className="flex-grow resize-none overflow-y-auto p-4 mr-3 text-base 
                         bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 
                         border border-gray-300 dark:border-gray-600 rounded-3xl 
                         focus:outline-none focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-700/50
                         transition duration-300 placeholder:text-gray-500 dark:placeholder:text-gray-400"
-            style={{ minHeight: '52px', maxHeight: '200px' }}
-            />
+          style={{ minHeight: '52px', maxHeight: '200px' }}
+        />
 
-            <button
-            onClick={handleSend}
-            type="submit"
-            disabled={!inputValue.trim()}
-            className={`p-3 rounded-full shadow-lg transition-all duration-300 
-                ${inputValue.trim() 
-                ? 'bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white transform hover:scale-105' 
-                : 'bg-gray-300 dark:bg-gray-600 text-gray-500 cursor-not-allowed'
-                }`}
-            aria-label="Send message"
-            >
-                <SendIcon className="w-6 h-6" />
-            </button>
-     
+        <button
+          onClick={handleSend}
+          type="submit"
+          disabled={!inputValue.trim()}
+          className={`p-3 rounded-full shadow-lg transition-all duration-300 
+                ${inputValue.trim()
+              ? 'bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white transform hover:scale-105'
+              : 'bg-gray-300 dark:bg-gray-600 text-gray-500 cursor-not-allowed'
+            }`}
+          aria-label="Send message"
+        >
+          <SendIcon className="w-6 h-6" />
+        </button>
+
       </div>
     </div>
   );
@@ -112,7 +112,7 @@ const SubmitButton: React.FC<InputButtonProps> = ({ action }) => {
 
       const decoder = new TextDecoder();
       const reader = response.body!.getReader()
-          
+
       while (true) {
         const { done, value } = await reader.read()
 
@@ -121,7 +121,7 @@ const SubmitButton: React.FC<InputButtonProps> = ({ action }) => {
           break;
         }
 
-        const chunk = decoder.decode(value, {stream: true});
+        const chunk = decoder.decode(value, { stream: true });
 
         //onResponseChunkRetrieved(chunk)
         // Process your chunk here (e.g., update UI, parse JSON)
@@ -134,7 +134,7 @@ const SubmitButton: React.FC<InputButtonProps> = ({ action }) => {
     setClickable(true)
   }
 
-  const handleCancelClick = () => {}
+  const handleCancelClick = () => { }
 
   const handleClick = () => {
     switch (action) {
@@ -149,7 +149,7 @@ const SubmitButton: React.FC<InputButtonProps> = ({ action }) => {
       onClick={handleClick}
       disabled={!clickable}
       className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
-      >
+    >
       Submit
     </button>
   )
