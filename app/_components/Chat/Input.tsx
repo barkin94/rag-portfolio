@@ -1,7 +1,6 @@
 'use client'
 
-import { useState } from "react";
-
+import { useState, useRef, useEffect } from "react";
 
 interface InputProps {
   onSendClicked: (input: string) => void
@@ -14,150 +13,184 @@ export const Input: React.FC<InputProps> = ({
   onResponseChunkRetrieved, onSendClicked, onResponse, onResponseChunkRetrievalDone
 }) => {
   const [inputValue, setInputValue] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const abortControllerRef = useRef<AbortController | null>(null)
+
+  // Auto-resize textarea
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = '52px'
+      const scrollHeight = textareaRef.current.scrollHeight
+      textareaRef.current.style.height = `${Math.min(scrollHeight, 200)}px`
+    }
+  }, [inputValue])
 
   const handleSend = async () => {
     const prompt = inputValue.trim()
 
-    if (!prompt) {
+    if (!prompt || isLoading) {
       return;
     }
 
+    setError(null)
     setInputValue('')
+    setIsLoading(true)
     onSendClicked(prompt.toString())
 
-    try {
-      const abortController = new AbortController();
+    // Create new abort controller for this request
+    abortControllerRef.current = new AbortController()
 
+    try {
       const response = await fetch('/api/input', {
-        signal: abortController.signal,
+        signal: abortControllerRef.current.signal,
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ prompt }),
       })
 
+      if (!response.ok) {
+        throw new Error(`Server error: ${response.status} ${response.statusText}`)
+      }
+
+      if (!response.body) {
+        throw new Error('No response body received')
+      }
+
       onResponse()
 
       const decoder = new TextDecoder();
-      const reader = response.body!.getReader()
+      const reader = response.body.getReader()
 
       while (true) {
         const { done, value } = await reader.read()
         if (done) {
           onResponseChunkRetrievalDone()
+          setIsLoading(false)
           break;
         }
 
-        const chunk = decoder.decode(value);
-
+        const chunk = decoder.decode(value, { stream: true });
         onResponseChunkRetrieved(chunk)
       }
 
-    } catch { }
+    } catch (err: unknown) {
+      setIsLoading(false)
+      if (err instanceof Error) {
+        if (err.name === 'AbortError') {
+          // Request was cancelled, don't show error
+          return
+        }
+        setError(err.message || 'Failed to send message. Please try again.')
+      } else {
+        setError('An unexpected error occurred. Please try again.')
+      }
+      onResponseChunkRetrievalDone()
+    }
+  }
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault()
+      handleSend()
+    }
+    // Shift+Enter will create a new line (default behavior)
+  }
+
+  const handleCancel = () => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort()
+      abortControllerRef.current = null
+    }
+    setIsLoading(false)
+    setError(null)
+    onResponseChunkRetrievalDone()
   }
 
   return (
-    // Fixed container at the bottom
-    <div className="w-full bottom-0 left-0 right-0 p-4 bg-white dark:bg-gray-800 shadow-2xl border-t border-gray-200 dark:border-gray-700 transition duration-300">
-      <div className="max-w-4xl mx-auto flex items-end">
-        <textarea
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          //onKeyDown={handleKeyPress}
-          placeholder="Ask me anything..."
-          className="flex-grow resize-none overflow-y-auto p-4 mr-3 text-base 
-                        bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 
-                        border border-gray-300 dark:border-gray-600 rounded-3xl 
-                        focus:outline-none focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-700/50
-                        transition duration-300 placeholder:text-gray-500 dark:placeholder:text-gray-400"
-          style={{ minHeight: '52px', maxHeight: '200px' }}
-        />
-
-        <button
-          onClick={handleSend}
-          type="submit"
-          disabled={!inputValue.trim()}
-          className={`p-3 rounded-full shadow-lg transition-all duration-300 
-                ${inputValue.trim()
-              ? 'bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white transform hover:scale-105'
-              : 'bg-gray-300 dark:bg-gray-600 text-gray-500 cursor-not-allowed'
-            }`}
-          aria-label="Send message"
+    <div className="w-full p-4 bg-white dark:bg-slate-900 shadow-lg border-t border-slate-200 dark:border-slate-800 transition duration-300">
+      {error && (
+        <div 
+          className="max-w-4xl mx-auto mb-3 p-3 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900/50 rounded-xl text-red-700 dark:text-red-400 text-sm flex items-center justify-between backdrop-blur-sm"
+          role="alert"
         >
-          <SendIcon className="w-6 h-6" />
-        </button>
+          <span>{error}</span>
+          <button
+            onClick={() => setError(null)}
+            className="ml-4 text-red-700 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300 transition-colors"
+            aria-label="Dismiss error"
+          >
+            ×
+          </button>
+        </div>
+      )}
+      <div className="max-w-4xl mx-auto flex items-end gap-3">
+        <div className="flex-grow relative">
+          <textarea
+            ref={textareaRef}
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder="Ask me anything... (Press Enter to send, Shift+Enter for new line)"
+            disabled={isLoading}
+            className="w-full resize-none overflow-y-auto p-4 text-base 
+                        bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-slate-100 
+                        border border-slate-200 dark:border-slate-700 rounded-3xl 
+                        focus:outline-none focus:ring-2 focus:ring-indigo-500/50 dark:focus:ring-indigo-400/50
+                        focus:border-indigo-300 dark:focus:border-indigo-600
+                        transition duration-300 placeholder:text-slate-400 dark:placeholder:text-slate-500
+                        disabled:opacity-50 disabled:cursor-not-allowed shadow-inner"
+            style={{ minHeight: '52px', maxHeight: '200px' }}
+            aria-label="Message input"
+            aria-describedby="input-help"
+          />
+          <div id="input-help" className="sr-only">
+            Type your message and press Enter to send, or Shift+Enter for a new line
+          </div>
+        </div>
 
+        {isLoading ? (
+          <button
+            onClick={handleCancel}
+            type="button"
+            className="p-3 rounded-full shadow-md transition-all duration-300 
+                      bg-slate-500 hover:bg-slate-600 dark:bg-slate-600 dark:hover:bg-slate-700 
+                      text-white transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-slate-400"
+            aria-label="Cancel request"
+          >
+            <CancelIcon className="w-6 h-6" />
+          </button>
+        ) : (
+          <button
+            onClick={handleSend}
+            type="submit"
+            disabled={!inputValue.trim() || isLoading}
+            className={`p-3 rounded-full shadow-md transition-all duration-300 
+                  ${inputValue.trim() && !isLoading
+                ? 'bg-gradient-to-br from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500/50'
+                : 'bg-slate-200 dark:bg-slate-700 text-slate-400 dark:text-slate-500 cursor-not-allowed'
+              }`}
+            aria-label="Send message"
+          >
+            <SendIcon className="w-6 h-6" />
+          </button>
+        )}
       </div>
     </div>
   );
 };
 
-type InputButtonProps = {
-  action: 'send' | 'cancel'
-
-}
-const abortController = new AbortController();
-
-const SubmitButton: React.FC<InputButtonProps> = ({ action }) => {
-  const [clickable, setClickable] = useState(true);
-
-  const handleSendClick = async (message: string) => {
-    try {
-      const response = await fetch('/api/input', {
-        signal: abortController.signal,
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message }),
-      })
-
-
-      const decoder = new TextDecoder();
-      const reader = response.body!.getReader()
-
-      while (true) {
-        const { done, value } = await reader.read()
-
-        if (done) {
-          console.log('Stream complete.');
-          break;
-        }
-
-        const chunk = decoder.decode(value, { stream: true });
-
-        //onResponseChunkRetrieved(chunk)
-        // Process your chunk here (e.g., update UI, parse JSON)
-      }
-
-    } catch {
-
-    }
-
-    setClickable(true)
-  }
-
-  const handleCancelClick = () => { }
-
-  const handleClick = () => {
-    switch (action) {
-      // case 'send': handleSendClick()
-      // case 'cancel': handleCancelClick()
-      default: true
-    }
-  }
-
-  return (
-    <button
-      onClick={handleClick}
-      disabled={!clickable}
-      className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
-    >
-      Submit
-    </button>
-  )
-}
-
 const SendIcon: React.FC<{ className?: string }> = ({ className = "w-6 h-6" }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <line x1="5" y1="12" x2="19" y2="12"></line>
-    <polyline points="12 5 19 12 12 19"></polyline>
+  <svg xmlns="http://www.w3.org/2000/svg" className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <line x1="22" y1="2" x2="11" y2="13"></line>
+    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+  </svg>
+);
+
+const CancelIcon: React.FC<{ className?: string }> = ({ className = "w-6 h-6" }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <line x1="18" y1="6" x2="6" y2="18"></line>
+    <line x1="6" y1="6" x2="18" y2="18"></line>
   </svg>
 );

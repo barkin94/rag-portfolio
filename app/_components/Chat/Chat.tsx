@@ -96,8 +96,11 @@ export default function Chat() {
   }, []);
 
   return (
-    <section className="flex items-center justify-center bg-zinc-50  dark:bg-black font-sans rounded-3xl p-8 md:p-12 shadow-2xl mb-12">
-      < div className="flex w-full flex-col items-center bg-white dark:bg-black sm:items-start" >
+    <section 
+      className="flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-950 font-sans rounded-3xl p-8 md:p-12 shadow-xl border border-slate-200 dark:border-slate-800 mb-12"
+      aria-label="Chat interface"
+    >
+      <div className="flex w-full flex-col items-center bg-white dark:bg-slate-900 sm:items-start rounded-2xl">
         <History
           initialMessages={state.messages}
           streamedMessage={state.streamingMessage.content}
@@ -109,7 +112,7 @@ export default function Chat() {
           onResponseChunkRetrieved={handleResponseChunkRetrieved}
           onResponseChunkRetrievalDone={handleResponseChunkRetrievalDone}
         />
-      </div >
-    </section >
+      </div>
+    </section>
   );
 }
