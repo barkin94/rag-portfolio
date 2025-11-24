@@ -1,55 +1,58 @@
-import { createAgent } from 'langchain';
+import { AIMessage, createAgent, HumanMessage } from 'langchain';
 import { ChatOllama } from '@langchain/ollama';
-import { searchUserKnowledgeTool } from './tools';
+import { ChatGoogleGenerativeAI } from '@langchain/google-genai';
+import Tools from './tools';
+import Config from './config';
+
+const provider = Config.provider;
+const { ollama, gemini } = Config
+
+const getModel = () => {
+  switch(provider) {
+    case 'gemini':
+      if (!gemini.apiKey) {
+        throw new Error('GOOGLE_API_KEY is required when LLM_PROVIDER=gemini');
+      }
+
+      return new ChatGoogleGenerativeAI({
+        model: gemini.model,
+        apiKey: gemini.apiKey,
+        temperature: gemini.temperature,
+        streamUsage: true,
+      });
+    case 'ollama':
+      return new ChatOllama({
+        model: ollama.model,
+        temperature: ollama.temperature,
+        baseUrl: ollama.baseUrl,
+        disableStreaming: false,
+      });
+    default:
+      throw new Error('invalid provider')
+  }
+};
 
 const agent = createAgent({
-  model: new ChatOllama({
-    model: 'llama3.1:8b-instruct-q4_K_M',
-    temperature: 0.1,
-    baseUrl: 'http://localhost:11434',
-    disableStreaming: false,
-  }),
-  tools: [searchUserKnowledgeTool],
+  model: getModel(),
+  tools: [Tools.searchUserKnowledgeTool],
   systemPrompt: `
-        You are a professional, first-person chatbot representing Barkin Buyuksagin, a Backend Software Engineer.
-        Your only purpose is to answer questions about Barkin's professional work experience, education, and skills
-        based EXCLUSIVELY on the provided context (the retrieved resume chunks).
+      Act as Barkin Buyuksagin, a Backend Software Engineer. Your sole function is to answer questions about my professional experience, education, and skills.
 
-        Constraints and Rules:
-
-        1) Strict Grounding: You MUST answer questions solely using the information contained within the provided
-        context chunks. Do not use external knowledge, speculation, or invented details.
-
-        2) First-Person Persona: All answers must be delivered in the first person, as if Barkin himself is answering
-        the question (e.g., "I developed," "My experience includes").
-
-        3) Handling Irrelevant/Out-of-Scope Questions: If the user asks a question that cannot be answered using the
-        provided context (e.g., questions about opinions, future plans, personal life, or topics not explicitly 
-        mentioned in the resume), you must politely decline. Use phrases like, "That detail is not covered in my 
-        professional experience document," or "I can only discuss information related to my summarized work history
-        and skills."
-
-        4) Formatting: Format your answers clearly, using bullet points or paragraphs as appropriate, maintaining a
-        professional and concise tone.
-
-        5) Focus: Pay special attention to job titles, company names, dates, technologies, and tangible achievements
-        (e.g., "reducing deployment time by 40%").
-    `
-
+      **Rules:**
+      1. **Strict Grounding:** Use ONLY the provided context (resume chunks). Do not invent details or use external knowledge.
+      2. **First-Person:** Answer in the first person (e.g., "I worked on...").
+      3. **Out-of-Scope:** If the answer is not in the context, politely state that the detail is not covered in my professional document.
+      4. **Professionalism:** Maintain a clear, concise, professional tone. Focus on titles, companies, dates, technologies, and achievements.
+  `
 })
 
-export const streamChatModelMessage = (query: string) => {
-  const response = agent.streamEvents(
-    { messages: [{ role: "user", content: query }] },
+const getResponseStream = async (messages: (AIMessage | HumanMessage)[]) => {
+  return agent.streamEvents(
+    { messages },
     { streamMode: "updates" }
   )
+}
 
-  return response.pipeThrough(new TransformStream({
-    transform(chunk, controller) {
-      if (chunk['event'] === "on_chat_model_stream") {
-        const content = chunk.data.chunk.content;
-        controller.enqueue(new TextEncoder().encode(content));
-      }
-    }
-  }))
+export default {
+  getResponseStream
 }

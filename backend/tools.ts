@@ -1,7 +1,7 @@
 import { tool } from 'langchain';
 import { vectorStore } from './vector-store';
 
-export const searchUserKnowledgeTool = tool(async (query) => {
+const searchUserKnowledgeTool = tool(async (query) => {
     const results = await vectorStore.similaritySearch(query, 3)
 
     return results.map((doc) => `- ${doc.pageContent}`).join("\n")
@@ -12,3 +12,7 @@ export const searchUserKnowledgeTool = tool(async (query) => {
         Use this ONLY for questions about the user's own work experience.
     `,
 })
+
+export default {
+    searchUserKnowledgeTool
+}

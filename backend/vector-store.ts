@@ -1,6 +1,8 @@
 import { MemoryVectorStore } from "@langchain/classic/vectorstores/memory";
-import { HuggingFaceTransformersEmbeddings } from "@langchain/community/embeddings/huggingface_transformers";
+import { GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
 import { Document } from "@langchain/core/documents";
+
+import Config from "./config";
 
 const raw_chunk_list = [
     `
@@ -71,8 +73,9 @@ const raw_chunk_list = [
 `
 ];
 
-const embeddings = new HuggingFaceTransformersEmbeddings({
-    model: "sentence-transformers/all-MiniLM-L6-v2",
+const embeddings = new GoogleGenerativeAIEmbeddings({
+  model: "gemini-embedding-001",
+  apiKey: Config.gemini.apiKey
 });
 
 const vectorStore = new MemoryVectorStore(embeddings);

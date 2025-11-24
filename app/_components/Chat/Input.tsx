@@ -43,7 +43,7 @@ export const Input: React.FC<InputProps> = ({
     abortControllerRef.current = new AbortController()
 
     try {
-      const response = await fetch('/api/input', {
+      const response = await fetch('/api/prompt', {
         signal: abortControllerRef.current.signal,
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
