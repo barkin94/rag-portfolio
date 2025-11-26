@@ -126,7 +126,7 @@ export const Input: React.FC<InputProps> = ({
         </div>
       )}
       <div className="max-w-4xl mx-auto flex items-end gap-3">
-        <div className="flex-grow relative">
+        <div className="grow relative">
           <textarea
             ref={textareaRef}
             value={inputValue}
@@ -168,7 +168,7 @@ export const Input: React.FC<InputProps> = ({
             disabled={!inputValue.trim() || isLoading}
             className={`p-3 rounded-full shadow-md transition-all duration-300 
                   ${inputValue.trim() && !isLoading
-                ? 'bg-gradient-to-br from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500/50'
+                ? 'bg-linear-to-br from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500/50'
                 : 'bg-slate-200 dark:bg-slate-700 text-slate-400 dark:text-slate-500 cursor-not-allowed'
               }`}
             aria-label="Send message"

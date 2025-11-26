@@ -29,66 +29,48 @@ const ResumeIcon: React.FC<{ className?: string }> = ({ className = "w-5 h-5" })
   </svg>
 );
 
-export default function Profile() {
+export const Profile = () => {
   return (
-    <section className="relative bg-gradient-to-br from-white via-indigo-50/30 to-purple-50/30 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800 rounded-3xl p-8 md:p-12 shadow-xl border border-slate-200 dark:border-slate-800 mb-12 overflow-hidden">
+    <section className="relative bg-linear-to-br from-white via-indigo-50/30 to-purple-50/30 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800 rounded-3xl p-8 md:p-12 shadow-xl border border-slate-200 dark:border-slate-800 mb-12 overflow-hidden">
       {/* Decorative background elements */}
-      <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-indigo-200/20 to-purple-200/20 dark:from-indigo-900/10 dark:to-purple-900/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
-      <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-purple-200/20 to-indigo-200/20 dark:from-purple-900/10 dark:to-indigo-900/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2"></div>
-      
-      <div className="relative z-10">
-        <div className="text-center mb-12">
-          <div className="inline-block mb-4">
-            <span className="text-sm font-semibold text-indigo-600 dark:text-indigo-400 bg-indigo-100 dark:bg-indigo-900/30 px-4 py-1.5 rounded-full">
-              👋 Hello, I'm
-            </span>
-          </div>
-          <h1 className="text-4xl md:text-6xl font-black bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-500 bg-clip-text text-transparent mb-4">
-            John Doe
-          </h1>
-          <p className="text-xl md:text-2xl text-slate-600 dark:text-slate-400 font-medium mb-2">
-            Full Stack Developer
-          </p>
-          <p className="text-slate-500 dark:text-slate-500 max-w-2xl mx-auto">
-            Building digital experiences that make a difference
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-          {/* Stats Cards */}
-          <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-            <div className="text-3xl font-bold text-indigo-600 dark:text-indigo-400 mb-1">5+</div>
-            <div className="text-slate-600 dark:text-slate-400 font-medium">Years Experience</div>
-          </div>
-          <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-            <div className="text-3xl font-bold text-purple-600 dark:text-purple-400 mb-1">50+</div>
-            <div className="text-slate-600 dark:text-slate-400 font-medium">Projects Completed</div>
-          </div>
-          <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-            <div className="text-3xl font-bold text-indigo-600 dark:text-indigo-400 mb-1">100%</div>
-            <div className="text-slate-600 dark:text-slate-400 font-medium">Client Satisfaction</div>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-          {/* Profile Info Card */}
-          <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-2xl p-6 md:p-8 border border-slate-200 dark:border-slate-700 shadow-lg">
-            <div className="flex flex-col md:flex-row items-center gap-6 mb-6">
-              <div className="relative">
-                <div className="w-32 h-32 md:w-36 md:h-36 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-5xl md:text-6xl text-white shadow-xl ring-4 ring-indigo-100 dark:ring-indigo-900/50">
-                  👤
-                </div>
-                <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-green-500 rounded-full border-4 border-white dark:border-slate-800"></div>
+      <div className="absolute top-0 right-0 w-64 h-64 bg-linear-to-br from-indigo-200/20 to-purple-200/20 dark:from-indigo-900/10 dark:to-purple-900/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+      <div className="absolute bottom-0 left-0 w-96 h-96 bg-linear-to-tr from-purple-200/20 to-indigo-200/20 dark:from-purple-900/10 dark:to-indigo-900/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2"></div>
+      <div>
+        <div className="flex items-center justify-center gap-4 mb-8">
+            <div className="w-32 h-32 md:w-36 md:h-36 bg-linear-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-5xl md:text-6xl text-white shadow-xl ring-4 ring-indigo-100 dark:ring-indigo-900/50">
+              👤
+            </div>
+            <div>
+              <div className="mb-4">
+                <span className="text-sm font-semibold text-indigo-600 dark:text-indigo-400 bg-indigo-100 dark:bg-indigo-900/30 px-4 py-1.5 rounded-full">
+                  👋 Hello, I'm
+                </span>
               </div>
+              <h1 className="text-4xl md:text-6xl font-black bg-linear-to-r from-indigo-600 via-purple-600 to-indigo-500 bg-clip-text text-transparent mb-4">
+                Barkin Buyuksagin
+              </h1>
+              <p className="text-xl md:text-2xl text-slate-600 dark:text-slate-400 font-medium mb-2">
+                Full Stack Developer
+              </p>
+              <p className="text-slate-500 dark:text-slate-500 max-w-2xl mx-auto">
+                Building digital experiences that make a difference
+              </p>
+            </div>
+          </div>
+
+        <div className="mb-8">
+          {/* Profile Info Card */}
+          {/* <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-2xl p-6 md:p-8 border border-slate-200 dark:border-slate-700 shadow-lg">
+            <div className="flex flex-col md:flex-row items-center gap-6 mb-6">
               <div className="text-center md:text-left flex-1">
                 <h2 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-slate-100 mb-2">John Doe</h2>
                 <p className="text-slate-500 dark:text-slate-400 mb-1">📍 Available for opportunities</p>
                 <div className="flex items-center justify-center md:justify-start gap-4 mt-4">
                   <a
-                    href="https://linkedin.com/in/yourprofile"
+                    href="https://linkedin.com/in/barkinsagin"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-3 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-white hover:from-indigo-600 hover:to-purple-700 transition-all duration-300 hover:scale-110 shadow-md hover:shadow-lg"
+                    className="p-3 rounded-full bg-linear-to-br from-indigo-500 to-purple-600 text-white hover:from-indigo-600 hover:to-purple-700 transition-all duration-300 hover:scale-110 shadow-md hover:shadow-lg"
                     aria-label="LinkedIn Profile"
                   >
                     <LinkedInIcon className="w-5 h-5" />
@@ -97,14 +79,14 @@ export default function Profile() {
                     href="https://github.com/yourusername"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-3 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-white hover:from-indigo-600 hover:to-purple-700 transition-all duration-300 hover:scale-110 shadow-md hover:shadow-lg"
+                    className="p-3 rounded-full bg-linear-to-br from-indigo-500 to-purple-600 text-white hover:from-indigo-600 hover:to-purple-700 transition-all duration-300 hover:scale-110 shadow-md hover:shadow-lg"
                     aria-label="GitHub Profile"
                   >
                     <GitHubIcon className="w-5 h-5" />
                   </a>
                   <a
-                    href="mailto:your.email@example.com"
-                    className="p-3 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-white hover:from-indigo-600 hover:to-purple-700 transition-all duration-300 hover:scale-110 shadow-md hover:shadow-lg"
+                    href="mailto:barkinsagin@gmail.com"
+                    className="p-3 rounded-full bg-linear-to-br from-indigo-500 to-purple-600 text-white hover:from-indigo-600 hover:to-purple-700 transition-all duration-300 hover:scale-110 shadow-md hover:shadow-lg"
                     aria-label="Email"
                   >
                     <EmailIcon className="w-5 h-5" />
@@ -112,7 +94,7 @@ export default function Profile() {
                   <a
                     href="/resume.pdf"
                     download
-                    className="p-3 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-white hover:from-indigo-600 hover:to-purple-700 transition-all duration-300 hover:scale-110 shadow-md hover:shadow-lg"
+                    className="p-3 rounded-full bg-linear-to-br from-indigo-500 to-purple-600 text-white hover:from-indigo-600 hover:to-purple-700 transition-all duration-300 hover:scale-110 shadow-md hover:shadow-lg"
                     aria-label="Download Resume"
                   >
                     <ResumeIcon className="w-5 h-5" />
@@ -120,10 +102,10 @@ export default function Profile() {
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
 
           {/* About Me Card */}
-          <div className="bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-slate-800/80 dark:to-slate-800/50 backdrop-blur-sm rounded-2xl p-6 md:p-8 border border-indigo-200 dark:border-indigo-900/50 shadow-lg relative overflow-hidden">
+          <div className="bg-linear-to-br from-indigo-50 to-purple-50 dark:from-slate-800/80 dark:to-slate-800/50 backdrop-blur-sm rounded-2xl p-6 md:p-8 border border-indigo-200 dark:border-indigo-900/50 shadow-lg relative overflow-hidden">
             <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-200/30 dark:bg-indigo-900/20 rounded-full blur-2xl"></div>
             <div className="relative z-10">
               <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-4 flex items-center gap-2">
@@ -137,6 +119,41 @@ export default function Profile() {
                 I love turning complex problems into simple, beautiful solutions.
               </p>
             </div>
+            <div className="flex items-center justify-center md:justify-start gap-4 mt-4">
+                  <a
+                    href="https://linkedin.com/in/barkinsagin"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-3 rounded-full bg-linear-to-br from-indigo-500 to-purple-600 text-white hover:from-indigo-600 hover:to-purple-700 transition-all duration-300 hover:scale-110 shadow-md hover:shadow-lg"
+                    aria-label="LinkedIn Profile"
+                  >
+                    <LinkedInIcon className="w-5 h-5" />
+                  </a>
+                  <a
+                    href="https://github.com/yourusername"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-3 rounded-full bg-linear-to-br from-indigo-500 to-purple-600 text-white hover:from-indigo-600 hover:to-purple-700 transition-all duration-300 hover:scale-110 shadow-md hover:shadow-lg"
+                    aria-label="GitHub Profile"
+                  >
+                    <GitHubIcon className="w-5 h-5" />
+                  </a>
+                  <a
+                    href="mailto:barkinsagin@gmail.com"
+                    className="p-3 rounded-full bg-linear-to-br from-indigo-500 to-purple-600 text-white hover:from-indigo-600 hover:to-purple-700 transition-all duration-300 hover:scale-110 shadow-md hover:shadow-lg"
+                    aria-label="Email"
+                  >
+                    <EmailIcon className="w-5 h-5" />
+                  </a>
+                  <a
+                    href="/resume.pdf"
+                    download
+                    className="p-3 rounded-full bg-linear-to-br from-indigo-500 to-purple-600 text-white hover:from-indigo-600 hover:to-purple-700 transition-all duration-300 hover:scale-110 shadow-md hover:shadow-lg"
+                    aria-label="Download Resume"
+                  >
+                    <ResumeIcon className="w-5 h-5" />
+                  </a>
+                </div>
           </div>
         </div>
 
@@ -149,7 +166,7 @@ export default function Profile() {
             {['React', 'Next.js', 'TypeScript', 'Node.js', 'Python', 'AWS', 'Docker', 'PostgreSQL'].map((tech) => (
               <span
                 key={tech}
-                className="px-4 py-2 bg-gradient-to-r from-indigo-100 to-purple-100 dark:from-indigo-900/30 dark:to-purple-900/30 text-indigo-700 dark:text-indigo-300 rounded-full text-sm font-medium border border-indigo-200 dark:border-indigo-800 hover:scale-105 transition-transform duration-200"
+                className="px-4 py-2 bg-linear-to-r from-indigo-100 to-purple-100 dark:from-indigo-900/30 dark:to-purple-900/30 text-indigo-700 dark:text-indigo-300 rounded-full text-sm font-medium border border-indigo-200 dark:border-indigo-800 hover:scale-105 transition-transform duration-200"
               >
                 {tech}
               </span>

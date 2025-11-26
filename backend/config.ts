@@ -15,6 +15,6 @@ export default {
     },
     redis: {
         url: env.REDIS_URL ?? '',
-        messagesTTLSeconds: parseInt(env.REDIS__MESSAGES_TTL_SECONDS ?? '3000')
+        messagesTTLSeconds: parseInt(env.REDIS_MESSAGES_TTL_SECONDS ?? '3000')
     }
 }

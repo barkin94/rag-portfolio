@@ -12,7 +12,6 @@ export type RedisMessage = {
 
 const MESSAGES_HGET_KEY = 'messages';
 
-
 if (!redis.url) {
   throw new Error("REDIS_URL not found");
 }
@@ -21,26 +20,28 @@ const client = createClient({
   url: redis.url
 });
 
-client.on("error", function(err) {
+client.on("error", function (err) {
   throw err;
 });
 await client.connect()
 
-const getMessages = async (threadID: string): Promise<RedisMessage[]> => {
-  const messagesValueStr = await client.HGET(threadID, MESSAGES_HGET_KEY);
+const getMessages = async (userId: string): Promise<RedisMessage[]> => {
+  const [messagesResult] =
+    await client.multi()
+      .HGET(userId, MESSAGES_HGET_KEY)
+      .EXPIRE(userId, redis.messagesTTLSeconds)
+      .execAsPipelineTyped()
 
-  const persistedMessages: RedisMessage[] = JSON.parse(
-    messagesValueStr ?? '[]'
-  );
+  const persistedMessages: RedisMessage[] = JSON.parse(messagesResult ?? '[]');
 
   return persistedMessages;
 }
 
-const storeMessages = (sessionID: string, messages: RedisMessage[]) => {
-   return client.multi()
-          .HSET(sessionID, MESSAGES_HGET_KEY, JSON.stringify(messages))
-          .EXPIRE(sessionID, redis.messagesTTLSeconds)
-          .exec();
+const storeMessages = (userId: string, messages: RedisMessage[]) => {
+  return client.multi()
+    .HSET(userId, MESSAGES_HGET_KEY, JSON.stringify(messages))
+    .EXPIRE(userId, redis.messagesTTLSeconds)
+    .execAsPipeline();
 }
 
 export default { getMessages, storeMessages };

@@ -20,7 +20,7 @@ const raw_chunk_list = [
     DATES: August 2023 - June 2025
     DESCRIPTION:
     - Maintained and developed event-driven backend microservices (Node.js, Java, Go) on AWS for a large-scale e-commerce platform.
-    - Integrated "Google Vertex Al Search for commerce" to improve product search relevance and accuracy.
+    - Integrated Google Vertex Al Search for commerce to improve product search relevance and accuracy.
     - Built a batch data pipeline using BigQuery, Cloud Scheduler, and Workflows for periodic data ingestion.
     - Developed BFF services to control mobile app pages from the backend, reducing the need for frequent app releases.
     TECHNOLOGIES: NestJS, Node.js, Spring Boot, MongoDB, PostgreSQL, Redis, Kafka, Kubernetes, Terraform, AWS, GCP, New Relic

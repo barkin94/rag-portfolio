@@ -1,8 +1,8 @@
 'use client';
 
-import { useCallback, useReducer } from "react";
+import React, { useCallback, useReducer } from "react";
 import { Input } from "./Input";
-import { History, Message } from "./ChatHistory";
+import { Messages, Message } from "./Messages";
 
 type ChatState = {
   messages: Message[];
@@ -61,7 +61,7 @@ function chatReducer(state: ChatState, action: ChatAction): ChatState {
         },
         messages: [
           ...state.messages,
-          { content: action.payload, owner: 'user' },
+          { content: action.payload, owner: 'human' },
         ],
       };
 
@@ -70,9 +70,10 @@ function chatReducer(state: ChatState, action: ChatAction): ChatState {
   }
 }
 
-export default function Chat() {
+
+export const Chat: React.FC<{ initialMessages: Message[] }> = ({ initialMessages = [] }) => {
   const [state, dispatch] = useReducer(chatReducer, {
-    messages: [],
+    messages: initialMessages,
     streamingMessage: {
       content: '',
       loading: false
@@ -97,11 +98,11 @@ export default function Chat() {
 
   return (
     <section 
-      className="flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-950 font-sans rounded-3xl p-8 md:p-12 shadow-xl border border-slate-200 dark:border-slate-800 mb-12"
+      className="flex items-center justify-center bg-linear-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-950 font-sans rounded-3xl shadow-xl border border-slate-200 dark:border-slate-800 mb-12 overflow-hidden"
       aria-label="Chat interface"
     >
-      <div className="flex w-full flex-col items-center bg-white dark:bg-slate-900 sm:items-start rounded-2xl">
-        <History
+      <div className="flex w-full flex-col items-center bg-white dark:bg-slate-900 sm:items-start rounded-2xl h-full">
+        <Messages
           initialMessages={state.messages}
           streamedMessage={state.streamingMessage.content}
           loading={state.streamingMessage.loading}

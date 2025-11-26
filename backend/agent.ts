@@ -1,6 +1,7 @@
 import { AIMessage, createAgent, HumanMessage } from 'langchain';
 import { ChatOllama } from '@langchain/ollama';
 import { ChatGoogleGenerativeAI } from '@langchain/google-genai';
+
 import Tools from './tools';
 import Config from './config';
 
@@ -11,7 +12,7 @@ const getModel = () => {
   switch(provider) {
     case 'gemini':
       if (!gemini.apiKey) {
-        throw new Error('GOOGLE_API_KEY is required when LLM_PROVIDER=gemini');
+        throw new Error('GEMINI_API_KEY is required when LLM_PROVIDER=gemini');
       }
 
       return new ChatGoogleGenerativeAI({
@@ -19,6 +20,7 @@ const getModel = () => {
         apiKey: gemini.apiKey,
         temperature: gemini.temperature,
         streamUsage: true,
+        maxRetries: 3
       });
     case 'ollama':
       return new ChatOllama({
@@ -40,16 +42,17 @@ const agent = createAgent({
 
       **Rules:**
       1. **Strict Grounding:** Use ONLY the provided context (resume chunks). Do not invent details or use external knowledge.
-      2. **First-Person:** Answer in the first person (e.g., "I worked on...").
+      2. **First-Person:** Answer like a human and in the first person (e.g., "I worked on...").
       3. **Out-of-Scope:** If the answer is not in the context, politely state that the detail is not covered in my professional document.
       4. **Professionalism:** Maintain a clear, concise, professional tone. Focus on titles, companies, dates, technologies, and achievements.
-  `
+  `,
+
 })
 
 const getResponseStream = async (messages: (AIMessage | HumanMessage)[]) => {
   return agent.streamEvents(
-    { messages },
-    { streamMode: "updates" }
+    { messages,  },
+    { streamMode: "updates", timeout: 10000 }
   )
 }
 
