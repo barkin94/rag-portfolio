@@ -12,15 +12,16 @@ export default async function Home() {
   const userId = await utils.getUserIdFromCookie();
   
   if(userId) {
-     initialMessages.push(
-      ...messageMapper.redisToLangchain(await redis.getMessages(userId))
-        .map(m => ({ content: m.content as string, owner: m.type }))
-     )
+    initialMessages.push(
+      ...messageMapper.redisToLangchain(
+        await redis.getMessages(userId)
+      ).map(m => ({ content: m.content as string, owner: m.type }))
+    )
   }
  
   return (
     <div className="container mx-auto px-4 py-8">
-      <main className="grid grid-cols-2 gap-8">
+      <main className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <Profile />
         <Chat initialMessages={initialMessages}/>
       </main>

@@ -2,6 +2,8 @@
 
 import { useState, useRef, useEffect } from "react";
 
+const decoder = new TextDecoder();
+
 interface InputProps {
   onSendClicked: (input: string) => void
   onResponse: () => void
@@ -60,7 +62,6 @@ export const Input: React.FC<InputProps> = ({
 
       onResponse()
 
-      const decoder = new TextDecoder();
       const reader = response.body.getReader()
 
       while (true) {
@@ -125,7 +126,7 @@ export const Input: React.FC<InputProps> = ({
           </button>
         </div>
       )}
-      <div className="max-w-4xl mx-auto flex items-end gap-3">
+      <div className="max-w-4xl mx-auto flex items-center gap-3">
         <div className="grow relative">
           <textarea
             ref={textareaRef}
@@ -133,8 +134,7 @@ export const Input: React.FC<InputProps> = ({
             onChange={(e) => setInputValue(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Ask me anything... (Press Enter to send, Shift+Enter for new line)"
-            disabled={isLoading}
-            className="w-full resize-none overflow-y-auto p-4 text-base 
+            className="w-full resize-none overflow-y-hidden p-4 text-base 
                         bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-slate-100 
                         border border-slate-200 dark:border-slate-700 rounded-3xl 
                         focus:outline-none focus:ring-2 focus:ring-indigo-500/50 dark:focus:ring-indigo-400/50

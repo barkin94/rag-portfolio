@@ -7,6 +7,8 @@ import redis from "@/backend/redis";
 import messageMapper from '@/backend/message-mapper'
 import utils from '@/backend/utils'
 
+const textEncoder = new TextEncoder();
+
 export async function POST(request: Request) {
   let messages: (HumanMessage | AIMessage)[] = []
 
@@ -38,17 +40,17 @@ export async function POST(request: Request) {
         transform: async (chunk, controller) => {
           // stream only the text response llm streams
           if (chunk['event'] === "on_chat_model_stream") {
-            const content = chunk.data.chunk.content;
-            controller.enqueue(new TextEncoder().encode(content));
+            controller.enqueue(textEncoder.encode(chunk.data.chunk.text));
           }
 
           // persist the full chat on redis when response is fully generated
           if (chunk['event'] === "on_chat_model_end") {
-            const { type, content } = chunk.data.output
+            const { type, text } = chunk.data.output;
+
             await redis.storeMessages(userId,
               [
                 ...messageMapper.langchainToRedis(messages),
-                { type, content }
+                { type, content: text }
               ]
             )
           }

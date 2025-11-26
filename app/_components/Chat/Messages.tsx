@@ -27,7 +27,7 @@ export const Messages: React.FC<MessagesProps> = ({ initialMessages, streamedMes
 
   return (
     <section 
-      className="w-full h-full overflow-y-auto p-4 mb-4"
+      className="w-full h-full overflow-y-auto p-8 mb-4"
       aria-label="Chat messages"
       role="log"
       aria-live="polite"

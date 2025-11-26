@@ -98,7 +98,7 @@ export const Chat: React.FC<{ initialMessages: Message[] }> = ({ initialMessages
 
   return (
     <section 
-      className="flex items-center justify-center bg-linear-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-950 font-sans rounded-3xl shadow-xl border border-slate-200 dark:border-slate-800 mb-12 overflow-hidden"
+      className="flex items-center justify-center bg-linear-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-950 font-sans rounded-3xl shadow-xl border border-slate-200 dark:border-slate-800 mb-12 overflow-hidden h-fit"
       aria-label="Chat interface"
     >
       <div className="flex w-full flex-col items-center bg-white dark:bg-slate-900 sm:items-start rounded-2xl h-full">
