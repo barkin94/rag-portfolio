@@ -1,5 +1,5 @@
-import { Chat } from "./_components/Chat/Chat";
-import { Profile } from "./_components/Profile";
+import Chat from "./_components/Chat";
+import Profile from "./_components/Profile";
 
 import messageMapper from "@/backend/message-mapper";
 import redis from "@/backend/redis";

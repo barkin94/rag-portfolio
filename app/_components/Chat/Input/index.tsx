@@ -11,7 +11,7 @@ interface InputProps {
   onResponseChunkRetrievalDone: () => void
 }
 
-export const Input: React.FC<InputProps> = ({
+const Input: React.FC<InputProps> = ({
   onResponseChunkRetrieved, onSendClicked, onResponse, onResponseChunkRetrievalDone
 }) => {
   const [inputValue, setInputValue] = useState('')
@@ -194,3 +194,5 @@ const CancelIcon: React.FC<{ className?: string }> = ({ className = "w-6 h-6" })
     <line x1="6" y1="6" x2="18" y2="18"></line>
   </svg>
 );
+
+export default Input;

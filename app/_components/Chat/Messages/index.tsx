@@ -16,7 +16,7 @@ type MessagesProps = {
   loading: boolean
 }
 
-export const Messages: React.FC<MessagesProps> = ({ initialMessages, streamedMessage, loading }) => {
+const Messages: React.FC<MessagesProps> = ({ initialMessages, streamedMessage, loading }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -64,20 +64,20 @@ export const Messages: React.FC<MessagesProps> = ({ initialMessages, streamedMes
             <div
               className={`max-w-[80%] md:max-w-[70%] rounded-2xl px-4 py-3 shadow-sm ${
                 owner === 'human'
-                  ? 'bg-gradient-to-br from-indigo-500 to-purple-600 text-white rounded-br-sm'
+                  ? 'bg-linear-to-br from-indigo-500 to-purple-600 text-white rounded-br-sm'
                   : 'bg-slate-100 dark:bg-slate-800/80 text-slate-800 dark:text-slate-200 rounded-bl-sm border border-slate-200 dark:border-slate-700/50'
               }`}
               role={owner === 'human' ? 'user-message' : 'assistant-message'}
             >
               <div className="flex items-start gap-2">
                 {owner === 'ai' && (
-                  <span className="text-lg flex-shrink-0 opacity-70" aria-hidden="true">🤖</span>
+                  <span className="text-lg shrink-0 opacity-70" aria-hidden="true">🤖</span>
                 )}
-                <p className="text-base leading-relaxed whitespace-pre-wrap break-words">
+                <p className="text-base leading-relaxed whitespace-pre-wrap wrap-break-words">
                   {content}
                 </p>
                 {owner === 'human' && (
-                  <span className="text-lg flex-shrink-0 opacity-80" aria-hidden="true">👤</span>
+                  <span className="text-lg shrink-0 opacity-80" aria-hidden="true">👤</span>
                 )}
               </div>
             </div>
@@ -104,8 +104,8 @@ export const Messages: React.FC<MessagesProps> = ({ initialMessages, streamedMes
           <div className="flex justify-start">
             <div className="max-w-[80%] md:max-w-[70%] bg-slate-100 dark:bg-slate-800/80 text-slate-800 dark:text-slate-200 rounded-2xl rounded-bl-sm px-4 py-3 border border-slate-200 dark:border-slate-700/50 shadow-sm">
               <div className="flex items-start gap-2">
-                <span className="text-lg flex-shrink-0 opacity-70" aria-hidden="true">🤖</span>
-                <p className="text-base leading-relaxed whitespace-pre-wrap break-words">
+                <span className="text-lg shrink-0 opacity-70" aria-hidden="true">🤖</span>
+                <p className="text-base leading-relaxed whitespace-pre-wrap wrap-break-words">
                   {streamedMessage}
                   {loading && (
                     <span className="inline-block w-2 h-4 ml-1 bg-slate-500 dark:bg-slate-400 animate-pulse rounded-sm" aria-hidden="true"></span>
@@ -121,3 +121,5 @@ export const Messages: React.FC<MessagesProps> = ({ initialMessages, streamedMes
     </section>
   )
 }
+
+export default Messages;

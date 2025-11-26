@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useCallback, useReducer } from "react";
-import { Input } from "./Input";
-import { Messages, Message } from "./Messages";
+import Input from "./Input";
+import Messages, { Message } from "./Messages";
 
 type ChatState = {
   messages: Message[];
@@ -70,8 +70,7 @@ function chatReducer(state: ChatState, action: ChatAction): ChatState {
   }
 }
 
-
-export const Chat: React.FC<{ initialMessages: Message[] }> = ({ initialMessages = [] }) => {
+const Chat: React.FC<{ initialMessages: Message[] }> = ({ initialMessages = [] }) => {
   const [state, dispatch] = useReducer(chatReducer, {
     messages: initialMessages,
     streamingMessage: {
@@ -117,3 +116,5 @@ export const Chat: React.FC<{ initialMessages: Message[] }> = ({ initialMessages
     </section>
   );
 }
+
+export default Chat;
