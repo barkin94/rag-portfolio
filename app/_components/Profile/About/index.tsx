@@ -80,9 +80,8 @@ export default () => (
         <span className="text-3xl">🚀</span> About Me
       </h3>
       <p className="text-slate-700 dark:text-slate-300 text-lg leading-relaxed mb-4">
-        Passionate full-stack developer with 5+ years of experience building
-        scalable web applications. Specializing in React, Next.js, Node.js, and
-        cloud technologies.
+        A backend software engineer with full-stack capabilities and 6+ years of experience building
+        scalable systems. Specializing in Javascript ecosystem and cloud technologies.
       </p>
       <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
         I love turning complex problems into simple, beautiful solutions.

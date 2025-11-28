@@ -27,7 +27,7 @@ const Messages: React.FC<MessagesProps> = ({ initialMessages, streamedMessage, l
 
   return (
     <section 
-      className="w-full h-full overflow-y-auto p-8 mb-4"
+      className="w-full h-full overflow-y-auto p-4 lg:p-8 mb-4"
       aria-label="Chat messages"
       role="log"
       aria-live="polite"
@@ -62,7 +62,7 @@ const Messages: React.FC<MessagesProps> = ({ initialMessages, streamedMessage, l
             className={`flex w-full ${owner === 'human' ? 'justify-end' : 'justify-start'}`}
           >
             <div
-              className={`max-w-[80%] md:max-w-[70%] rounded-2xl px-4 py-3 shadow-sm ${
+              className={`rounded-2xl px-4 py-3 shadow-sm ${
                 owner === 'human'
                   ? 'bg-linear-to-br from-indigo-500 to-purple-600 text-white rounded-br-sm'
                   : 'bg-slate-100 dark:bg-slate-800/80 text-slate-800 dark:text-slate-200 rounded-bl-sm border border-slate-200 dark:border-slate-700/50'
@@ -102,7 +102,7 @@ const Messages: React.FC<MessagesProps> = ({ initialMessages, streamedMessage, l
 
         {streamedMessage && (
           <div className="flex justify-start">
-            <div className="max-w-[80%] md:max-w-[70%] bg-slate-100 dark:bg-slate-800/80 text-slate-800 dark:text-slate-200 rounded-2xl rounded-bl-sm px-4 py-3 border border-slate-200 dark:border-slate-700/50 shadow-sm">
+            <div className="bg-slate-100 dark:bg-slate-800/80 text-slate-800 dark:text-slate-200 rounded-2xl rounded-bl-sm px-4 py-3 border border-slate-200 dark:border-slate-700/50 shadow-sm">
               <div className="flex items-start gap-2">
                 <span className="text-lg shrink-0 opacity-70" aria-hidden="true">🤖</span>
                 <p className="text-base leading-relaxed whitespace-pre-wrap wrap-break-words">

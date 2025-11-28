@@ -19,11 +19,19 @@ const Input: React.FC<InputProps> = ({
   const [error, setError] = useState<string | null>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const abortControllerRef = useRef<AbortController | null>(null)
+  const [isTouchDevice, isSetTouchDevice] = useState(false);
+
+  // This code only runs on the client/browser
+  useEffect(() => {
+    const userAgent = navigator.userAgent.toLowerCase();
+    
+    isSetTouchDevice(userAgent.includes('mobile'));
+  }, []);
 
   // Auto-resize textarea
   useEffect(() => {
     if (textareaRef.current) {
-      textareaRef.current.style.height = '52px'
+      textareaRef.current.style.height = '56px'
       const scrollHeight = textareaRef.current.scrollHeight
       textareaRef.current.style.height = `${Math.min(scrollHeight, 200)}px`
     }
@@ -92,11 +100,10 @@ const Input: React.FC<InputProps> = ({
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (!isTouchDevice && e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
       handleSend()
     }
-    // Shift+Enter will create a new line (default behavior)
   }
 
   const handleCancel = () => {
@@ -133,15 +140,15 @@ const Input: React.FC<InputProps> = ({
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Ask me anything... (Press Enter to send, Shift+Enter for new line)"
+            placeholder="Ask me anything..."
             className="w-full resize-none overflow-y-hidden p-4 text-base 
                         bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-slate-100 
                         border border-slate-200 dark:border-slate-700 rounded-3xl 
                         focus:outline-none focus:ring-2 focus:ring-indigo-500/50 dark:focus:ring-indigo-400/50
                         focus:border-indigo-300 dark:focus:border-indigo-600
                         transition duration-300 placeholder:text-slate-400 dark:placeholder:text-slate-500
-                        disabled:opacity-50 disabled:cursor-not-allowed shadow-inner"
-            style={{ minHeight: '52px', maxHeight: '200px' }}
+                        disabled:opacity-50 disabled:cursor-not-allowed shadow-inner h-min-[52px]"
+            style={{ height: '56px', maxHeight: '200px' }}
             aria-label="Message input"
             aria-describedby="input-help"
           />
