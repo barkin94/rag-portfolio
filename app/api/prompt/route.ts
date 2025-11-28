@@ -47,12 +47,15 @@ export async function POST(request: Request) {
           if (chunk['event'] === "on_chat_model_end") {
             const { type, text } = chunk.data.output;
 
-            await redis.storeMessages(userId,
-              [
-                ...messageMapper.langchainToRedis(messages),
-                { type, content: text }
-              ]
-            )
+            // if text is '' then a network error likely happened so skip saving response to redis
+            if(text) {
+              await redis.storeMessages(userId,
+                [
+                  ...messageMapper.langchainToRedis(messages),
+                  { type, content: text }
+                ]
+              )
+            }
           }
         }
       })
