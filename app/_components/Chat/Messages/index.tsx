@@ -19,6 +19,15 @@ type MessagesProps = {
 const Messages: React.FC<MessagesProps> = ({ initialMessages, streamedMessage, loading }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  // This code only runs on the client/browser
+  useEffect(() => {
+    setTimeout(() => localStorage.removeItem('closeEvent'), 10000);
+    
+    window.addEventListener('beforeunload', (event) => {
+      navigator.sendBeacon('/api/close');
+    })
+  }, []);
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [initialMessages, streamedMessage, loading]);
@@ -64,7 +73,7 @@ const Messages: React.FC<MessagesProps> = ({ initialMessages, streamedMessage, l
             <div
               className={`rounded-2xl px-4 py-3 shadow-sm ${
                 owner === 'human'
-                  ? 'bg-linear-to-br from-indigo-500 to-purple-600 text-white rounded-br-sm'
+                  ? 'bg-linear-to-br from-indigo-500 to-purple-600 text-white rounded-br-sm max-w-7/10'
                   : 'bg-slate-100 dark:bg-slate-800/80 text-slate-800 dark:text-slate-200 rounded-bl-sm border border-slate-200 dark:border-slate-700/50'
               }`}
               role={owner === 'human' ? 'user-message' : 'assistant-message'}

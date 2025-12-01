@@ -4,53 +4,24 @@ import { Document } from "@langchain/core/documents";
 
 import Config from "./config";
 
-export enum Category {
-  INFO = 'info',
-  WORK_EXPERIENCE = 'work_experience',
-  EDUCATION = 'education'
-}
-
-export enum InfoChunkType {
-  CONTACT = 'contact',
-  SUMMARY = 'summary',
-  EXPERTISE = 'expertise',
-  WORK_PREFERENCE = 'work_preference'
-}
-
-export enum WorkExperienceChunkType {
-  FULL = 'full',
-  ACHIEVEMENT = 'achievement',
-  TECHNOLOGIES = 'technologies'
-}
-
-export enum EducationChunkType {
-  FULL = 'full',
-  DEGREE = 'degree',
-  CERTIFICATE = 'certificate'
-}
-
 const createInfoChunks = () => [
   new Document({
     pageContent: `FULL NAME: BARKIN BUYUKSAGIN
     LOCATION: Ankara, Turkey
     E-MAIL: barkinsagin@gmail.com
     LINKEDIN: https://www.linkedin.com/in/barkinsagin`,
-    metadata: { category: Category.INFO, chunkType: InfoChunkType.CONTACT }
+    metadata: { category: 'info', chunkType: 'contact' }
   }),
   new Document({
     pageContent: `SUMMARY: Back-End Engineer with strong full-stack experience, specializing in building and optimizing
     high-performance Node.js services and APIs. Focused on enhancing scalability, reducing API latency, and minimizing
     cloud infrastructure costs to deliver tangible business results.`,
-    metadata: { category: Category.INFO, chunkType:  InfoChunkType.SUMMARY }
+    metadata: { category: 'info', chunkType: 'summary' }
   }),
   new Document({
     pageContent: `EXPERTISE: Adept at diagnosing and resolving complex, system-level issues across the backend and infrastructure. 
     Also has commercial experience in Go and Java for distributed systems.`,
-    metadata: { category: Category.INFO, chunkType:  InfoChunkType.EXPERTISE }
-  }),
-  new Document({
-    pageContent: `WORK PREFERENCE: Open to remote, hybrid, or on-site roles. Prefers flexible working hours and values a healthy work-life balance.`,
-    metadata: { category: Category.INFO, chunkType:  InfoChunkType.WORK_PREFERENCE }
+    metadata: { category: 'info', chunkType: 'expertise' }
   })
 ];
 
@@ -58,7 +29,7 @@ const createInfoChunks = () => [
 const workExperienceData = [
   {
     role: 'Backend Software Engineer',
-    company: 'getir',
+    company: 'Getir',
     location: 'Hybrid (Ankara, Turkey)',
     startDate: 'August 2023',
     endDate: 'June 2025',
@@ -72,7 +43,7 @@ const workExperienceData = [
   },
   {
     role: 'Frontend Software Engineer',
-    company: 'getir',
+    company: 'Getir',
     location: 'Remote',
     startDate: 'January 2023',
     endDate: 'August 2023',
@@ -85,7 +56,7 @@ const workExperienceData = [
   },
   {
     role: 'Full-stack Software Engineer',
-    company: 'bilisim inc.',
+    company: 'Bilisim Inc.',
     location: 'On-Site (Ankara, Turkey)',
     startDate: 'June 2021',
     endDate: 'January 2023',
@@ -100,7 +71,7 @@ const workExperienceData = [
   },
   {
     role: 'Full-stack Software Engineer',
-    company: 'cubicl',
+    company: 'Cubicl',
     location: 'On-Site (Ankara, Turkey)',
     startDate: 'June 2019',
     endDate: 'June 2021',
@@ -134,14 +105,14 @@ const createWorkExperienceChunks = () => {
     documents.push(new Document({
       pageContent: fullContext.trim(),
       metadata: {
-        category: Category.WORK_EXPERIENCE,
+        category: 'work_experience',
         company: exp.company,
         role: exp.role,
         startDate: exp.startDate,
         endDate: exp.endDate,
         technologies: exp.technologies,
-        x: exp.location,
-        chunkType: WorkExperienceChunkType.FULL,
+        location: exp.location,
+        chunkType: 'full',
         experienceIndex: index
       }
     }));
@@ -160,13 +131,13 @@ const createWorkExperienceChunks = () => {
       documents.push(new Document({
         pageContent: achievementChunk.trim(),
         metadata: {
-          category: Category.WORK_EXPERIENCE,
+          category: 'work_experience',
           company: exp.company,
           role: exp.role,
           startDate: exp.startDate,
           endDate: exp.endDate,
           technologies: exp.technologies,
-          chunkType: WorkExperienceChunkType.ACHIEVEMENT,
+          chunkType: 'achievement',
           experienceIndex: index,
           achievementIndex: achIndex
         }
@@ -186,13 +157,13 @@ const createWorkExperienceChunks = () => {
     documents.push(new Document({
       pageContent: techChunk.trim(),
       metadata: {
-        category: Category.WORK_EXPERIENCE,
+        category: 'work_experience',
         company: exp.company,
         role: exp.role,
         startDate: exp.startDate,
         endDate: exp.endDate,
         technologies: exp.technologies,
-        chunkType: WorkExperienceChunkType.TECHNOLOGIES,
+        chunkType: 'technologies',
         experienceIndex: index
       }
     }));
@@ -248,8 +219,8 @@ const createEducationChunks = () => {
   documents.push(new Document({
     pageContent: fullEducation.trim(),
     metadata: {
-      category: Category.EDUCATION,
-      chunkType: EducationChunkType.FULL
+      category: 'education',
+      chunkType: 'full'
     }
   }));
   
@@ -265,8 +236,8 @@ const createEducationChunks = () => {
     documents.push(new Document({
       pageContent: degreeChunk.trim(),
       metadata: {
-        category: Category.EDUCATION,
-        chunkType: EducationChunkType.DEGREE,
+        category: 'education',
+        chunkType: 'degree',
         degreeIndex: index
       }
     }));
@@ -286,8 +257,8 @@ const createEducationChunks = () => {
       documents.push(new Document({
         pageContent: certChunk.trim(),
         metadata: {
-          category: Category.EDUCATION,
-          chunkType: EducationChunkType.CERTIFICATE,
+          category: 'education',
+          chunkType: 'certificate',
           certificateIndex: index,
           subjectIndex: subIndex
         }

@@ -23,6 +23,7 @@ const client = createClient({
 client.on("error", function (err) {
   throw err;
 });
+
 await client.connect()
 
 const getMessages = async (userId: string): Promise<RedisMessage[]> => {
@@ -44,4 +45,8 @@ const storeMessages = (userId: string, messages: RedisMessage[]) => {
     .execAsPipeline();
 }
 
-export default { getMessages, storeMessages };
+const resetMessages = async (userId: string) => {
+  return client.del(userId);
+}
+
+export default { getMessages, storeMessages, resetMessages };
