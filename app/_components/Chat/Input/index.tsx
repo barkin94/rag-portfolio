@@ -117,7 +117,7 @@ const Input: React.FC<InputProps> = ({
   }
 
   return (
-    <div className="w-full p-4 bg-white dark:bg-slate-900 shadow-lg border-t border-slate-200 dark:border-slate-800 transition duration-300">
+    <div className="w-full end p-4 border-t border-slate-200 dark:border-slate-800 transition duration-300">
       {error && (
         <div 
           className="max-w-4xl mx-auto mb-3 p-3 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900/50 rounded-xl text-red-700 dark:text-red-400 text-sm flex items-center justify-between backdrop-blur-sm"

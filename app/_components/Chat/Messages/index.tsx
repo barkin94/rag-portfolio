@@ -36,7 +36,7 @@ const Messages: React.FC<MessagesProps> = ({ initialMessages, streamedMessage, l
 
   return (
     <section 
-      className="w-full h-full overflow-y-auto p-4 lg:p-8 mb-4"
+      className="w-full grow overflow-y-auto p-4 lg:p-8"
       aria-label="Chat messages"
       role="log"
       aria-live="polite"
