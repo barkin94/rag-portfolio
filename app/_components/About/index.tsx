@@ -91,7 +91,7 @@ export default () => (
         href="https://linkedin.com/in/barkinsagin"
         target="_blank"
         rel="noopener noreferrer"
-        className="p-3 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-white hover:from-indigo-600 hover:to-purple-700 transition-all duration-300 hover:scale-110 shadow-md hover:shadow-lg"
+        className="p-3 rounded-full border-2 border-stone-400 dark:border-stone-600 text-stone-700 dark:text-stone-300 hover:bg-stone-400 dark:hover:bg-stone-600 hover:text-stone-900 dark:hover:text-stone-100 transition-all duration-300 hover:scale-110 shadow-md hover:shadow-lg"
         aria-label="LinkedIn Profile"
       >
         <LinkedInIcon className="w-5 h-5" />
@@ -100,14 +100,14 @@ export default () => (
         href="https://github.com/yourusername"
         target="_blank"
         rel="noopener noreferrer"
-        className="p-3 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-white hover:from-indigo-600 hover:to-purple-700 transition-all duration-300 hover:scale-110 shadow-md hover:shadow-lg"
+        className="p-3 rounded-full border-2 border-stone-400 dark:border-stone-600 text-stone-700 dark:text-stone-300 hover:bg-stone-400 dark:hover:bg-stone-600 hover:text-stone-900 dark:hover:text-stone-100 transition-all duration-300 hover:scale-110 shadow-md hover:shadow-lg"
         aria-label="GitHub Profile"
       >
         <GitHubIcon className="w-5 h-5" />
       </a>
       <a
         href="mailto:barkinsagin@gmail.com"
-        className="p-3 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-white hover:from-indigo-600 hover:to-purple-700 transition-all duration-300 hover:scale-110 shadow-md hover:shadow-lg"
+        className="p-3 rounded-full border-2 border-stone-400 dark:border-stone-600 text-stone-700 dark:text-stone-300 hover:bg-stone-400 dark:hover:bg-stone-600 hover:text-stone-900 dark:hover:text-stone-100 transition-all duration-300 hover:scale-110 shadow-md hover:shadow-lg"
         aria-label="Email"
       >
         <EmailIcon className="w-5 h-5" />
@@ -115,7 +115,7 @@ export default () => (
       <a
         href="#"
         download
-        className="p-3 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-white hover:from-indigo-600 hover:to-purple-700 transition-all duration-300 hover:scale-110 shadow-md hover:shadow-lg"
+        className="p-3 rounded-full border-2 border-stone-400 dark:border-stone-600 text-stone-700 dark:text-stone-300 hover:bg-stone-400 dark:hover:bg-stone-600 hover:text-stone-900 dark:hover:text-stone-100 transition-all duration-300 hover:scale-110 shadow-md hover:shadow-lg"
         aria-label="Download Resume"
       >
         <ResumeIcon className="w-5 h-5" />

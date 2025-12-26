@@ -73,7 +73,7 @@ const Messages: React.FC<MessagesProps> = ({ initialMessages, streamedMessage, l
             <div
               className={`rounded-2xl px-4 py-3 shadow-sm ${
                 owner === 'human'
-                  ? 'bg-gradient-to-br from-indigo-500 to-purple-600 text-white rounded-br-sm max-w-7/10'
+                  ? 'bg-stone-600 dark:bg-stone-700 text-white rounded-br-sm max-w-7/10'
                   : 'bg-background text-foreground rounded-bl-sm'
               }`}
               role={owner === 'human' ? 'user-message' : 'assistant-message'}

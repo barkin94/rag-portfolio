@@ -9,7 +9,7 @@ export default () => (
     className="text-center"
   >
     <div className="mb-4 mt-5">
-      <span className="text-sm font-semibold text-indigo-600 dark:text-indigo-400 bg-indigo-100 dark:bg-indigo-900/30 px-4 py-1.5 rounded-full">
+      <span className="text-sm font-semibold text-stone-700 dark:text-stone-300 bg-stone-200 dark:bg-stone-800 px-4 py-1.5 rounded-full">
         👋 Welcome
       </span>
     </div>

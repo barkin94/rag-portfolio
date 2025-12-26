@@ -143,9 +143,9 @@ const Input: React.FC<InputProps> = ({
             placeholder="Ask me anything..."
             className="w-full resize-none overflow-y-hidden p-4 text-base 
                         bg-background text-foreground
-                        rounded-3xl 
-                        focus:outline-none focus:ring-2 focus:ring-indigo-500/50 dark:focus:ring-indigo-400/50
-                        focus:border-indigo-300 dark:focus:border-indigo-600
+                        rounded-3xl border border-stone-200 dark:border-stone-700
+                        focus:outline-none focus:ring-stone-500/50 dark:focus:ring-stone-400/50
+                        focus:border-stone-400 dark:focus:border-stone-500
                         transition duration-300 placeholder:text-stone-400 dark:placeholder:text-stone-500
                         disabled:opacity-50 disabled:cursor-not-allowed shadow-inner h-min-[52px]"
             style={{ height: '56px', maxHeight: '200px' }}
@@ -161,9 +161,9 @@ const Input: React.FC<InputProps> = ({
           <button
             onClick={handleCancel}
             type="button"
-            className="p-3 rounded-full shadow-md transition-all duration-300 
+            className="p-3 rounded-full shadow-lg shadow-stone-900/20 dark:shadow-stone-950/50 transition-all duration-300 
                       bg-stone-500 hover:bg-stone-600 dark:bg-stone-600 dark:hover:bg-stone-700 
-                      text-white transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-stone-400"
+                      text-white transform hover:scale-105 hover:shadow-xl hover:shadow-stone-900/30 dark:hover:shadow-stone-950/70 focus:outline-none focus:ring-2 focus:ring-stone-400"
             aria-label="Cancel request"
           >
             <CancelIcon className="w-6 h-6" />
@@ -173,9 +173,9 @@ const Input: React.FC<InputProps> = ({
             onClick={handleSend}
             type="submit"
             disabled={!inputValue.trim() || isLoading}
-            className={`p-3 rounded-full shadow-md transition-all duration-300 
+            className={`p-3 rounded-full shadow-lg shadow-stone-900/20 dark:shadow-stone-950/50 transition-all duration-300 
                   ${inputValue.trim() && !isLoading
-                ? 'bg-gradient-to-br from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500/50'
+                ? 'bg-stone-600 dark:bg-stone-700 hover:bg-stone-700 dark:hover:bg-stone-600 text-white transform hover:scale-105 hover:shadow-xl hover:shadow-stone-900/30 dark:hover:shadow-stone-950/70 focus:outline-none focus:ring-2 focus:ring-stone-500/50'
                 : 'bg-background text-foreground cursor-not-allowed'
               }`}
             aria-label="Send message"
