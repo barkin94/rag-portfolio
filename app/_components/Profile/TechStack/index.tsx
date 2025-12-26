@@ -55,7 +55,7 @@ const TechStack = () => {
             <h3 className="text-xl font-bold mb-4">{category}</h3>
             <ul className="flex flex-wrap gap-2">
               {techList.map((tech) => (
-                <li key={tech} className="bg-gray-200 dark:bg-gray-700 rounded-full px-3 py-1 text-sm font-medium">
+                <li key={tech} className="bg-stone-200 dark:bg-stone-700 rounded-full px-3 py-1 text-sm font-medium">
                   {tech}
                 </li>
               ))}

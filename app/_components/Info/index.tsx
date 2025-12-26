@@ -28,10 +28,10 @@ export default () => (
           "This is a very long multi-line test."
         ]}/>
       </h1>
-      <p className="text-xl md:text-2xl text-slate-600 dark:text-slate-400 font-medium mb-2">
+      <p className="text-xl md:text-2xl text-stone-600 dark:text-stone-400 font-medium mb-2">
         Backend Software Engineer
       </p>
-      <p className="text-slate-500 dark:text-slate-500 max-w-2xl mx-auto">
+      <p className="text-stone-500 dark:text-stone-400 max-w-2xl mx-auto">
         Building digital experiences that make a difference
       </p>
     </div>

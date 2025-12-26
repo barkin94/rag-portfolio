@@ -9,7 +9,7 @@ export default function Header() {
         <div className="flex items-center justify-between h-16">
           {/* Left Division - Name */}
           <div className="flex items-center justify-center flex-1">
-            <h1 className="text-xl font-bold text-slate-900 dark:text-slate-100">
+            <h1 className="text-xl font-bold text-stone-900 dark:text-stone-100">
               Barkin Buyuksagin
             </h1>
           </div>

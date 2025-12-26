@@ -156,7 +156,7 @@ const Chat: React.FC<{ initialMessages: Message[] }> = ({ initialMessages = [] }
           </div>
           <button
             onClick={handleChatCloseClicked}
-            className="mr-2 bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-foreground rounded-full w-8 h-8 flex items-center justify-center shadow focus:outline-none"
+            className="mr-2 bg-stone-200 hover:bg-stone-300 dark:bg-stone-800 dark:hover:bg-stone-700 text-foreground rounded-full w-8 h-8 flex items-center justify-center shadow focus:outline-none"
             aria-label="Close chat"
           >
             x
@@ -164,7 +164,7 @@ const Chat: React.FC<{ initialMessages: Message[] }> = ({ initialMessages = [] }
 
           <button
             onClick={handleChatResetClicked}
-            className="bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-foreground rounded-full w-8 h-8 flex items-center justify-center shadow focus:outline-none"
+            className="bg-stone-200 hover:bg-stone-300 dark:bg-stone-800 dark:hover:bg-stone-700 text-foreground rounded-full w-8 h-8 flex items-center justify-center shadow focus:outline-none"
             aria-label="Close chat"
           >
             ↺

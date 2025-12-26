@@ -75,14 +75,14 @@ export default () => (
     className='mx-10 lg:mx-50'
   >
     <div className="relative z-10">
-      <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-4 flex items-center gap-2">
+      <h3 className="text-2xl font-bold text-stone-900 dark:text-stone-100 mb-4 flex items-center gap-2">
         <span className="text-3xl">🚀</span> About Me
       </h3>
-      <p className="text-slate-700 dark:text-slate-300 text-lg leading-relaxed mb-4">
+      <p className="text-stone-700 dark:text-stone-300 text-lg leading-relaxed mb-4">
         A backend software engineer with full-stack capabilities and 6+ years of experience building
         scalable systems. Specializing in Javascript ecosystem and cloud technologies.
       </p>
-      <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
+      <p className="text-stone-600 dark:text-stone-400 leading-relaxed">
         I love turning complex problems into simple, beautiful solutions.
       </p>
     </div>
@@ -91,7 +91,7 @@ export default () => (
         href="https://linkedin.com/in/barkinsagin"
         target="_blank"
         rel="noopener noreferrer"
-        className="p-3 rounded-full bg-linear-to-br from-indigo-500 to-purple-600 text-white hover:from-indigo-600 hover:to-purple-700 transition-all duration-300 hover:scale-110 shadow-md hover:shadow-lg"
+        className="p-3 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-white hover:from-indigo-600 hover:to-purple-700 transition-all duration-300 hover:scale-110 shadow-md hover:shadow-lg"
         aria-label="LinkedIn Profile"
       >
         <LinkedInIcon className="w-5 h-5" />
@@ -100,14 +100,14 @@ export default () => (
         href="https://github.com/yourusername"
         target="_blank"
         rel="noopener noreferrer"
-        className="p-3 rounded-full bg-linear-to-br from-indigo-500 to-purple-600 text-white hover:from-indigo-600 hover:to-purple-700 transition-all duration-300 hover:scale-110 shadow-md hover:shadow-lg"
+        className="p-3 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-white hover:from-indigo-600 hover:to-purple-700 transition-all duration-300 hover:scale-110 shadow-md hover:shadow-lg"
         aria-label="GitHub Profile"
       >
         <GitHubIcon className="w-5 h-5" />
       </a>
       <a
         href="mailto:barkinsagin@gmail.com"
-        className="p-3 rounded-full bg-linear-to-br from-indigo-500 to-purple-600 text-white hover:from-indigo-600 hover:to-purple-700 transition-all duration-300 hover:scale-110 shadow-md hover:shadow-lg"
+        className="p-3 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-white hover:from-indigo-600 hover:to-purple-700 transition-all duration-300 hover:scale-110 shadow-md hover:shadow-lg"
         aria-label="Email"
       >
         <EmailIcon className="w-5 h-5" />
@@ -115,7 +115,7 @@ export default () => (
       <a
         href="#"
         download
-        className="p-3 rounded-full bg-linear-to-br from-indigo-500 to-purple-600 text-white hover:from-indigo-600 hover:to-purple-700 transition-all duration-300 hover:scale-110 shadow-md hover:shadow-lg"
+        className="p-3 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-white hover:from-indigo-600 hover:to-purple-700 transition-all duration-300 hover:scale-110 shadow-md hover:shadow-lg"
         aria-label="Download Resume"
       >
         <ResumeIcon className="w-5 h-5" />

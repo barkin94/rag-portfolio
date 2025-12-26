@@ -146,7 +146,7 @@ const Input: React.FC<InputProps> = ({
                         rounded-3xl 
                         focus:outline-none focus:ring-2 focus:ring-indigo-500/50 dark:focus:ring-indigo-400/50
                         focus:border-indigo-300 dark:focus:border-indigo-600
-                        transition duration-300 placeholder:text-slate-400 dark:placeholder:text-slate-500
+                        transition duration-300 placeholder:text-stone-400 dark:placeholder:text-stone-500
                         disabled:opacity-50 disabled:cursor-not-allowed shadow-inner h-min-[52px]"
             style={{ height: '56px', maxHeight: '200px' }}
             aria-label="Message input"
@@ -162,8 +162,8 @@ const Input: React.FC<InputProps> = ({
             onClick={handleCancel}
             type="button"
             className="p-3 rounded-full shadow-md transition-all duration-300 
-                      bg-slate-500 hover:bg-slate-600 dark:bg-slate-600 dark:hover:bg-slate-700 
-                      text-white transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-slate-400"
+                      bg-stone-500 hover:bg-stone-600 dark:bg-stone-600 dark:hover:bg-stone-700 
+                      text-white transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-stone-400"
             aria-label="Cancel request"
           >
             <CancelIcon className="w-6 h-6" />
@@ -175,7 +175,7 @@ const Input: React.FC<InputProps> = ({
             disabled={!inputValue.trim() || isLoading}
             className={`p-3 rounded-full shadow-md transition-all duration-300 
                   ${inputValue.trim() && !isLoading
-                ? 'bg-linear-to-br from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500/50'
+                ? 'bg-gradient-to-br from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500/50'
                 : 'bg-background text-foreground cursor-not-allowed'
               }`}
             aria-label="Send message"

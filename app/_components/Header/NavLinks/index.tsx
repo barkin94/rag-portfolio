@@ -17,7 +17,7 @@ export default () => (
             key={index}
             href={url} 
             onNavigate={(e) => console.log(e)}
-            className="text-slate-700 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+            className="text-stone-700 dark:text-stone-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
           >
             {label}
           </Link>
