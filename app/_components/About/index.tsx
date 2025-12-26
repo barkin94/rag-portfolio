@@ -68,13 +68,12 @@ const ResumeIcon: React.FC<{ className?: string }> = ({
 );
 
 export default () => (
-  <section
+  <div
     aria-label="About"
     role="log"
     aria-live="polite"
-    className="bg-linear-to-br from-indigo-50 to-purple-50 dark:from-slate-800/80 dark:to-slate-800/50 backdrop-blur-sm rounded-2xl p-6 md:p-8 border border-indigo-200 dark:border-indigo-900/50 shadow-lg relative overflow-hidden"
+    className='mx-10 lg:mx-50'
   >
-    <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-200/30 dark:bg-indigo-900/20 rounded-full blur-2xl"></div>
     <div className="relative z-10">
       <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-4 flex items-center gap-2">
         <span className="text-3xl">🚀</span> About Me
@@ -122,5 +121,5 @@ export default () => (
         <ResumeIcon className="w-5 h-5" />
       </a>
     </div>
-  </section>
+  </div>
 );

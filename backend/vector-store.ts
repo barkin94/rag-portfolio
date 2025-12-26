@@ -1,302 +1,551 @@
-import { MemoryVectorStore } from "@langchain/classic/vectorstores/memory";
-import { GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
-import { Document } from "@langchain/core/documents";
+// import { MemoryVectorStore } from "@langchain/classic/vectorstores/memory";
+// import { GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
+// import { Document } from "@langchain/core/documents";
 
+// import { workExperienceData } from "./data";
+// import Config from "./config";
+
+// export enum Category {
+//   INFO = 'info',
+//   WORK_EXPERIENCE = 'work_experience',
+//   EDUCATION = 'education'
+// }
+
+// export enum InfoChunkType {
+//   CONTACT = 'contact',
+//   SUMMARY = 'summary',
+//   EXPERTISE = 'expertise',
+//   WORK_PREFERENCE = 'work_preference'
+// }
+
+// export enum WorkExperienceChunkType {
+//   FULL = 'full',
+//   ACHIEVEMENT = 'achievement',
+//   TECHNOLOGIES = 'technologies'
+// }
+
+// export enum EducationChunkType {
+//   FULL = 'full',
+//   DEGREE = 'degree',
+//   CERTIFICATE = 'certificate'
+// }
+
+// const createInfoChunks = () => [
+//   new Document({
+//     pageContent: `FULL NAME: BARKIN BUYUKSAGIN
+//     LOCATION: Ankara, Turkey
+//     E-MAIL: barkinsagin@gmail.com
+//     LINKEDIN: https://www.linkedin.com/in/barkinsagin`,
+//     metadata: { category: Category.INFO, chunkType: InfoChunkType.CONTACT }
+//   }),
+//   new Document({
+//     pageContent: `SUMMARY: Back-End Engineer with strong full-stack experience, specializing in building and optimizing
+//     high-performance Node.js services and APIs. Focused on enhancing scalability, reducing API latency, and minimizing
+//     cloud infrastructure costs to deliver tangible business results.`,
+//     metadata: { category: Category.INFO, chunkType:  InfoChunkType.SUMMARY }
+//   }),
+//   new Document({
+//     pageContent: `EXPERTISE: Adept at diagnosing and resolving complex, system-level issues across the backend and infrastructure. 
+//     Also has commercial experience in Go and Java for distributed systems.`,
+//     metadata: { category: Category.INFO, chunkType:  InfoChunkType.EXPERTISE }
+//   }),
+//   new Document({
+//     pageContent: `WORK PREFERENCE: Open to remote, hybrid, or on-site roles. Prefers flexible working hours and values a healthy work-life balance.`,
+//     metadata: { category: Category.INFO, chunkType:  InfoChunkType.WORK_PREFERENCE }
+//   })
+// ];
+
+// // Create work experience chunks with rich metadata
+// const createWorkExperienceChunks = () => {
+//   const documents: Document[] = [];
+  
+//   workExperienceData.forEach((exp, index) => {
+//     // Create a full role chunk with all context
+//     const fullContext = `
+//     ROLE: ${exp.role}
+//     COMPANY: ${exp.company}
+//     LOCATION: ${exp.location}
+//     START-DATE: ${exp.startDate}
+//     END-DATE: ${exp.endDate}
+//     DESCRIPTION:
+//     ${exp.description.map(d => `- ${d}`).join('\n    ')}
+//     TECHNOLOGIES: ${exp.technologies.join(', ')}
+//     `;
+    
+//     documents.push(new Document({
+//       pageContent: fullContext.trim(),
+//       metadata: {
+//         category: Category.WORK_EXPERIENCE,
+//         company: exp.company.toLowerCase(),
+//         role: exp.role,
+//         startDate: exp.startDate,
+//         endDate: exp.endDate,
+//         technologies: exp.technologies,
+//         x: exp.location,
+//         chunkType: WorkExperienceChunkType.FULL,
+//         experienceIndex: index
+//       }
+//     }));
+    
+//     // Create individual achievement chunks for better granularity
+//     exp.description.forEach((achievement, achIndex) => {
+//       const achievementChunk = `
+//       ROLE: ${exp.role}
+//       COMPANY: ${exp.company}
+//       START-DATE: ${exp.startDate}
+//       END-DATE: ${exp.endDate}
+//       ACHIEVEMENT: ${achievement}
+//       TECHNOLOGIES: ${exp.technologies.join(', ')}
+//       `;
+      
+//       documents.push(new Document({
+//         pageContent: achievementChunk.trim(),
+//         metadata: {
+//           category: Category.WORK_EXPERIENCE,
+//           company: exp.company.toLowerCase(),
+//           role: exp.role,
+//           startDate: exp.startDate,
+//           endDate: exp.endDate,
+//           technologies: exp.technologies,
+//           chunkType: WorkExperienceChunkType.ACHIEVEMENT,
+//           experienceIndex: index,
+//           achievementIndex: achIndex
+//         }
+//       }));
+//     });
+    
+//     // Create technology-focused chunks
+//     const techChunk = `
+//     ROLE: ${exp.role}
+//     COMPANY: ${exp.company}
+//     START-DATE: ${exp.startDate}
+//     END-DATE: ${exp.endDate}
+//     TECHNOLOGIES USED: ${exp.technologies.join(', ')}
+//     CONTEXT: Worked with these technologies at ${exp.company} as a ${exp.role}
+//     `;
+    
+//     documents.push(new Document({
+//       pageContent: techChunk.trim(),
+//       metadata: {
+//         category: Category.WORK_EXPERIENCE,
+//         company: exp.company.toLowerCase(),
+//         role: exp.role,
+//         startDate: exp.startDate,
+//         endDate: exp.endDate,
+//         technologies: exp.technologies,
+//         chunkType: WorkExperienceChunkType.TECHNOLOGIES,
+//         experienceIndex: index
+//       }
+//     }));
+//   });
+  
+//   return documents;
+// };
+
+// // Education data structured for better chunking
+// const educationData = {
+//   degrees: [
+//     {
+//       degree: 'B.Sc. in Computer Engineering',
+//       institution: 'Baskent University',
+//       location: 'Ankara, Turkey',
+//       period: '2012-2018'
+//     },
+//     {
+//       degree: 'High School Diploma',
+//       institution: 'TED Ankara College Private High School',
+//       location: 'Ankara, Turkey',
+//       period: '2008-2012'
+//     }
+//   ],
+//   certificates: [
+//     {
+//       name: 'Bournemouth Business School International',
+//       location: 'Bournemouth, UK',
+//       period: 'Summer 2015',
+//       subjects: [
+//         { name: 'Science, Mathematics & IT', grade: 'DISTINCTION' },
+//         { name: 'Business Skills', grade: 'CREDIT' }
+//       ]
+//     }
+//   ]
+// };
+
+// // Create education chunks with metadata
+// const createEducationChunks = () => {
+//   const documents: Document[] = [];
+  
+//   // Full education chunk
+//   const fullEducation = `
+//     EDUCATION:
+//     ${educationData.degrees.map(d => `- ${d.degree}, ${d.institution}, ${d.location} (${d.period})`).join('\n    ')}
+
+//     CERTIFICATES:
+//     ${educationData.certificates.map(c => 
+//       `- ${c.name}, ${c.location} (${c.period})\n    ${c.subjects.map(s => `${s.name}: ${s.grade}`).join('\n    ')}`
+//     ).join('\n    ')}
+//   `;
+  
+//   documents.push(new Document({
+//     pageContent: fullEducation.trim(),
+//     metadata: {
+//       category: Category.EDUCATION,
+//       chunkType: EducationChunkType.FULL
+//     }
+//   }));
+  
+//   // Individual degree chunks
+//   educationData.degrees.forEach((degree, index) => {
+//     const degreeChunk = `
+//     DEGREE: ${degree.degree}
+//     INSTITUTION: ${degree.institution}
+//     LOCATION: ${degree.location}
+//     PERIOD: ${degree.period}
+//     `;
+    
+//     documents.push(new Document({
+//       pageContent: degreeChunk.trim(),
+//       metadata: {
+//         category: Category.EDUCATION,
+//         chunkType: EducationChunkType.DEGREE,
+//         degreeIndex: index
+//       }
+//     }));
+//   });
+  
+//   // Certificate chunks
+//   educationData.certificates.forEach((cert, index) => {
+//     cert.subjects.forEach((subject, subIndex) => {
+//       const certChunk = `
+//       CERTIFICATE: ${cert.name}
+//       LOCATION: ${cert.location}
+//       PERIOD: ${cert.period}
+//       SUBJECT: ${subject.name}
+//       GRADE: ${subject.grade}
+//       `;
+      
+//       documents.push(new Document({
+//         pageContent: certChunk.trim(),
+//         metadata: {
+//           category: Category.EDUCATION,
+//           chunkType: EducationChunkType.CERTIFICATE,
+//           certificateIndex: index,
+//           subjectIndex: subIndex
+//         }
+//       }));
+//     });
+//   });
+  
+//   return documents;
+// };
+
+// const embeddings = new GoogleGenerativeAIEmbeddings({
+//   model: "gemini-embedding-001",
+//   apiKey: Config.gemini.apiKey
+// });
+
+// const vectorStore = new MemoryVectorStore(embeddings);
+
+// await vectorStore.addDocuments([
+//   ...createInfoChunks(),
+//   ...createWorkExperienceChunks(),
+//   ...createEducationChunks()
+// ])
+
+// export { vectorStore };
+
+// ============================================
+// RAG CHAT SYSTEM - COMPLETE SOLUTION
+// ============================================
+
+import { Document } from 'langchain';
+import { MemoryVectorStore } from "@langchain/classic/vectorstores/memory";
+import { GoogleGenerativeAIEmbeddings } from '@langchain/google-genai';
 import Config from "./config";
 
-export enum Category {
-  INFO = 'info',
-  WORK_EXPERIENCE = 'work_experience',
-  EDUCATION = 'education'
+
+// ============================================
+// 1. TYPES AND INTERFACES
+// ============================================
+
+interface ConversationMessage {
+  role: 'user' | 'assistant';
+  content: string;
+  timestamp: Date;
 }
 
-export enum InfoChunkType {
-  CONTACT = 'contact',
-  SUMMARY = 'summary',
-  EXPERTISE = 'expertise',
-  WORK_PREFERENCE = 'work_preference'
-}
+// ============================================
+// 2. RESUME DATA CHUNKS
+// ============================================
 
-export enum WorkExperienceChunkType {
-  FULL = 'full',
-  ACHIEVEMENT = 'achievement',
-  TECHNOLOGIES = 'technologies'
-}
-
-export enum EducationChunkType {
-  FULL = 'full',
-  DEGREE = 'degree',
-  CERTIFICATE = 'certificate'
-}
-
-const createInfoChunks = () => [
+const createResumeChunks = (): Document[] => [
   new Document({
-    pageContent: `FULL NAME: BARKIN BUYUKSAGIN
-    LOCATION: Ankara, Turkey
-    E-MAIL: barkinsagin@gmail.com
-    LINKEDIN: https://www.linkedin.com/in/barkinsagin`,
-    metadata: { category: Category.INFO, chunkType: InfoChunkType.CONTACT }
+    pageContent: `ABOUT BARKIN BUYUKSAGIN
+    
+Location: Ankara, Turkey
+Email: barkinsagin@gmail.com
+LinkedIn: https://www.linkedin.com/in/barkinsagin
+
+I'm a Back-End Engineer with strong full-stack experience, specializing in building and optimizing high-performance Node.js services and APIs. I focus on enhancing scalability, reducing API latency, and minimizing cloud infrastructure costs to deliver tangible business results.
+
+I'm adept at diagnosing and resolving complex, system-level issues across the backend and infrastructure, and have commercial experience in Go and Java for distributed systems.
+
+Work Preferences: Open to remote, hybrid, or on-site roles. I prefer flexible working hours and value a healthy work-life balance.`,
+    metadata: { 
+      section: 'overview',
+      topics: ['about', 'summary', 'contact', 'preferences']
+    }
   }),
+
   new Document({
-    pageContent: `SUMMARY: Back-End Engineer with strong full-stack experience, specializing in building and optimizing
-    high-performance Node.js services and APIs. Focused on enhancing scalability, reducing API latency, and minimizing
-    cloud infrastructure costs to deliver tangible business results.`,
-    metadata: { category: Category.INFO, chunkType:  InfoChunkType.SUMMARY }
+    pageContent: `GETIR - BACKEND SOFTWARE ENGINEER (August 2023 - June 2025)
+Hybrid in Ankara, Turkey
+
+At Getir, I maintained and developed event-driven backend microservices using Node.js, Java, and Go on AWS for a large-scale e-commerce platform serving millions of users.
+
+Key Achievements:
+• Integrated Google Vertex AI Search for commerce to significantly improve product search relevance and accuracy
+• Built a robust batch data pipeline using BigQuery, Cloud Scheduler, and Workflows for periodic data ingestion
+• Developed BFF (Backend for Frontend) services to control mobile app pages dynamically, reducing the need for frequent app releases
+• Worked extensively with event-driven architecture using Kafka for asynchronous communication
+• Optimized database queries and caching strategies with Redis to reduce API latency
+
+Technologies: NestJS, Node.js, Spring Boot, MongoDB, PostgreSQL, Redis, Kafka, Kubernetes, Terraform, AWS, GCP, New Relic`,
+    metadata: { 
+      section: 'work',
+      company: 'getir',
+      role: 'backend'
+    }
   }),
+
   new Document({
-    pageContent: `EXPERTISE: Adept at diagnosing and resolving complex, system-level issues across the backend and infrastructure. 
-    Also has commercial experience in Go and Java for distributed systems.`,
-    metadata: { category: Category.INFO, chunkType:  InfoChunkType.EXPERTISE }
+    pageContent: `GETIR - FRONTEND SOFTWARE ENGINEER (January 2023 - August 2023)
+Remote
+
+During my frontend role at Getir, I helped build web and admin applications using React and Nx for the e-commerce platform.
+
+Key Achievements:
+• Refactored untestable parts of a Next.js application and added comprehensive test coverage using Jest
+• Built a flexible, reusable component library in React with Storybook documentation
+• Implemented Redux-Saga for complex async state management
+• Collaborated with designers to ensure pixel-perfect implementation of UI/UX designs
+• Integrated New Relic for frontend performance monitoring
+
+Technologies: TypeScript, React, Next.js, Redux, Redux-Saga, Jest, Storybook, styled-components, Node.js, New Relic`,
+    metadata: { 
+      section: 'work',
+      company: 'getir',
+      role: 'frontend'
+    }
   }),
+
   new Document({
-    pageContent: `WORK PREFERENCE: Open to remote, hybrid, or on-site roles. Prefers flexible working hours and values a healthy work-life balance.`,
-    metadata: { category: Category.INFO, chunkType:  InfoChunkType.WORK_PREFERENCE }
+    pageContent: `BILISIM INC. - FULL-STACK SOFTWARE ENGINEER (June 2021 - January 2023)
+On-Site in Ankara, Turkey
+
+At Bilisim Inc., I built and maintained React applications for an HR management SaaS platform used by employees and administrators.
+
+Key Achievements:
+• Extracted replicated React components into reusable libraries shared across teams, reducing code duplication by ~40%
+• Increased accessibility of internal UI tools by simplifying their APIs and adding documentation
+• Reduced unnecessary backend requests by implementing intelligent client-side caching
+• Contributed to backend features, working closely with the Java/Spring Boot backend team
+• Worked with Docker for local development and Jaeger for distributed tracing
+
+Technologies: React, TypeScript, Java, Spring Boot, PostgreSQL, Docker, Jaeger, Vault`,
+    metadata: { 
+      section: 'work',
+      company: 'bilisim',
+      role: 'fullstack'
+    }
+  }),
+
+  new Document({
+    pageContent: `CUBICL - FULL-STACK SOFTWARE ENGINEER (June 2019 - June 2021)
+On-Site in Ankara, Turkey
+
+At Cubicl, I was instrumental in building a JIRA-alternative task management SaaS from the ground up.
+
+Key Achievements:
+• Built the complete frontend in close collaboration with UI/UX designers
+• Developed RESTful APIs, background jobs, and database logic using NestJS and MongoDB
+• Integrated external services including SMS gateways, Google Drive, and email (SMTP/IMAP)
+• Replaced an expensive third-party SaaS by building a custom real-time push server with Socket.io
+• Designed and implemented the MongoDB schema with proper indexing for performance
+
+Technologies: TypeScript, React, Redux, MongoDB, NestJS, Express.js, Node.js, Socket.io, Docker, AWS`,
+    metadata: { 
+      section: 'work',
+      company: 'cubicl',
+      role: 'fullstack'
+    }
+  }),
+
+  new Document({
+    pageContent: `TECHNICAL SKILLS & EXPERTISE
+
+Primary Strengths:
+• Backend Development: Node.js, NestJS, TypeScript, Express.js - extensive experience building scalable APIs and microservices
+• Frontend Development: React, Next.js, Redux, TypeScript - strong skills in building modern web applications
+• Databases: PostgreSQL, MongoDB, Redis - proficient in both SQL and NoSQL databases
+
+Additional Technologies:
+• Languages: JavaScript/TypeScript (expert), Java (commercial experience), Go (commercial experience)
+• Backend Frameworks: Spring Boot, NestJS, Express.js
+• Infrastructure: AWS, GCP, Docker, Kubernetes, Terraform
+• Message Queues: Kafka, Redis Pub/Sub
+• Monitoring: New Relic, Jaeger
+• Testing: Jest, integration testing, unit testing
+• Real-time: Socket.io, WebSockets
+
+Specializations:
+• Building and optimizing high-performance backend services
+• Reducing API latency through caching and database optimization
+• Event-driven microservices architecture
+• Scalability improvements and cost optimization`,
+    metadata: { 
+      section: 'skills',
+      topics: ['technologies', 'expertise', 'skills']
+    }
+  }),
+
+  new Document({
+    pageContent: `EDUCATION & CERTIFICATIONS
+
+Bachelor of Science in Computer Engineering
+Baskent University, Ankara, Turkey
+2012 - 2018
+
+High School Diploma
+TED Ankara College Private High School, Ankara, Turkey
+2008 - 2012
+
+Professional Certificate
+Bournemouth Business School International, Bournemouth, UK (Summer 2015)
+• Science, Mathematics & IT: DISTINCTION
+• Business Skills: CREDIT`,
+    metadata: { 
+      section: 'education'
+    }
+  }),
+
+  new Document({
+    pageContent: `PROJECT HIGHLIGHTS & ACHIEVEMENTS
+
+Performance Optimization:
+• Reduced API response times by up to 60% through caching and query optimization
+• Cut cloud infrastructure costs by optimizing resource usage and implementing auto-scaling
+• Improved performance monitoring with New Relic
+
+Architecture & Scalability:
+• Designed event-driven microservices handling millions of requests daily
+• Built robust data pipelines for batch processing
+• Implemented BFF pattern to decouple mobile apps from backend changes
+
+Code Quality:
+• Increased test coverage significantly across multiple projects
+• Built reusable component libraries reducing development time
+• Mentored junior developers on best practices`,
+    metadata: { 
+      section: 'achievements'
+    }
   })
 ];
 
-// Work experience data with structured information
-const workExperienceData = [
-  {
-    role: 'Backend Software Engineer',
-    company: 'getir',
-    location: 'Hybrid (Ankara, Turkey)',
-    startDate: 'August 2023',
-    endDate: 'June 2025',
-    description: [
-      'Maintained and developed event-driven backend microservices (Node.js, Java, Go) on AWS for a large-scale e-commerce platform.',
-      'Integrated Google Vertex AI Search for commerce to improve product search relevance and accuracy.',
-      'Built a batch data pipeline using BigQuery, Cloud Scheduler, and Workflows for periodic data ingestion.',
-      'Developed BFF services to control mobile app pages from the backend, reducing the need for frequent app releases.'
-    ],
-    technologies: ['NestJS', 'Node.js', 'Spring Boot', 'MongoDB', 'PostgreSQL', 'Redis', 'Kafka', 'Kubernetes', 'Terraform', 'AWS', 'GCP', 'New Relic']
-  },
-  {
-    role: 'Frontend Software Engineer',
-    company: 'getir',
-    location: 'Remote',
-    startDate: 'January 2023',
-    endDate: 'August 2023',
-    description: [
-      'Helped build web and admin apps using React and Nx for a large e-commerce platform.',
-      'Refactored untestable parts of a Next.js app and added tests to improve test coverage and reliability.',
-      'Built a flexible, reusable component library in React to speed up UI development.'
-    ],
-    technologies: ['Typescript', 'React', 'Next.js', 'Redux', 'Redux-Saga', 'Jest', 'Storybook', 'styled-components', 'Node.js', 'New Relic']
-  },
-  {
-    role: 'Full-stack Software Engineer',
-    company: 'bilisim inc.',
-    location: 'On-Site (Ankara, Turkey)',
-    startDate: 'June 2021',
-    endDate: 'January 2023',
-    description: [
-      'Built and maintained React apps of an HR management SaaS used by employees and admins.',
-      'Extracted replicated React components (buttons, inputs, etc.) into reusable libraries shared across teams.',
-      'Increased the accessibility of internal UI tools by simplifying their APIs and adding examples.',
-      'Reduced unnecessary backend requests by adding client-side caching for common data.',
-      'Helped with backend features when needed, working closely with the backend team.'
-    ],
-    technologies: ['React', 'Typescript', 'Java', 'Spring Boot', 'PostgreSQL', 'Docker', 'Jaeger', 'Vault']
-  },
-  {
-    role: 'Full-stack Software Engineer',
-    company: 'cubicl',
-    location: 'On-Site (Ankara, Turkey)',
-    startDate: 'June 2019',
-    endDate: 'June 2021',
-    description: [
-      'Built the frontend of a JIRA-alternative, user-friendly task management SaaS in collaboration with UI/UX designers.',
-      'Developed REST APIs, background jobs, and database logic using NestJS for core app features.',
-      'Integrated external services like SMS gateways, Google Drive, and email (SMTP/IMAP).',
-      'Replaced a 3rd-party SaaS dependency by building a custom push server with Socket.io.'
-    ],
-    technologies: ['Typescript', 'React', 'Redux', 'MongoDB', 'NestJS', 'Express.js', 'Node.js', 'Docker', 'AWS']
+// ============================================
+// 3. CONVERSATION MANAGER
+// ============================================
+
+class ConversationManager {
+  private history: ConversationMessage[] = [];
+  private maxHistoryLength: number = 10;
+
+  addMessage(role: 'user' | 'assistant', content: string): void {
+    this.history.push({ role, content, timestamp: new Date() });
+    if (this.history.length > this.maxHistoryLength) {
+      this.history = this.history.slice(-this.maxHistoryLength);
+    }
   }
-];
 
-// Create work experience chunks with rich metadata
-const createWorkExperienceChunks = () => {
-  const documents: Document[] = [];
-  
-  workExperienceData.forEach((exp, index) => {
-    // Create a full role chunk with all context
-    const fullContext = `
-    ROLE: ${exp.role}
-    COMPANY: ${exp.company}
-    LOCATION: ${exp.location}
-    START-DATE: ${exp.startDate}
-    END-DATE: ${exp.endDate}
-    DESCRIPTION:
-    ${exp.description.map(d => `- ${d}`).join('\n    ')}
-    TECHNOLOGIES: ${exp.technologies.join(', ')}
-    `;
-    
-    documents.push(new Document({
-      pageContent: fullContext.trim(),
-      metadata: {
-        category: Category.WORK_EXPERIENCE,
-        company: exp.company,
-        role: exp.role,
-        startDate: exp.startDate,
-        endDate: exp.endDate,
-        technologies: exp.technologies,
-        x: exp.location,
-        chunkType: WorkExperienceChunkType.FULL,
-        experienceIndex: index
-      }
-    }));
-    
-    // Create individual achievement chunks for better granularity
-    exp.description.forEach((achievement, achIndex) => {
-      const achievementChunk = `
-      ROLE: ${exp.role}
-      COMPANY: ${exp.company}
-      START-DATE: ${exp.startDate}
-      END-DATE: ${exp.endDate}
-      ACHIEVEMENT: ${achievement}
-      TECHNOLOGIES: ${exp.technologies.join(', ')}
-      `;
-      
-      documents.push(new Document({
-        pageContent: achievementChunk.trim(),
-        metadata: {
-          category: Category.WORK_EXPERIENCE,
-          company: exp.company,
-          role: exp.role,
-          startDate: exp.startDate,
-          endDate: exp.endDate,
-          technologies: exp.technologies,
-          chunkType: WorkExperienceChunkType.ACHIEVEMENT,
-          experienceIndex: index,
-          achievementIndex: achIndex
-        }
-      }));
-    });
-    
-    // Create technology-focused chunks
-    const techChunk = `
-    ROLE: ${exp.role}
-    COMPANY: ${exp.company}
-    START-DATE: ${exp.startDate}
-    END-DATE: ${exp.endDate}
-    TECHNOLOGIES USED: ${exp.technologies.join(', ')}
-    CONTEXT: Worked with these technologies at ${exp.company} as a ${exp.role}
-    `;
-    
-    documents.push(new Document({
-      pageContent: techChunk.trim(),
-      metadata: {
-        category: Category.WORK_EXPERIENCE,
-        company: exp.company,
-        role: exp.role,
-        startDate: exp.startDate,
-        endDate: exp.endDate,
-        technologies: exp.technologies,
-        chunkType: WorkExperienceChunkType.TECHNOLOGIES,
-        experienceIndex: index
-      }
-    }));
-  });
-  
-  return documents;
-};
+  getHistory(lastN: number = 6): ConversationMessage[] {
+    return this.history.slice(-lastN);
+  }
 
-// Education data structured for better chunking
-const educationData = {
-  degrees: [
-    {
-      degree: 'B.Sc. in Computer Engineering',
-      institution: 'Baskent University',
-      location: 'Ankara, Turkey',
-      period: '2012-2018'
-    },
-    {
-      degree: 'High School Diploma',
-      institution: 'TED Ankara College Private High School',
-      location: 'Ankara, Turkey',
-      period: '2008-2012'
+  formatHistory(): string {
+    const recent = this.getHistory();
+    if (recent.length === 0) return 'No previous conversation.';
+    return recent.map(m => `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.content}`).join('\n');
+  }
+
+  clear(): void {
+    this.history = [];
+  }
+
+  getLastUserMessage(): string | null {
+    for (let i = this.history.length - 1; i >= 0; i--) {
+      if (this.history[i].role === 'user') return this.history[i].content;
     }
-  ],
-  certificates: [
-    {
-      name: 'Bournemouth Business School International',
-      location: 'Bournemouth, UK',
-      period: 'Summer 2015',
-      subjects: [
-        { name: 'Science, Mathematics & IT', grade: 'DISTINCTION' },
-        { name: 'Business Skills', grade: 'CREDIT' }
-      ]
-    }
-  ]
-};
+    return null;
+  }
+}
 
-// Create education chunks with metadata
-const createEducationChunks = () => {
-  const documents: Document[] = [];
-  
-  // Full education chunk
-  const fullEducation = `
-    EDUCATION:
-    ${educationData.degrees.map(d => `- ${d.degree}, ${d.institution}, ${d.location} (${d.period})`).join('\n    ')}
+// ============================================
+// 4. QUERY ENHANCEMENT
+// ============================================
 
-    CERTIFICATES:
-    ${educationData.certificates.map(c => 
-      `- ${c.name}, ${c.location} (${c.period})\n    ${c.subjects.map(s => `${s.name}: ${s.grade}`).join('\n    ')}`
-    ).join('\n    ')}
-  `;
-  
-  documents.push(new Document({
-    pageContent: fullEducation.trim(),
-    metadata: {
-      category: Category.EDUCATION,
-      chunkType: EducationChunkType.FULL
-    }
-  }));
-  
-  // Individual degree chunks
-  educationData.degrees.forEach((degree, index) => {
-    const degreeChunk = `
-    DEGREE: ${degree.degree}
-    INSTITUTION: ${degree.institution}
-    LOCATION: ${degree.location}
-    PERIOD: ${degree.period}
-    `;
-    
-    documents.push(new Document({
-      pageContent: degreeChunk.trim(),
-      metadata: {
-        category: Category.EDUCATION,
-        chunkType: EducationChunkType.DEGREE,
-        degreeIndex: index
+class QueryEnhancer {
+  static enhanceQuery(query: string, conversationManager: ConversationManager): string {
+    const lower = query.toLowerCase().trim();
+    const vaguePatterns = [
+      'more', 'details', 'tell me more', 'elaborate', 'explain',
+      'continue', 'what else', 'anything else', 'expand'
+    ];
+
+    const isVague = vaguePatterns.some(p => lower.includes(p) && lower.length < 50);
+
+    if (isVague) {
+      const lastMsg = conversationManager.getLastUserMessage();
+      if (lastMsg && lastMsg !== query) {
+        return `${lastMsg} - provide more detailed information`;
       }
-    }));
-  });
-  
-  // Certificate chunks
-  educationData.certificates.forEach((cert, index) => {
-    cert.subjects.forEach((subject, subIndex) => {
-      const certChunk = `
-      CERTIFICATE: ${cert.name}
-      LOCATION: ${cert.location}
-      PERIOD: ${cert.period}
-      SUBJECT: ${subject.name}
-      GRADE: ${subject.grade}
-      `;
-      
-      documents.push(new Document({
-        pageContent: certChunk.trim(),
-        metadata: {
-          category: Category.EDUCATION,
-          chunkType: EducationChunkType.CERTIFICATE,
-          certificateIndex: index,
-          subjectIndex: subIndex
-        }
-      }));
-    });
-  });
-  
-  return documents;
-};
+    }
+
+    return query;
+  }
+}
+
+
+// ============================================
+// 7. EXAMPLE USAGE
+// ============================================
+
+/*
+// Usage example:
+const GEMINI_API_KEY = 'your-api-key-here';
+
+async function main() {
+  // Initialize the system
+  const ragSystem = await initializeRAGSystem(GEMINI_API_KEY);
+
+  // First question
+  const response1 = await ragSystem.chat('tell me about yourself');
+  console.log('Response 1:', response1);
+
+  // Follow-up question
+  const response2 = await ragSystem.chat('more details');
+  console.log('Response 2:', response2);
+
+  // Another question
+  const response3 = await ragSystem.chat('what technologies do you know?');
+  console.log('Response 3:', response3);
+
+  // Clear history if needed
+  ragSystem.clearHistory();
+}
+
+main();
+*/
+
 
 const embeddings = new GoogleGenerativeAIEmbeddings({
   model: "gemini-embedding-001",
@@ -305,10 +554,13 @@ const embeddings = new GoogleGenerativeAIEmbeddings({
 
 const vectorStore = new MemoryVectorStore(embeddings);
 
-await vectorStore.addDocuments([
-  ...createInfoChunks(),
-  ...createWorkExperienceChunks(),
-  ...createEducationChunks()
-])
+await vectorStore.addDocuments(createResumeChunks())
 
 export { vectorStore };
+
+// Export everything
+export {
+  ConversationManager,
+  QueryEnhancer,
+  createResumeChunks,
+};

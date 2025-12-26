@@ -2,7 +2,7 @@ import { AIMessage, createAgent, HumanMessage } from 'langchain';
 import { ChatOllama } from '@langchain/ollama';
 import { ChatGoogleGenerativeAI } from '@langchain/google-genai';
 
-import Tools from './tools';
+import { getInfoTool, getToolsArray } from './tools';
 import Config from './config';
 
 const provider = Config.provider;
@@ -36,7 +36,7 @@ const getModel = () => {
 
 const agent = createAgent({
   model: getModel(),
-  tools: Object.values(Tools),
+  tools: getToolsArray(),
   systemPrompt: `
       You are Barkin Buyuksagin. Answer questions naturally and conversationally as if you are speaking directly to the person asking.
 

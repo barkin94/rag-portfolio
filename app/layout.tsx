@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import "./globals.css";
-import Header from "./_components/Header";
+import { cookies } from "next/headers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -18,18 +18,19 @@ export const metadata: Metadata = {
   title: "Barkin Buyuksagin",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const isDark = (await cookies()).get('isDark')?.value === 'true';
+
   return (
-    <html lang="en">
+    <html lang="en" className={isDark ? 'dark' : ''}>
       {process.env.NODE_ENV === 'production' && <SpeedInsights/>}
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Header />
         {children}
       </body>
     </html>

@@ -117,7 +117,7 @@ const Input: React.FC<InputProps> = ({
   }
 
   return (
-    <div className="w-full end p-4 border-t border-slate-200 dark:border-slate-800 transition duration-300">
+    <div className="w-full end p-4 transition duration-300 border-t border-stone-200 dark:border-stone-800">
       {error && (
         <div 
           className="max-w-4xl mx-auto mb-3 p-3 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900/50 rounded-xl text-red-700 dark:text-red-400 text-sm flex items-center justify-between backdrop-blur-sm"
@@ -142,8 +142,8 @@ const Input: React.FC<InputProps> = ({
             onKeyDown={handleKeyDown}
             placeholder="Ask me anything..."
             className="w-full resize-none overflow-y-hidden p-4 text-base 
-                        bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-slate-100 
-                        border border-slate-200 dark:border-slate-700 rounded-3xl 
+                        bg-background text-foreground
+                        rounded-3xl 
                         focus:outline-none focus:ring-2 focus:ring-indigo-500/50 dark:focus:ring-indigo-400/50
                         focus:border-indigo-300 dark:focus:border-indigo-600
                         transition duration-300 placeholder:text-slate-400 dark:placeholder:text-slate-500
@@ -176,7 +176,7 @@ const Input: React.FC<InputProps> = ({
             className={`p-3 rounded-full shadow-md transition-all duration-300 
                   ${inputValue.trim() && !isLoading
                 ? 'bg-linear-to-br from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500/50'
-                : 'bg-slate-200 dark:bg-slate-700 text-slate-400 dark:text-slate-500 cursor-not-allowed'
+                : 'bg-background text-foreground cursor-not-allowed'
               }`}
             aria-label="Send message"
           >
