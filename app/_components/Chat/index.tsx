@@ -1,8 +1,10 @@
 'use client';
 
-import React, { useCallback, useReducer } from "react";
+import React, { useCallback, useReducer, useRef, useState } from "react";
 import Input from "./Input";
 import Messages, { Message } from "./Messages";
+
+const decoder = new TextDecoder();
 
 type ChatState = {
   isOpen: boolean;
@@ -107,6 +109,9 @@ const Chat: React.FC<{ initialMessages: Message[] }> = ({ initialMessages = [] }
     isOpen: false,
   });
 
+  const [error, setError] = useState<string | null>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
+
   const handleChatIconClicked = () => {
     dispatch({ type: 'OPEN_CHAT' });
   }
@@ -119,21 +124,77 @@ const Chat: React.FC<{ initialMessages: Message[] }> = ({ initialMessages = [] }
     dispatch({ type: 'RESET_CHAT' });
   }  
 
-  const handleSendClicked = useCallback((input: string) => {
-    dispatch({ type: 'SEND_MESSAGE', payload: input });
-  }, []);
+  const handleSend = useCallback(async (prompt: string) => {
+    dispatch({ type: 'SEND_MESSAGE', payload: prompt });
+    setError(null);
 
-  const handleResponse = useCallback(() => {
-    dispatch({ type: 'START_RESPONSE' });
-  }, []);
+    // Convert client messages to server format (owner -> type)
+    // Only send previous conversation history, not the current prompt
+    const serverMessages = state.messages.map(msg => ({
+      type: msg.owner,
+      content: msg.content
+    }));
 
-  const handleResponseChunkRetrieved = useCallback((chunk: string) => {
-    dispatch({ type: 'CHUNK_RETRIEVED', payload: chunk });
-  }, []);
+    // Create new abort controller for this request
+    abortControllerRef.current = new AbortController();
 
-  const handleResponseChunkRetrievalDone = useCallback(() => {
+    try {
+      const response = await fetch('/api/prompt', {
+        signal: abortControllerRef.current.signal,
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt, messages: serverMessages }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Server error: ${response.status} ${response.statusText}`);
+      }
+
+      if (!response.body) {
+        throw new Error('No response body received');
+      }
+
+      dispatch({ type: 'START_RESPONSE' });
+
+      const reader = response.body.getReader();
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) {
+          dispatch({ type: 'DONE_RETRIEVING' });
+          break;
+        }
+
+        const chunk = decoder.decode(value, { stream: true });
+        dispatch({ type: 'CHUNK_RETRIEVED', payload: chunk });
+      }
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        if (err.name === 'AbortError') {
+          // Request was cancelled, don't show error
+          return;
+        }
+        setError(err.message || 'Failed to send message. Please try again.');
+      } else {
+        setError('An unexpected error occurred. Please try again.');
+      }
+      dispatch({ type: 'DONE_RETRIEVING' });
+    }
+  }, [state.messages]);
+
+  const handleCancel = useCallback(() => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      abortControllerRef.current = null;
+    }
     dispatch({ type: 'DONE_RETRIEVING' });
+    setError(null);
   }, []);
+
+  const handleDismissError = useCallback(() => {
+    setError(null);
+  }, []);
+
 
   const chatHeightClass = state.isOpen ? 'h-9/10 lg:h-4/5' : 'h-0';
 
@@ -177,10 +238,11 @@ const Chat: React.FC<{ initialMessages: Message[] }> = ({ initialMessages = [] }
             loading={state.streamingMessage.loading}
           />
           <Input
-            onSendClicked={handleSendClicked}
-            onResponse={handleResponse}
-            onResponseChunkRetrieved={handleResponseChunkRetrieved}
-            onResponseChunkRetrievalDone={handleResponseChunkRetrievalDone}
+            isLoading={state.streamingMessage.loading}
+            error={error}
+            onSend={handleSend}
+            onCancel={handleCancel}
+            onDismissError={handleDismissError}
           />
       </section>
     </>

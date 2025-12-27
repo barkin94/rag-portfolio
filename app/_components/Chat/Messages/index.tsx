@@ -19,14 +19,6 @@ type MessagesProps = {
 const Messages: React.FC<MessagesProps> = ({ initialMessages, streamedMessage, loading }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // This code only runs on the client/browser
-  // useEffect(() => {
-  //   setTimeout(() => localStorage.removeItem('closeEvent'), 10000);
-    
-  //   window.addEventListener('beforeunload', (event) => {
-  //     navigator.sendBeacon('/api/close');
-  //   })
-  // }, []);
 
   // useEffect(() => {
   //   messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });

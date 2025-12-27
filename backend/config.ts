@@ -13,8 +13,4 @@ export default {
         temperature: parseInt(env.OLLAMA_TEMPERATURE ?? '0.1'),
         baseUrl: env.OLLAMA_BASE_URL ?? 'http://localhost:11434',
     },
-    redis: {
-        url: env.REDIS_URL ?? '',
-        messagesTTLSeconds: parseInt(env.REDIS_MESSAGES_TTL_SECONDS ?? '3000')
-    }
 }

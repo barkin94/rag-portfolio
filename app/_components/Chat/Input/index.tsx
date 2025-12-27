@@ -2,23 +2,19 @@
 
 import { useState, useRef, useEffect } from "react";
 
-const decoder = new TextDecoder();
-
 interface InputProps {
-  onSendClicked: (input: string) => void
-  onResponse: () => void
-  onResponseChunkRetrieved: (chunk: string) => void
-  onResponseChunkRetrievalDone: () => void
+  isLoading: boolean
+  error: string | null
+  onSend: (prompt: string) => Promise<void>
+  onCancel: () => void
+  onDismissError: () => void
 }
 
 const Input: React.FC<InputProps> = ({
-  onResponseChunkRetrieved, onSendClicked, onResponse, onResponseChunkRetrievalDone
+  isLoading, error, onSend, onCancel, onDismissError
 }) => {
   const [inputValue, setInputValue] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
-  const abortControllerRef = useRef<AbortController | null>(null)
   const [isTouchDevice, isSetTouchDevice] = useState(false);
 
   // This code only runs on the client/browser
@@ -44,59 +40,8 @@ const Input: React.FC<InputProps> = ({
       return;
     }
 
-    setError(null)
     setInputValue('')
-    setIsLoading(true)
-    onSendClicked(prompt.toString())
-
-    // Create new abort controller for this request
-    abortControllerRef.current = new AbortController()
-
-    try {
-      const response = await fetch('/api/prompt', {
-        signal: abortControllerRef.current.signal,
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt }),
-      })
-
-      if (!response.ok) {
-        throw new Error(`Server error: ${response.status} ${response.statusText}`)
-      }
-
-      if (!response.body) {
-        throw new Error('No response body received')
-      }
-
-      onResponse()
-
-      const reader = response.body.getReader()
-
-      while (true) {
-        const { done, value } = await reader.read()
-        if (done) {
-          onResponseChunkRetrievalDone()
-          setIsLoading(false)
-          break;
-        }
-
-        const chunk = decoder.decode(value, { stream: true });
-        onResponseChunkRetrieved(chunk)
-      }
-
-    } catch (err: unknown) {
-      setIsLoading(false)
-      if (err instanceof Error) {
-        if (err.name === 'AbortError') {
-          // Request was cancelled, don't show error
-          return
-        }
-        setError(err.message || 'Failed to send message. Please try again.')
-      } else {
-        setError('An unexpected error occurred. Please try again.')
-      }
-      onResponseChunkRetrievalDone()
-    }
+    await onSend(prompt)
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -107,13 +52,7 @@ const Input: React.FC<InputProps> = ({
   }
 
   const handleCancel = () => {
-    if (abortControllerRef.current) {
-      abortControllerRef.current.abort()
-      abortControllerRef.current = null
-    }
-    setIsLoading(false)
-    setError(null)
-    onResponseChunkRetrievalDone()
+    onCancel()
   }
 
   return (
@@ -125,7 +64,7 @@ const Input: React.FC<InputProps> = ({
         >
           <span>{error}</span>
           <button
-            onClick={() => setError(null)}
+            onClick={onDismissError}
             className="ml-4 text-red-700 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300 transition-colors"
             aria-label="Dismiss error"
           >

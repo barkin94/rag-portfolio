@@ -1,14 +1,12 @@
 import { AIMessage, HumanMessage } from "langchain"
-import { RedisMessage } from "./redis"
 
-const redisToLangchain = (messages: RedisMessage[]) =>
+export type Message = {
+  type: 'ai' | 'human'
+  content: string
+}
+
+const toLangchain = (messages: Message[]) =>
   messages.map(m => new (getMessageConstructor(m.type))(m.content))
-
-const langchainToRedis = (messages: (AIMessage | HumanMessage)[]) =>
-  messages.map(({ type, content }) => ({
-    type, content
-  }))
-
 
 const getMessageConstructor = (type: string) => {
   switch (type) {
@@ -18,4 +16,4 @@ const getMessageConstructor = (type: string) => {
   }
 }
 
-export default { redisToLangchain, langchainToRedis }
+export default { toLangchain }
