@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 
 interface InputProps {
+  isFocused: boolean,
   isLoading: boolean
   error: string | null
   onSend: (prompt: string) => Promise<void>
@@ -11,7 +12,7 @@ interface InputProps {
 }
 
 const Input: React.FC<InputProps> = ({
-  isLoading, error, onSend, onCancel, onDismissError
+  isFocused, isLoading, error, onSend, onCancel, onDismissError
 }) => {
   const [inputValue, setInputValue] = useState('')
   const textareaRef = useRef<HTMLTextAreaElement>(null)
@@ -32,6 +33,10 @@ const Input: React.FC<InputProps> = ({
       textareaRef.current.style.height = `${Math.min(scrollHeight, 200)}px`
     }
   }, [inputValue])
+
+  if(textareaRef.current) {
+    isFocused ? textareaRef.current.focus() : textareaRef.current.blur()
+  }
 
   const handleSend = async () => {
     const prompt = inputValue.trim()

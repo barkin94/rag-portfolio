@@ -238,6 +238,7 @@ const Chat: React.FC<{ initialMessages: Message[] }> = ({ initialMessages = [] }
             loading={state.streamingMessage.loading}
           />
           <Input
+            isFocused={state.isOpen}
             isLoading={state.streamingMessage.loading}
             error={error}
             onSend={handleSend}
