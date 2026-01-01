@@ -61,7 +61,7 @@ const Input: React.FC<InputProps> = ({
   }
 
   return (
-    <div className="w-full end p-4 transition duration-300 border-t border-stone-200 dark:border-stone-800">
+    <div className="w-full end p-4 transition duration-300 border-t border-slate-200 dark:border-slate-800">
       {error && (
         <div 
           className="max-w-4xl mx-auto mb-3 p-3 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900/50 rounded-xl text-red-700 dark:text-red-400 text-sm flex items-center justify-between backdrop-blur-sm"
@@ -87,10 +87,10 @@ const Input: React.FC<InputProps> = ({
             placeholder="Ask me anything..."
             className="w-full resize-none overflow-y-hidden p-4 text-base 
                         bg-background text-foreground
-                        rounded-3xl border border-stone-200 dark:border-stone-700
-                        focus:outline-none focus:ring-stone-500/50 dark:focus:ring-stone-400/50
-                        focus:border-stone-400 dark:focus:border-stone-500
-                        transition duration-300 placeholder:text-stone-400 dark:placeholder:text-stone-500
+                        rounded-3xl border border-slate-200 dark:border-slate-700
+                        focus:outline-none focus:ring-slate-500/50 dark:focus:ring-slate-400/50
+                        focus:border-slate-400 dark:focus:border-slate-500
+                        transition duration-300 placeholder:text-slate-400 dark:placeholder:text-slate-500
                         disabled:opacity-50 disabled:cursor-not-allowed shadow-inner h-min-[52px]"
             style={{ height: '56px', maxHeight: '200px' }}
             aria-label="Message input"
@@ -105,9 +105,9 @@ const Input: React.FC<InputProps> = ({
           <button
             onClick={handleCancel}
             type="button"
-            className="p-3 rounded-full shadow-lg shadow-stone-900/20 dark:shadow-stone-950/50 transition-all duration-300 
-                      bg-stone-500 hover:bg-stone-600 dark:bg-stone-600 dark:hover:bg-stone-700 
-                      text-white transform hover:scale-105 hover:shadow-xl hover:shadow-stone-900/30 dark:hover:shadow-stone-950/70 focus:outline-none focus:ring-2 focus:ring-stone-400"
+            className="p-3 rounded-full shadow-lg shadow-slate-900/20 dark:shadow-slate-950/50 transition-all duration-300 
+                      bg-slate-500 hover:bg-slate-600 dark:bg-slate-600 dark:hover:bg-slate-700 
+                      text-white transform hover:scale-105 hover:shadow-xl hover:shadow-slate-900/30 dark:hover:shadow-slate-950/70 focus:outline-none focus:ring-2 focus:ring-slate-400"
             aria-label="Cancel request"
           >
             <CancelIcon className="w-6 h-6" />
@@ -117,9 +117,9 @@ const Input: React.FC<InputProps> = ({
             onClick={handleSend}
             type="submit"
             disabled={!inputValue.trim() || isLoading}
-            className={`p-3 rounded-full shadow-lg shadow-stone-900/20 dark:shadow-stone-950/50 transition-all duration-300 
+            className={`p-3 rounded-full shadow-lg shadow-slate-900/20 dark:shadow-slate-950/50 transition-all duration-300 
                   ${inputValue.trim() && !isLoading
-                ? 'bg-stone-600 dark:bg-stone-700 hover:bg-stone-700 dark:hover:bg-stone-600 text-white transform hover:scale-105 hover:shadow-xl hover:shadow-stone-900/30 dark:hover:shadow-stone-950/70 focus:outline-none focus:ring-2 focus:ring-stone-500/50'
+                ? 'bg-slate-600 dark:bg-slate-700 hover:bg-slate-700 dark:hover:bg-slate-600 text-white transform hover:scale-105 hover:shadow-xl hover:shadow-slate-900/30 dark:hover:shadow-slate-950/70 focus:outline-none focus:ring-2 focus:ring-slate-500/50'
                 : 'bg-background text-foreground cursor-not-allowed'
               }`}
             aria-label="Send message"

@@ -6,12 +6,12 @@ export default async function Header() {
   const isDark = (await cookies()).get('isDark')?.value === '1';
 
   return (
-    <header className="w-full border-b border-stone-200 dark:border-stone-800 sticky top-0 z-50 shadow-sm backdrop-blur">
+    <header className="w-full border-b border-slate-200 dark:border-slate-800 sticky top-0 z-50 shadow-sm backdrop-blur">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Left Division - Name */}
           <div className="flex items-center justify-center flex-1">
-            <h4 className="text-xl font-bold text-stone-900 dark:text-stone-100">
+            <h4 className="text-xl font-bold text-slate-900 dark:text-slate-100">
               Barkin Buyuksagin
             </h4>
           </div>

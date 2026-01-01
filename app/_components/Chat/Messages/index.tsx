@@ -43,13 +43,13 @@ const Messages: React.FC<MessagesProps> = ({ initialMessages, streamedMessage, l
             I am a bot, ask me anything about my portfolio, experience, or projects. I'm here to help!
           </p>
           <div className="flex flex-wrap gap-2 justify-center">
-            <span className="px-4 py-2 bg-background text-foreground rounded-full text-sm hover:bg-stone-200 dark:hover:bg-stone-700/50 transition-colors">
+            <span className="px-4 py-2 bg-background text-foreground rounded-full text-sm hover:bg-slate-200 dark:hover:bg-slate-700/50 transition-colors">
               "Tell me about your experience"
             </span>
-            <span className="px-4 py-2 bg-background text-foreground rounded-full text-sm hover:bg-stone-200 dark:hover:bg-stone-700/50 transition-colors">
+            <span className="px-4 py-2 bg-background text-foreground rounded-full text-sm hover:bg-slate-200 dark:hover:bg-slate-700/50 transition-colors">
               "What projects have you worked on?"
             </span>
-            <span className="px-4 py-2 bg-background text-foreground rounded-full text-sm hover:bg-stone-200 dark:hover:bg-stone-700/50 transition-colors">
+            <span className="px-4 py-2 bg-background text-foreground rounded-full text-sm hover:bg-slate-200 dark:hover:bg-slate-700/50 transition-colors">
               "What technologies do you use?"
             </span>
           </div>
@@ -65,7 +65,7 @@ const Messages: React.FC<MessagesProps> = ({ initialMessages, streamedMessage, l
             <div
               className={`rounded-2xl px-4 py-3 shadow-sm ${
                 owner === 'human'
-                  ? 'bg-stone-600 dark:bg-stone-700 text-white rounded-br-sm max-w-7/10'
+                  ? 'bg-slate-600 dark:bg-slate-700 text-white rounded-br-sm max-w-7/10'
                   : 'bg-background text-foreground rounded-bl-sm'
               }`}
               role={owner === 'human' ? 'user-message' : 'assistant-message'}
