@@ -1,39 +1,22 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useTransition } from 'react';
+import { setThemeCookie } from '@/app/actions';
 
-export default function ThemeToggleButton() {
-  const [isDark, setIsDark] = useState(false);
-
-  useEffect(() => {
-    // Check localStorage for saved theme preference
-    const savedTheme = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const shouldBeDark = savedTheme === 'dark' || (!savedTheme && prefersDark);
-    
-    setIsDark(shouldBeDark);
-  }, []);
-
-  useEffect(() => {
-    if (isDark) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [isDark]);
+const ThemeToggleButton = ({ isDark }: { isDark: boolean }) => {
+  const [isPending, startTransition] = useTransition();
 
   const toggleTheme = () => {
     const newIsDark = !isDark;
-    setIsDark(newIsDark);
+
+    startTransition(() => setThemeCookie(newIsDark));
   };
 
   return (
-    // <form action={setThemeCookie}>
-     
-    // </form>
     <button
       onClick={toggleTheme}
-      className="p-2 rounded-lg bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-stone-700 transition-colors"
+      disabled={isPending}
+      className="p-2 rounded-lg bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-stone-700 transition-colors disabled:opacity-50"
       aria-label="Toggle dark mode"
     >
       {!isDark ? (
@@ -49,3 +32,4 @@ export default function ThemeToggleButton() {
   );
 }
 
+export default ThemeToggleButton;

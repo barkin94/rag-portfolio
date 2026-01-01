@@ -1,7 +1,9 @@
 import ThemeToggleButton from './ThemeToggleButton'
 import NavLinks from './NavLinks';
+import { cookies } from 'next/headers';
 
-export default function Header() {
+export default async function Header() {
+  const isDark = (await cookies()).get('isDark')?.value === '1';
 
   return (
     <header className="w-full border-b border-stone-200 dark:border-stone-800 sticky top-0 z-50 shadow-sm backdrop-blur">
@@ -19,7 +21,7 @@ export default function Header() {
 
           {/* Right Division - Theme Toggle */}
           <div className="flex items-center justify-center flex-1">
-            <ThemeToggleButton />
+            <ThemeToggleButton isDark={isDark} />
           </div>
         </div>
       </div>
