@@ -10,9 +10,9 @@ export default function Home() {
           <h1 className="text-4xl md:text-5xl md:leading-16 font-black bg-clip-text mb-6 lg:mb-8">
             <TypingText
               textArray={[
-                "Hello!",
+                "Hello! 👋",
                 "I'm Barkin.",
-                "👋 Welcome",
+                "Welcome to my portfolio!",
                 //"This is a very long multi-line test."
               ]}
             />
@@ -23,11 +23,6 @@ export default function Home() {
         </div>
 
         <div className="col-span-1">
-          {/* <div className="mb-4">
-      <span className="text-sm font-semibold text-slate-700 dark:text-slate-300 bg-slate-200 dark:bg-slate-800 px-4 py-1.5 rounded-full">
-        👋 Welcome
-      </span>
-    </div> */}
           <Image
             src="/1727656649134.jpeg"
             alt="user picture"
