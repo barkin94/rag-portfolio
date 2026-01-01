@@ -207,6 +207,7 @@ const Chat: React.FC = () => {
       </button>
 
       <section
+        id="chat"
         className={`flex flex-col z-50 transition-[height] ease-in-out duration-1000 ${chatHeightClass} fixed bottom-0 right-0 lg:right-4 w-full lg:w-3/4 xl:w-2/5 bg-background rounded-3xl shadow-2xl shadow-blue-700/30  border border-stone-200 dark:border-stone-800 overflow-hidden`}
         aria-label="Chat interface"
       >
