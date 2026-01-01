@@ -72,7 +72,6 @@ export default () => (
     aria-label="About"
     role="log"
     aria-live="polite"
-    className='mx-10 lg:mx-50'
   >
     <div className="relative z-10">
       <h3 className="text-2xl font-bold text-stone-900 dark:text-stone-100 mb-4 flex items-center gap-2">

@@ -99,9 +99,9 @@ function chatReducer(state: ChatState, action: ChatAction): ChatState {
   }
 }
 
-const Chat: React.FC<{ initialMessages: Message[] }> = ({ initialMessages = [] }) => {
+const Chat: React.FC = () => {
   const [state, dispatch] = useReducer(chatReducer, {
-    messages: initialMessages,
+    messages: [],
     streamingMessage: {
       content: '',
       loading: false
