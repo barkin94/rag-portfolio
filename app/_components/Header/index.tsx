@@ -11,9 +11,9 @@ export default async function Header() {
         <div className="flex items-center justify-between h-16">
           {/* Left Division - Name */}
           <div className="flex items-center justify-center flex-1">
-            <h1 className="text-xl font-bold text-stone-900 dark:text-stone-100">
+            <h4 className="text-xl font-bold text-stone-900 dark:text-stone-100">
               Barkin Buyuksagin
-            </h1>
+            </h4>
           </div>
 
           {/* Middle Division - Navigation Links */}        
