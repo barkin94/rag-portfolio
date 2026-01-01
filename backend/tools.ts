@@ -106,54 +106,13 @@ enum Section {
 }
 
 // ============================================
-// TOOL HELPER FUNCTIONS
-// ============================================
-
-/**
- * Enhanced query with conversation context
- */
-function enhanceQueryWithContext(
-  query: string, 
-  conversationHistory?: Array<{role: string, content: string}>
-): string {
-  if (!conversationHistory || conversationHistory.length === 0) {
-    return query;
-  }
-
-  const recentContext = conversationHistory
-    .slice(-4)
-    .map(m => `${m.role}: ${m.content}`)
-    .join('\n');
-
-  return `${query}\n\nRecent conversation context:\n${recentContext}`;
-}
-
-/**
- * Format results with deduplication
- */
-function formatResults(results: any[]): string {
-  if (results.length === 0) {
-    return "No information found.";
-  }
-
-  // Remove duplicates based on content similarity
-  const uniqueResults = results.filter((result, index, self) => 
-    index === self.findIndex(r => r.pageContent === result.pageContent)
-  );
-
-  return uniqueResults.map(chunk => chunk.pageContent).join("\n\n---\n\n");
-}
-
-// ============================================
 // TOOL 1: GET GENERAL INFO
 // ============================================
 
 export const getInfoTool = () => tool(
-  async ({ query, includeContact, conversationHistory }) => {
-    const enhancedQuery = enhanceQueryWithContext(query, conversationHistory);
-    
+  async ({ query, includeContact }) => {
     const results = await vectorStore.similaritySearch(
-      enhancedQuery,
+      query,
       3,
       (doc) => {
         // Always include overview section
@@ -166,25 +125,26 @@ export const getInfoTool = () => tool(
       }
     );
 
-    return formatResults(results);
+    if (results.length === 0) {
+      return "No information found.";
+    }
+    return results.map(chunk => chunk.pageContent).join("\n\n---\n\n");
   },
   {
     name: 'get_info',
-    description: `Retrieves general information about Barkin - professional summary, background, expertise, and contact details.
+    description: `
+    Retrieves general information about Barkin - professional summary, background, expertise, and contact details.
     
-Use when asked about:
-- "Tell me about yourself"
-- Professional background or summary
-- Contact information (email, LinkedIn, location)
-- Work preferences or availability
-- General introduction`,
+    Use when asked about:
+    - "Tell me about yourself"
+    - Professional background or summary
+    - Contact information (email, LinkedIn, location)
+    - Work preferences or availability
+    - General introduction
+    `,
     schema: z.object({
       query: z.string().describe("What the person is asking about general information or background"),
       includeContact: z.boolean().default(false).describe("Set to true if specifically asking for contact information (email, LinkedIn, location)"),
-      conversationHistory: z.array(z.object({
-        role: z.string(),
-        content: z.string()
-      })).optional().describe("Recent conversation messages for context")
     })
   }
 );
@@ -194,11 +154,9 @@ Use when asked about:
 // ============================================
 
 export const getWorkExperienceTool = () => tool(
-  async ({ query, company, conversationHistory }) => {
-    const enhancedQuery = enhanceQueryWithContext(query, conversationHistory);
-    
+  async ({ query, company }) => {
     const results = await vectorStore.similaritySearch(
-      enhancedQuery,
+      query,
       company ? 2 : 4, // Fewer results if filtering by company
       (doc) => {
         if (doc.metadata.section !== Section.WORK) return false;
@@ -212,26 +170,27 @@ export const getWorkExperienceTool = () => tool(
       }
     );
 
-    return formatResults(results);
+    if (results.length === 0) {
+      return "No information found.";
+    }
+    return results.map(chunk => chunk.pageContent).join("\n\n---\n\n");
   },
   {
     name: 'get_work_experience',
-    description: `Retrieves work experience and career history - past jobs, companies, roles, projects, technologies used, and achievements.
+    description: `
+    Retrieves work experience and career history - past jobs, companies, roles, projects, technologies used, and achievements.
     
-Use when asked about:
-- Work history or career progression
-- Specific companies or roles
-- Projects worked on
-- Technologies and tools used professionally
-- Job responsibilities and achievements
-- Experience with specific tech stacks`,
+    Use when asked about:
+    - Work history or career progression
+    - Specific companies or roles
+    - Projects worked on
+    - Technologies and tools used professionally
+    - Job responsibilities and achievements
+    - Experience with specific tech stacks
+    `,
     schema: z.object({
       query: z.string().describe("What the person is asking about work experience, roles, companies, projects, or technologies"),
-      company: z.string().optional().describe("Specific company name if asking about a particular employer (e.g., 'Getir', 'Cubicl')"),
-      conversationHistory: z.array(z.object({
-        role: z.string(),
-        content: z.string()
-      })).optional().describe("Recent conversation messages for context")
+      company: z.string().optional().describe("Specific company name if asking about a particular employer (e.g., 'Getir', 'Cubicl')"),      
     })
   }
 );
@@ -241,34 +200,33 @@ Use when asked about:
 // ============================================
 
 export const getTechnicalSkillsTool = () => tool(
-  async ({ query, conversationHistory }) => {
-    const enhancedQuery = enhanceQueryWithContext(query, conversationHistory);
-    
+  async ({ query }) => {
     const results = await vectorStore.similaritySearch(
-      enhancedQuery,
+      query,
       2,
       (doc) => doc.metadata.section === Section.SKILLS
     );
 
-    return formatResults(results);
+    if (results.length === 0) {
+      return "No information found.";
+    }
+    return results.map(chunk => chunk.pageContent).join("\n\n---\n\n");
   },
   {
     name: 'get_technical_skills',
-    description: `Retrieves technical skills, technologies, programming languages, frameworks, and tools expertise.
-    
-Use when asked about:
-- Technical skills or stack
-- Programming languages known
-- Frameworks and libraries
-- Databases and infrastructure
-- DevOps tools
-- Specific technology expertise`,
+    description: `
+    Retrieves technical skills, technologies, programming languages, frameworks, and tools expertise.
+        
+    Use when asked about:
+    - Technical skills or stack
+    - Programming languages known
+    - Frameworks and libraries
+    - Databases and infrastructure
+    - DevOps tools
+    - Specific technology expertise
+    `,
     schema: z.object({
       query: z.string().describe("What the person is asking about technical skills, technologies, or tools"),
-      conversationHistory: z.array(z.object({
-        role: z.string(),
-        content: z.string()
-      })).optional().describe("Recent conversation messages for context")
     })
   }
 );
@@ -278,33 +236,33 @@ Use when asked about:
 // ============================================
 
 export const getEducationTool = () => tool(
-  async ({ query, conversationHistory }) => {
-    const enhancedQuery = enhanceQueryWithContext(query, conversationHistory);
-    
+  async ({ query }) => {
     const results = await vectorStore.similaritySearch(
-      enhancedQuery,
+      query,
       2,
       (doc) => doc.metadata.section === Section.EDUCATION
     );
 
-    return formatResults(results);
+    if (results.length === 0) {
+      return "No information found.";
+    }
+    return results.map(chunk => chunk.pageContent).join("\n\n---\n\n");
   },
   {
     name: 'get_education',
-    description: `Retrieves education background - degrees, universities, certifications, and academic achievements.
+    description: `
+    Retrieves education background - degrees, universities, certifications, and academic achievements.
     
-Use when asked about:
-- Education or academic background
-- University or college attended
-- Degree obtained
-- Certifications or courses
-- Where studied`,
+    Use when asked about:
+    - Education or academic background
+    - University or college attended
+    - Degree obtained
+    - Certifications or courses
+    - Where studied
+
+    `,
     schema: z.object({
       query: z.string().describe("What the person is asking about education, degrees, universities, or certifications"),
-      conversationHistory: z.array(z.object({
-        role: z.string(),
-        content: z.string()
-      })).optional().describe("Recent conversation messages for context")
     })
   }
 );
@@ -314,33 +272,32 @@ Use when asked about:
 // ============================================
 
 export const getAchievementsTool = () => tool(
-  async ({ query, conversationHistory }) => {
-    const enhancedQuery = enhanceQueryWithContext(query, conversationHistory);
-    
+  async ({ query }) => {
     const results = await vectorStore.similaritySearch(
-      enhancedQuery,
+      query,
       2,
       (doc) => doc.metadata.section === Section.ACHIEVEMENTS
     );
 
-    return formatResults(results);
+    if (results.length === 0) {
+      return "No information found.";
+    }
+    return results.map(chunk => chunk.pageContent).join("\n\n---\n\n");
   },
   {
     name: 'get_achievements',
-    description: `Retrieves notable achievements, project highlights, and significant contributions.
-    
-Use when asked about:
-- Notable achievements or accomplishments
-- Project highlights
-- Performance improvements made
-- Impact and results delivered
-- Success stories`,
+    description: `
+    Retrieves notable achievements, project highlights, and significant contributions.
+        
+    Use when asked about:
+    - Notable achievements or accomplishments
+    - Project highlights
+    - Performance improvements made
+    - Impact and results delivered
+    - Success stories
+    `,
     schema: z.object({
       query: z.string().describe("What the person is asking about achievements, accomplishments, or impact"),
-      conversationHistory: z.array(z.object({
-        role: z.string(),
-        content: z.string()
-      })).optional().describe("Recent conversation messages for context")
     })
   }
 );

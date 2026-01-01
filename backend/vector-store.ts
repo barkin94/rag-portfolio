@@ -260,7 +260,8 @@
 
 import { Document } from 'langchain';
 import { MemoryVectorStore } from "@langchain/classic/vectorstores/memory";
-import { GoogleGenerativeAIEmbeddings } from '@langchain/google-genai';
+import { HuggingFaceInferenceEmbeddings } from "@langchain/community/embeddings/hf";
+
 import Config from "./config";
 
 
@@ -515,51 +516,21 @@ class QueryEnhancer {
 }
 
 
-// ============================================
-// 7. EXAMPLE USAGE
-// ============================================
-
-/*
-// Usage example:
-const GEMINI_API_KEY = 'your-api-key-here';
-
-async function main() {
-  // Initialize the system
-  const ragSystem = await initializeRAGSystem(GEMINI_API_KEY);
-
-  // First question
-  const response1 = await ragSystem.chat('tell me about yourself');
-  console.log('Response 1:', response1);
-
-  // Follow-up question
-  const response2 = await ragSystem.chat('more details');
-  console.log('Response 2:', response2);
-
-  // Another question
-  const response3 = await ragSystem.chat('what technologies do you know?');
-  console.log('Response 3:', response3);
-
-  // Clear history if needed
-  ragSystem.clearHistory();
-}
-
-main();
-*/
-
-
-const embeddings = new GoogleGenerativeAIEmbeddings({
-  model: "gemini-embedding-001",
-  apiKey: Config.gemini.apiKey
+const embeddings = new HuggingFaceInferenceEmbeddings({
+  apiKey: Config.HF_EMBEDDINGS_API_KEY,
+  model: Config.HF_EMBEDDINGS_MODEL, 
+  provider: "hf-inference",
+  maxRetries: 3
 });
+
 
 const vectorStore = new MemoryVectorStore(embeddings);
 
 await vectorStore.addDocuments(createResumeChunks())
 
-export { vectorStore };
-
 // Export everything
 export {
+  vectorStore,
   ConversationManager,
   QueryEnhancer,
   createResumeChunks,
