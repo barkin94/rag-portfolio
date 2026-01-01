@@ -196,7 +196,7 @@ const Chat: React.FC = () => {
   }, []);
 
 
-  const chatHeightClass = state.isOpen ? 'h-9/10 lg:h-4/5' : 'h-0';
+  const chatHeightClass = state.isOpen ? 'h-9/10 lg:h-4/5' : 'h-0 bottom-[-2px]';
 
   return (
     <>
@@ -208,7 +208,7 @@ const Chat: React.FC = () => {
 
       <section
         id="chat"
-        className={`flex flex-col z-50 transition-[height] ease-in-out duration-1000 ${chatHeightClass} fixed bottom-0 right-0 lg:right-4 w-full lg:w-3/4 xl:w-2/5 bg-background rounded-3xl shadow-2xl shadow-blue-700/30  border border-slate-200 dark:border-slate-800 overflow-hidden`}
+        className={`flex flex-col z-50 transition-all ease-in-out duration-1000 ${chatHeightClass} fixed bottom-0 right-0 lg:right-4 w-full lg:w-3/4 xl:w-2/5 bg-background rounded-3xl shadow-2xl shadow-blue-700/30  border border-slate-200 dark:border-slate-800 overflow-hidden`}
         aria-label="Chat interface"
       >
         <div className="p-4 flex items-center border-b border-slate-200 dark:border-slate-800">
