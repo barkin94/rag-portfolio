@@ -119,7 +119,7 @@ const Input: React.FC<InputProps> = ({
             disabled={!inputValue.trim() || isLoading}
             className={`p-3 rounded-full shadow-lg shadow-slate-900/20 dark:shadow-slate-950/50 transition-all duration-300 
                   ${inputValue.trim() && !isLoading
-                ? 'bg-slate-600 dark:bg-slate-700 hover:bg-slate-700 dark:hover:bg-slate-600 text-white transform hover:scale-105 hover:shadow-xl hover:shadow-slate-900/30 dark:hover:shadow-slate-950/70 focus:outline-none focus:ring-2 focus:ring-slate-500/50'
+                ? 'bg-slate-600 dark:bg-slate-700 hover:bg-slate-700 dark:hover:bg-slate-600 text-white transform hover:scale-105 hover:shadow-xl hover:shadow-slate-900/30 dark:hover:shadow-slate-950/70 focus:outline-none focus:ring-2 focus:ring-slate-500/50 cursor-pointer'
                 : 'bg-background text-foreground cursor-not-allowed'
               }`}
             aria-label="Send message"

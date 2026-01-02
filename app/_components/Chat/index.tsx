@@ -195,6 +195,10 @@ const Chat: React.FC = () => {
     setError(null);
   }, []);
 
+  const handleStarterClick = useCallback(async (text: string) => {
+    await handleSend(text);
+  }, [handleSend]);
+
 
   const chatHeightClass = state.isOpen ? 'h-9/10 lg:h-4/5' : 'h-0 bottom-[-2px]';
 
@@ -202,7 +206,7 @@ const Chat: React.FC = () => {
     <>
       <button
         onClick={handleChatIconClicked}
-        className="animate-bounce fixed text-5xl p-5 bottom-6 right-6 z-50 bg-background text-foreground transition-all duration-300 hover:scale-110 shadow-2xl hover:shadow-lg rounded-full w-20 h-20 flex items-center justify-center focus:outline-none">
+        className="animate-bounce fixed text-5xl p-5 bottom-6 right-6 z-50 bg-background text-foreground transition-all duration-300 hover:scale-110 shadow-2xl hover:shadow-lg rounded-full w-20 h-20 flex items-center justify-center focus:outline-none cursor-pointer">
           🤖
       </button>
 
@@ -218,7 +222,7 @@ const Chat: React.FC = () => {
           </div>
           <button
             onClick={handleChatCloseClicked}
-            className="mr-2 bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-foreground rounded-full w-8 h-8 flex items-center justify-center shadow focus:outline-none"
+            className="mr-2 bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-foreground rounded-full w-8 h-8 flex items-center justify-center shadow focus:outline-none cursor-pointer"
             aria-label="Close chat"
           >
             x
@@ -226,7 +230,7 @@ const Chat: React.FC = () => {
 
           <button
             onClick={handleChatResetClicked}
-            className="bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-foreground rounded-full w-8 h-8 flex items-center justify-center shadow focus:outline-none"
+            className="bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-foreground rounded-full w-8 h-8 flex items-center justify-center shadow focus:outline-none cursor-pointer"
             aria-label="Close chat"
           >
             ↺
@@ -237,6 +241,7 @@ const Chat: React.FC = () => {
             initialMessages={state.messages}
             streamedMessage={state.streamingMessage.content}
             loading={state.streamingMessage.loading}
+            onStarterClick={handleStarterClick}
           />
         <Input
           isFocused={state.isOpen}

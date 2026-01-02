@@ -1,33 +1,58 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 
 export type Message = {
-  content: string,
-  owner: 'human' | 'ai'
-}
+  content: string;
+  owner: "human" | "ai";
+};
 
 export type StreamingMessage = {
-  isActive: boolean,
-  message: Message
-}
+  isActive: boolean;
+  message: Message;
+};
 
 type MessagesProps = {
-  initialMessages: Message[],
-  streamedMessage: string,
-  loading: boolean
-}
+  initialMessages: Message[];
+  streamedMessage: string;
+  loading: boolean;
+  onStarterClick?: (text: string) => void;
+};
 
-const Messages: React.FC<MessagesProps> = ({ initialMessages, streamedMessage, loading }) => {
+const Messages: React.FC<MessagesProps> = ({
+  initialMessages,
+  streamedMessage,
+  loading,
+  onStarterClick,
+}) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-
+  const StarterMessages = useMemo(
+    () => (
+      <>
+        {["Tell me about your experience"].map((starterText) => (
+          <button
+            onClick={() => onStarterClick?.(starterText)}
+            className="px-4 py-2 bg-background text-foreground rounded-full text-sm hover:bg-slate-200 dark:hover:bg-slate-700/50 transition-colors border border-slate-200 dark:border-slate-800 cursor-pointer"
+          >
+            {starterText}
+          </button>
+        ))}
+        ,
+      </>
+    ),
+    []
+  );
   // useEffect(() => {
   //   messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   // }, [initialMessages, streamedMessage, loading]);
 
   const hasMessages = initialMessages.length > 0 || streamedMessage || loading;
 
+  const handleStarterClick = (text: string) => {
+    onStarterClick?.(text);
+  };
+
   return (
-    <section 
+    <section
       className="w-full grow overflow-y-auto p-4 lg:p-8"
       aria-label="Chat messages"
       role="log"
@@ -36,22 +61,24 @@ const Messages: React.FC<MessagesProps> = ({ initialMessages, streamedMessage, l
       {!hasMessages && (
         <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
           <div className="text-6xl mb-4 opacity-60">🤖</div>
-          <h2 className="text-2xl font-bold text-foreground mb-6">
-            Welcome!
-          </h2>
+          <h2 className="text-2xl font-bold text-foreground mb-6">Welcome!</h2>
           <p className="text-foreground max-w-md mb-6">
-            I am a bot, ask me anything about my portfolio, experience, or projects. I'm here to help!
+            I am a bot, ask me anything about my portfolio, experience, or
+            projects. I'm here to help!
           </p>
-          <div id="chat-starter-messages" className="flex flex-wrap gap-2 justify-center">
-            <span className="px-4 py-2 bg-background text-foreground rounded-full text-sm hover:bg-slate-200 dark:hover:bg-slate-700/50 transition-colors border border-slate-200 dark:border-slate-800">
-              "Tell me about your experience"
-            </span>
-            <span className="px-4 py-2 bg-background text-foreground rounded-full text-sm hover:bg-slate-200 dark:hover:bg-slate-700/50 transition-colors border border-slate-200 dark:border-slate-800">
-              "What projects have you worked on?"
-            </span>
-            <span className="px-4 py-2 bg-background text-foreground rounded-full text-sm hover:bg-slate-200 dark:hover:bg-slate-700/50 transition-colors border border-slate-200 dark:border-slate-800">
-              "What technologies do you use?"
-            </span>
+          <div
+            id="chat-starter-messages"
+            className="flex flex-wrap gap-2 justify-center"
+          >
+            {['Tell me about your experience', 'What projects have you worked on?', 'What technologies do you use?'].map((starterText) => (
+              <button
+                key={starterText}
+                onClick={() => onStarterClick?.(starterText)}
+                className="px-4 py-2 bg-background text-foreground rounded-full text-sm hover:bg-slate-200 dark:hover:bg-slate-700/50 transition-colors border border-slate-200 dark:border-slate-800 cursor-pointer"
+              >
+                {starterText}
+              </button>
+            ))}
           </div>
         </div>
       )}
@@ -60,25 +87,35 @@ const Messages: React.FC<MessagesProps> = ({ initialMessages, streamedMessage, l
         {initialMessages.map(({ content, owner }, index) => (
           <div
             key={index}
-            className={`flex w-full ${owner === 'human' ? 'justify-end' : 'justify-start'}`}
+            className={`flex w-full ${owner === "human" ? "justify-end" : "justify-start"
+              }`}
           >
             <div
-              className={`rounded-2xl px-4 py-3 shadow-sm ${
-                owner === 'human'
-                  ? 'bg-slate-600 dark:bg-slate-700 text-white rounded-br-sm max-w-7/10'
-                  : 'bg-background text-foreground rounded-bl-sm'
-              }`}
-              role={owner === 'human' ? 'user-message' : 'assistant-message'}
+              className={`rounded-2xl px-4 py-3 shadow-sm ${owner === "human"
+                  ? "bg-slate-600 dark:bg-slate-700 text-white rounded-br-sm max-w-7/10"
+                  : "bg-background text-foreground rounded-bl-sm"
+                }`}
+              role={owner === "human" ? "user-message" : "assistant-message"}
             >
               <div className="flex items-start gap-2">
-                {owner === 'ai' && (
-                  <span className="text-lg shrink-0 opacity-70" aria-hidden="true">🤖</span>
+                {owner === "ai" && (
+                  <span
+                    className="text-lg shrink-0 opacity-70"
+                    aria-hidden="true"
+                  >
+                    🤖
+                  </span>
                 )}
                 <p className="text-base leading-relaxed whitespace-pre-wrap wrap-break-words">
                   {content}
                 </p>
-                {owner === 'human' && (
-                  <span className="text-lg shrink-0 opacity-80" aria-hidden="true">👤</span>
+                {owner === "human" && (
+                  <span
+                    className="text-lg shrink-0 opacity-80"
+                    aria-hidden="true"
+                  >
+                    👤
+                  </span>
                 )}
               </div>
             </div>
@@ -89,11 +126,22 @@ const Messages: React.FC<MessagesProps> = ({ initialMessages, streamedMessage, l
           <div className="flex justify-start">
             <div className="bg-background rounded-2xl rounded-bl-sm px-4 py-3 shadow-sm">
               <div className="flex items-center gap-2">
-                <span className="text-lg opacity-70" aria-hidden="true">🤖</span>
+                <span className="text-lg opacity-70" aria-hidden="true">
+                  🤖
+                </span>
                 <div className="flex gap-1.5">
-                  <span className="w-2 h-2 bg-foreground rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
-                  <span className="w-2 h-2 bg-foreground rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
-                  <span className="w-2 h-2 bg-foreground rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
+                  <span
+                    className="w-2 h-2 bg-foreground rounded-full animate-bounce"
+                    style={{ animationDelay: "0ms" }}
+                  ></span>
+                  <span
+                    className="w-2 h-2 bg-foreground rounded-full animate-bounce"
+                    style={{ animationDelay: "150ms" }}
+                  ></span>
+                  <span
+                    className="w-2 h-2 bg-foreground rounded-full animate-bounce"
+                    style={{ animationDelay: "300ms" }}
+                  ></span>
                 </div>
                 <span className="sr-only">AI is typing</span>
               </div>
@@ -105,11 +153,19 @@ const Messages: React.FC<MessagesProps> = ({ initialMessages, streamedMessage, l
           <div className="flex justify-start">
             <div className="bg-background text-foreground rounded-2xl rounded-bl-sm px-4 py-3 shadow-sm">
               <div className="flex items-start gap-2">
-                <span className="text-lg shrink-0 opacity-70" aria-hidden="true">🤖</span>
+                <span
+                  className="text-lg shrink-0 opacity-70"
+                  aria-hidden="true"
+                >
+                  🤖
+                </span>
                 <p className="text-base leading-relaxed whitespace-pre-wrap wrap-break-words">
                   {streamedMessage}
                   {loading && (
-                    <span className="inline-block w-2 h-4 ml-1 bg-foreground animate-pulse rounded-sm" aria-hidden="true"></span>
+                    <span
+                      className="inline-block w-2 h-4 ml-1 bg-foreground animate-pulse rounded-sm"
+                      aria-hidden="true"
+                    ></span>
                   )}
                 </p>
               </div>
@@ -120,7 +176,7 @@ const Messages: React.FC<MessagesProps> = ({ initialMessages, streamedMessage, l
 
       <div ref={messagesEndRef} />
     </section>
-  )
-}
+  );
+};
 
 export default Messages;
