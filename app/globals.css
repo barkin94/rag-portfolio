@@ -28,3 +28,23 @@ body {
 }
 
 @custom-variant dark (&:where(.dark, .dark *));
+
+/* Fade-in animation for sections */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.fade-in-section {
+  opacity: 0;
+  transition: opacity 1s ease-out;
+}
+
+.fade-in-section.fade-in-visible {
+  opacity: 1;
+  animation: fadeIn 1s ease-out;
+}

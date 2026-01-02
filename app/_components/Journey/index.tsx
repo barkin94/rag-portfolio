@@ -1,5 +1,6 @@
 import { workExperienceData } from '@/backend/data';
 import Card from '../UI/Card';
+import WithFadeInAnimation from '../UI/WithFadeInAnimation';
 
 interface TimelineItem {
   role: string;
@@ -19,7 +20,8 @@ export default function Timeline() {
   }));
 
   return (
-    <section id='journey' className="container mx-auto px-4 py-8 max-w-4xl">
+    <WithFadeInAnimation>
+      <section id='journey' className="container mx-auto px-4 py-8 max-w-4xl">
       <h1 className="text-4xl font-bold text-center mb-4">My Journey</h1>
       <p className="text-xl text-center text-slate-600 dark:text-slate-300 mb-12">The path of building, scaling...</p>
 
@@ -50,6 +52,7 @@ export default function Timeline() {
           </div>
         ))}
       </div>
-    </section>
+      </section>
+    </WithFadeInAnimation>
   );
 }

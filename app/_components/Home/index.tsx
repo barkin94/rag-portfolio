@@ -1,10 +1,12 @@
 import Image from "next/image";
 import TypingText from "../UI/TypingText";
 import About from "./About";
+import WithFadeInAnimation from "../UI/WithFadeInAnimation";
 
 export default function Home() {
   return (
-    <section id="home" role="log" aria-live="polite">
+    <WithFadeInAnimation>
+      <section id="home" role="log" aria-live="polite">
       <div className="grid grid-cols-3 gap-3 mx-20 lg:mx-50 min-h-[calc(100vh-1.5rem)] items-center">
         <div className="col-span-2">
           <h1 className="text-4xl md:text-5xl md:leading-16 font-black bg-clip-text mb-6 lg:mb-8">
@@ -40,6 +42,7 @@ export default function Home() {
     </div> */}
         </div>
       </div>
-    </section>
+      </section>
+    </WithFadeInAnimation>
   );
 }

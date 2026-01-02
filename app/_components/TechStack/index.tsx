@@ -1,5 +1,6 @@
 import React from 'react';
 import Card from '../UI/Card';
+import WithFadeInAnimation from '../UI/WithFadeInAnimation';
 
 const skills = {
   "Programming Languages": [
@@ -44,7 +45,8 @@ const skills = {
 
 const TechStack = () => {
   return (
-    <section id="tech-stack" className="py-20 bg-slate-50/50 dark:bg-slate-900/30">
+    <WithFadeInAnimation>
+      <section id="tech-stack" className="py-20 bg-slate-50/50 dark:bg-slate-900/30">
       <h2 className="text-3xl font-bold text-center mb-4">My Tech Stack</h2>
       <p className="text-xl text-center text-slate-600 dark:text-slate-300 mb-12">Capabilities I bring to product building</p>
       <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 gap-8 mx-10 sm:mx-40 md:mx-60">
@@ -59,7 +61,8 @@ const TechStack = () => {
           </Card>
         ))}
       </div>
-    </section>
+      </section>
+    </WithFadeInAnimation>
   );
 };
 
