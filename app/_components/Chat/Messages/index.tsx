@@ -42,14 +42,14 @@ const Messages: React.FC<MessagesProps> = ({ initialMessages, streamedMessage, l
           <p className="text-foreground max-w-md mb-6">
             I am a bot, ask me anything about my portfolio, experience, or projects. I'm here to help!
           </p>
-          <div className="flex flex-wrap gap-2 justify-center">
-            <span className="px-4 py-2 bg-background text-foreground rounded-full text-sm hover:bg-slate-200 dark:hover:bg-slate-700/50 transition-colors">
+          <div id="chat-starter-messages" className="flex flex-wrap gap-2 justify-center">
+            <span className="px-4 py-2 bg-background text-foreground rounded-full text-sm hover:bg-slate-200 dark:hover:bg-slate-700/50 transition-colors border border-slate-200 dark:border-slate-800">
               "Tell me about your experience"
             </span>
-            <span className="px-4 py-2 bg-background text-foreground rounded-full text-sm hover:bg-slate-200 dark:hover:bg-slate-700/50 transition-colors">
+            <span className="px-4 py-2 bg-background text-foreground rounded-full text-sm hover:bg-slate-200 dark:hover:bg-slate-700/50 transition-colors border border-slate-200 dark:border-slate-800">
               "What projects have you worked on?"
             </span>
-            <span className="px-4 py-2 bg-background text-foreground rounded-full text-sm hover:bg-slate-200 dark:hover:bg-slate-700/50 transition-colors">
+            <span className="px-4 py-2 bg-background text-foreground rounded-full text-sm hover:bg-slate-200 dark:hover:bg-slate-700/50 transition-colors border border-slate-200 dark:border-slate-800">
               "What technologies do you use?"
             </span>
           </div>

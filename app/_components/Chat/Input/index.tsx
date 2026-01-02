@@ -87,7 +87,7 @@ const Input: React.FC<InputProps> = ({
             placeholder="Ask me anything..."
             className="w-full resize-none overflow-y-hidden p-4 text-base 
                         bg-background text-foreground
-                        rounded-3xl border border-slate-200 dark:border-slate-700
+                        rounded-3xl border border-slate-200 dark:border-slate-800
                         focus:outline-none focus:ring-slate-500/50 dark:focus:ring-slate-400/50
                         focus:border-slate-400 dark:focus:border-slate-500
                         transition duration-300 placeholder:text-slate-400 dark:placeholder:text-slate-500

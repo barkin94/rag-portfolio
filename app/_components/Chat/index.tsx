@@ -238,14 +238,14 @@ const Chat: React.FC = () => {
             streamedMessage={state.streamingMessage.content}
             loading={state.streamingMessage.loading}
           />
-          <Input
-            isFocused={state.isOpen}
-            isLoading={state.streamingMessage.loading}
-            error={error}
-            onSend={handleSend}
-            onCancel={handleCancel}
-            onDismissError={handleDismissError}
-          />
+        <Input
+          isFocused={state.isOpen}
+          isLoading={state.streamingMessage.loading}
+          error={error}
+          onSend={handleSend}
+          onCancel={handleCancel}
+          onDismissError={handleDismissError}
+        />
       </section>
     </>
   );
