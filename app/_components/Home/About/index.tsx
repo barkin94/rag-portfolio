@@ -79,11 +79,11 @@ export default () => (
       </h3>
       <p className="text-slate-700 dark:text-slate-300 text-lg leading-relaxed mb-4">
         A backend software engineer with full-stack capabilities and 6+ years of experience building
-        scalable systems. Specializing in Javascript ecosystem and cloud technologies.
+        scalable systems. Specializing in Javascript ecosystem and cloud technologies, and also bringing more skills to the table.
       </p>
-      <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
+      {/* <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
         I love turning complex problems into simple, beautiful solutions.
-      </p>
+      </p> */}
     </div>
     <div className="flex items-center justify-center md:justify-start gap-4 mt-4">
       <a
