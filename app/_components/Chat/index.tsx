@@ -206,7 +206,7 @@ const Chat: React.FC = () => {
     <>
       <button
         onClick={handleChatIconClicked}
-        className="animate-bounce fixed text-5xl p-5 bottom-6 right-6 z-50 bg-background text-foreground transition-all duration-300 hover:scale-110 shadow-2xl hover:shadow-lg rounded-full w-20 h-20 flex items-center justify-center focus:outline-none cursor-pointer">
+        className="animate-bounce fixed text-6xl p-5 bottom-6 right-6 z-50 bg-background text-foreground transition-all duration-300 hover:scale-110 shadow-2xl hover:shadow-lg rounded-full w-20 h-20 flex items-center justify-center focus:outline-none cursor-pointer">
           🤖
       </button>
 
