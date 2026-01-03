@@ -9,13 +9,14 @@ export default function Home() {
       <section id="home" role="log" aria-live="polite">
       <div className="grid grid-cols-3 gap-3 mx-20 lg:mx-50 min-h-[calc(100vh-1.5rem)] items-center">
         <div className="col-span-2">
-          <h1 className="text-4xl md:text-5xl md:leading-16 font-black bg-clip-text mb-6 lg:mb-8">
+          <h1 className="text-4xl md:text-5xl md:leading-16 font-black bg-clip-text mb-6 lg:mb-10">
             <TypingText
               textArray={[
                 "Hello! 👋",
-                "I'm Barkin.",
                 "Welcome to my portfolio!",
-                //"This is a very long multi-line test."
+                "I'm Barkin...",
+                "A software engineer.",
+                "Click 🤖 and let's chat!",
               ]}
             />
           </h1>
