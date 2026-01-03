@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 
 // Define the three phases of the animation
-type AnimationPhase = 'typing' | 'pausing' | 'deleting';
+type AnimationPhase = 'typing' | 'paused' | 'deleting';
 
 interface TypingTextProps {
   textArray: string[]; // The array of strings to loop through
@@ -25,7 +25,7 @@ const TypingText: React.FC<TypingTextProps> = ({
   //textClassName = 'text-lg text-gray-800'
 }) => {
   const [typedText, setTypedText] = useState('');
-  const [phase, setPhase] = useState<AnimationPhase>('typing');
+  const [phase, setPhase] = useState<AnimationPhase>('paused');
   const [arrayIndex, setArrayIndex] = useState(0); // Index of the current string in textArray
 
   const currentText = textArray[arrayIndex];
@@ -44,15 +44,15 @@ const TypingText: React.FC<TypingTextProps> = ({
         return () => clearTimeout(timer);
       } else {
         // Typing finished, move to pausing phase
-        setPhase('pausing');
+        setPhase('paused');
       }
     } 
     
     // --- Phase: PAUSING ---
-    else if (phase === 'pausing') {
+    else if (phase === 'paused') {
       // Pause for a specified time before deleting
       const timer = setTimeout(() => {
-        setPhase('deleting');
+        setPhase(typedText ? 'deleting' : 'typing');
       }, pauseTime);
 
       return () => clearTimeout(timer);
@@ -79,7 +79,7 @@ const TypingText: React.FC<TypingTextProps> = ({
   }, [typedText, phase, arrayIndex, textArray, currentText, typingSpeed, deletingSpeed, pauseTime]);
 
   // The cursor blinks only during the typing and deleting phases
-  const cursorClass = phase === 'pausing' ? 'animate-ping' : 'opacity-100';
+  const cursorClass = phase === 'paused' ? 'animate-ping' : 'opacity-100';
 
   return (
     <div>
