@@ -16,13 +16,11 @@ export async function POST(request: Request) {
   // Add the new prompt
   messages.push(new HumanMessage(prompt))
 
-  const stream = await agent.getResponseStream(messages);
-
   return new Response(
     new ReadableStream({
       async start(controller) {
         try {
-          for await (const event of stream) {
+          for await (const event of await agent.getResponseStream(messages)) {
             if (event.event === "on_chat_model_stream") {
               const content = event.data.chunk.content;
               if (content) controller.enqueue(textEncoder.encode(content));

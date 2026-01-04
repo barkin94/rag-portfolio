@@ -264,21 +264,6 @@ import { HuggingFaceInferenceEmbeddings } from "@langchain/community/embeddings/
 
 import Config from "./config";
 
-
-// ============================================
-// 1. TYPES AND INTERFACES
-// ============================================
-
-interface ConversationMessage {
-  role: 'user' | 'assistant';
-  content: string;
-  timestamp: Date;
-}
-
-// ============================================
-// 2. RESUME DATA CHUNKS
-// ============================================
-
 const createResumeChunks = (): Document[] => [
   new Document({
     pageContent: `ABOUT BARKIN BUYUKSAGIN
@@ -453,69 +438,6 @@ Code Quality:
   })
 ];
 
-// ============================================
-// 3. CONVERSATION MANAGER
-// ============================================
-
-class ConversationManager {
-  private history: ConversationMessage[] = [];
-  private maxHistoryLength: number = 10;
-
-  addMessage(role: 'user' | 'assistant', content: string): void {
-    this.history.push({ role, content, timestamp: new Date() });
-    if (this.history.length > this.maxHistoryLength) {
-      this.history = this.history.slice(-this.maxHistoryLength);
-    }
-  }
-
-  getHistory(lastN: number = 6): ConversationMessage[] {
-    return this.history.slice(-lastN);
-  }
-
-  formatHistory(): string {
-    const recent = this.getHistory();
-    if (recent.length === 0) return 'No previous conversation.';
-    return recent.map(m => `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.content}`).join('\n');
-  }
-
-  clear(): void {
-    this.history = [];
-  }
-
-  getLastUserMessage(): string | null {
-    for (let i = this.history.length - 1; i >= 0; i--) {
-      if (this.history[i].role === 'user') return this.history[i].content;
-    }
-    return null;
-  }
-}
-
-// ============================================
-// 4. QUERY ENHANCEMENT
-// ============================================
-
-class QueryEnhancer {
-  static enhanceQuery(query: string, conversationManager: ConversationManager): string {
-    const lower = query.toLowerCase().trim();
-    const vaguePatterns = [
-      'more', 'details', 'tell me more', 'elaborate', 'explain',
-      'continue', 'what else', 'anything else', 'expand'
-    ];
-
-    const isVague = vaguePatterns.some(p => lower.includes(p) && lower.length < 50);
-
-    if (isVague) {
-      const lastMsg = conversationManager.getLastUserMessage();
-      if (lastMsg && lastMsg !== query) {
-        return `${lastMsg} - provide more detailed information`;
-      }
-    }
-
-    return query;
-  }
-}
-
-
 const embeddings = new HuggingFaceInferenceEmbeddings({
   apiKey: Config.HF_EMBEDDINGS_API_KEY,
   model: Config.HF_EMBEDDINGS_MODEL, 
@@ -531,7 +453,5 @@ await vectorStore.addDocuments(createResumeChunks())
 // Export everything
 export {
   vectorStore,
-  ConversationManager,
-  QueryEnhancer,
   createResumeChunks,
 };

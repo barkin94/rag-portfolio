@@ -25,31 +25,11 @@ const Messages: React.FC<MessagesProps> = ({
 }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const StarterMessages = useMemo(
-    () => (
-      <>
-        {["Tell me about your experience"].map((starterText) => (
-          <button
-            onClick={() => onStarterClick?.(starterText)}
-            className="px-4 py-2 bg-background text-foreground rounded-full text-sm hover:bg-slate-200 dark:hover:bg-slate-700/50 transition-colors border border-slate-200 dark:border-slate-800 cursor-pointer"
-          >
-            {starterText}
-          </button>
-        ))}
-        ,
-      </>
-    ),
-    []
-  );
   // useEffect(() => {
   //   messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   // }, [initialMessages, streamedMessage, loading]);
 
   const hasMessages = initialMessages.length > 0 || streamedMessage || loading;
-
-  const handleStarterClick = (text: string) => {
-    onStarterClick?.(text);
-  };
 
   return (
     <section
