@@ -5,6 +5,8 @@ import { redirect, RedirectType } from 'next/navigation'
 
 import Input from "./Input";
 import Messages, { Message } from "./Messages";
+import { LeftArrowIcon } from "@/app/_components/Icons";
+
 const decoder = new TextDecoder();
 
 type ChatState = {
@@ -190,22 +192,24 @@ const Chat: React.FC = () => {
         aria-label="Chat interface"
       >
         <div className="flex items-center border-b border-slate-200 dark:border-slate-800 p-4">
+        <button
+            onClick={handleChatCloseClicked}
+            title="Go back"
+            className="mr-4 bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-foreground rounded-full w-8 h-8 flex items-center justify-center shadow focus:outline-none cursor-pointer"
+            aria-label="Go back"
+          >
+            <LeftArrowIcon className="w-4 h-4" />
+          </button>
+
           <div className="grow">
             <h2 className="text-lg font-semibold text-foreground">Chat with me</h2>
             <p className="text-sm text-foreground">I am here to help you with your questions.</p>
           </div>
           <button
-            onClick={handleChatCloseClicked}
-            className="mr-2 bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-foreground rounded-full w-8 h-8 flex items-center justify-center shadow focus:outline-none cursor-pointer"
-            aria-label="Close chat"
-          >
-            x
-          </button>
-
-          <button
             onClick={handleChatResetClicked}
+            title="Reset chat"
             className="bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-foreground rounded-full w-8 h-8 flex items-center justify-center shadow focus:outline-none cursor-pointer"
-            aria-label="Close chat"
+            aria-label="Reset chat"
           >
             ↺
           </button>

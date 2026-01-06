@@ -118,6 +118,7 @@ const Input: React.FC<InputProps> = ({
         {isLoading ? (
           <button
             onClick={handleCancel}
+            title="Cancel request"
             type="button"
             className="p-3 rounded-full border-2 border-slate-400 dark:border-slate-600 text-slate-700 dark:text-slate-300 hover:bg-slate-400 dark:hover:bg-slate-600 hover:text-slate-900 dark:hover:text-slate-100 transition-all duration-300 hover:scale-110 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-slate-400"
             aria-label="Cancel request"
@@ -127,6 +128,7 @@ const Input: React.FC<InputProps> = ({
         ) : (
           <button
             onClick={() => submitPrompt(inputValue.trim())}
+            title="Send message"
             type="submit"
             disabled={!inputValue.trim() || isLoading}
             className={`p-3 rounded-full border-2 transition-all duration-300 hover:scale-110 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-slate-400
@@ -144,6 +146,7 @@ const Input: React.FC<InputProps> = ({
         {showExpandButton && (
           <button
             onClick={onExpand}
+            title="Expand chat"
             type="button"
             className="p-3 rounded-full border-2 border-slate-400 dark:border-slate-600 text-slate-700 dark:text-slate-300 hover:bg-slate-400 dark:hover:bg-slate-600 hover:text-slate-900 dark:hover:text-slate-100 transition-all duration-300 hover:scale-110 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-slate-400"
             aria-label="Expand chat"
