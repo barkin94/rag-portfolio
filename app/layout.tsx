@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import "./globals.css";
 import { cookies } from "next/headers";
+import ParticlesBackground from "./_components/ParticlesBackground";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,10 +28,11 @@ export default async function RootLayout({
 
   return (
     <html lang="en" className={isDark ? 'dark' : ''}>
-      {process.env.NODE_ENV === 'production' && <SpeedInsights/>}
+      {process.env.NODE_ENV === 'production' && <SpeedInsights />}
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <ParticlesBackground themeColor={'#3b82f6'} />
         {children}
       </body>
     </html>

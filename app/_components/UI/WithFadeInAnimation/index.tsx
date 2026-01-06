@@ -17,6 +17,12 @@ export default function WithFadeInAnimation({ children }: WithFadeInAnimationPro
             entry.target.classList.add('fade-in-visible');
             // Optionally disconnect after first appearance
             observer.unobserve(entry.target);
+
+            // after animation is finished, remove css classes containing "transform" property 
+            // because children with "position: fixed" won't work properly
+            setTimeout(() => {
+              entry.target.classList.remove('fade-in-section', 'fade-in-visible');
+            }, 1500);
           }
         });
       },

@@ -33,13 +33,13 @@ const Messages: React.FC<MessagesProps> = ({
 
   return (
     <section
-      className="w-full grow overflow-y-auto p-4 lg:p-8"
+      className="w-full grow overflow-y-auto"
       aria-label="Chat messages"
       role="log"
       aria-live="polite"
     >
       {!hasMessages && (
-        <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
+        <div className="flex flex-col items-center justify-center text-center">
           <div className="text-6xl mb-4 opacity-60">🤖</div>
           <h2 className="text-2xl font-bold text-foreground mb-6">Welcome!</h2>
           <p className="text-foreground max-w-md mb-6">
@@ -71,9 +71,9 @@ const Messages: React.FC<MessagesProps> = ({
               }`}
           >
             <div
-              className={`rounded-2xl px-4 py-3 shadow-sm ${owner === "human"
+              className={`rounded-2xl py-3 shadow-sm ${owner === "human"
                   ? "bg-slate-600 dark:bg-slate-700 text-white rounded-br-sm max-w-7/10"
-                  : "bg-background text-foreground rounded-bl-sm"
+                  : "text-foreground rounded-bl-sm"
                 }`}
               role={owner === "human" ? "user-message" : "assistant-message"}
             >
@@ -86,12 +86,12 @@ const Messages: React.FC<MessagesProps> = ({
                     🤖
                   </span>
                 )}
-                <p className="text-base leading-relaxed whitespace-pre-wrap wrap-break-words">
+                <p className="text-base px-4 leading-relaxed whitespace-pre-wrap wrap-break-words">
                   {content}
                 </p>
                 {owner === "human" && (
                   <span
-                    className="text-lg shrink-0 opacity-80"
+                    className="text-lg shrink-0 opacity-80 pr-2"
                     aria-hidden="true"
                   >
                     👤
@@ -131,7 +131,7 @@ const Messages: React.FC<MessagesProps> = ({
 
         {streamedMessage && (
           <div className="flex justify-start">
-            <div className="bg-background text-foreground rounded-2xl rounded-bl-sm px-4 py-3 shadow-sm">
+            <div className="bg-background text-foreground rounded-2xl rounded-bl-sm py-3 shadow-sm">
               <div className="flex items-start gap-2">
                 <span
                   className="text-lg shrink-0 opacity-70"
@@ -139,7 +139,7 @@ const Messages: React.FC<MessagesProps> = ({
                 >
                   🤖
                 </span>
-                <p className="text-base leading-relaxed whitespace-pre-wrap wrap-break-words">
+                <p className="text-base  px-4 leading-relaxed whitespace-pre-wrap wrap-break-words">
                   {streamedMessage}
                   {loading && (
                     <span

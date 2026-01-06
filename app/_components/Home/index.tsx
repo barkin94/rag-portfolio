@@ -1,48 +1,27 @@
-import Image from "next/image";
 import TypingText from "../UI/TypingText";
 import About from "./About";
 import WithFadeInAnimation from "../UI/WithFadeInAnimation";
+import ChatInputWithRedirect from "../ChatInputWithRedirect";
 
 export default function Home() {
   return (
     <WithFadeInAnimation>
-      <section id="home" role="log" aria-live="polite">
-      <div className="grid grid-cols-3 gap-3 mx-20 lg:mx-50 min-h-[calc(100vh-1.5rem)] items-center">
-        <div className="col-span-2">
-          <h1 className="text-4xl md:text-5xl md:leading-16 font-black bg-clip-text mb-6 lg:mb-10">
+      <section id="home" role="log" aria-live="polite" className="flex flex-col justify-center mx-auto max-w-4xl min-h-screen px-4">
+        <div className="mb-16">
+          <h1 className="text-4xl md:text-5xl md:leading-16 font-black bg-clip-text mb-12">
             <TypingText
               textArray={[
                 "Hello! 👋",
-                "Welcome to my portfolio!",
-                "I'm Barkin...",
-                "A software engineer.",
-                "Click 🤖 and let's chat!",
+                "Welcome!",
+                "I'm Barkin.",
+                //"A software engineer.",
+                "Let's chat!",
               ]}
             />
           </h1>
-          <div>
-            <About />
-          </div>
+          <About />
         </div>
-
-        <div className="col-span-1">
-          <Image
-            src="/1727656649134.jpeg"
-            alt="user picture"
-            className="rounded-full mx-auto"
-            width={400}
-            height={400}
-          />
-          {/* <div>
-      <p className="text-xl md:text-2xl text-slate-600 dark:text-slate-400 font-medium mb-2">
-        Backend Software Engineer
-      </p>
-      <p className="text-slate-500 dark:text-slate-400 max-w-2xl mx-auto">
-        Building digital experiences that make a difference
-      </p>
-    </div> */}
-        </div>
-      </div>
+        <ChatInputWithRedirect />
       </section>
     </WithFadeInAnimation>
   );

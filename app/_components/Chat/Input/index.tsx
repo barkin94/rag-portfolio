@@ -1,28 +1,43 @@
 'use client'
 
+import { CancelIcon, ExpandIcon, SendIcon } from "@/app/_components/Icons";
 import { useState, useRef, useEffect } from "react";
 
 interface InputProps {
-  isFocused: boolean,
-  isLoading: boolean
-  error: string | null
-  onSend: (prompt: string) => Promise<void>
-  onCancel: () => void
-  onDismissError: () => void
+  isFocused?: boolean,
+  isLoading?: boolean
+  error?: string | null
+  showExpandButton?: boolean
+  onSend?: (prompt: string) => Promise<void>
+  onCancel?: () => void
+  onDismissError?: () => void
+  onExpand?: () => void
 }
 
 const Input: React.FC<InputProps> = ({
-  isFocused, isLoading, error, onSend, onCancel, onDismissError
+  isFocused,
+  isLoading,
+  error = null,
+  onSend,
+  onCancel,
+  onDismissError,
+  onExpand,
+  showExpandButton = false,
 }) => {
   const [inputValue, setInputValue] = useState('')
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const [isTouchDevice, isSetTouchDevice] = useState(false);
-
   // This code only runs on the client/browser
   useEffect(() => {
     const userAgent = navigator.userAgent.toLowerCase();
-    
     isSetTouchDevice(userAgent.includes('mobile'));
+
+    const initialPrompt = sessionStorage.getItem('prompt') ?? '';
+
+    sessionStorage.removeItem('prompt')
+    if(initialPrompt) {
+      submitPrompt(initialPrompt)
+    }
   }, []);
 
   // Auto-resize textarea
@@ -34,36 +49,35 @@ const Input: React.FC<InputProps> = ({
     }
   }, [inputValue])
 
-  if(textareaRef.current) {
+  // force textarea to focus/blur if explicitly passed in props
+  if (textareaRef.current && isFocused != undefined) {
     isFocused ? textareaRef.current.focus() : textareaRef.current.blur()
   }
 
-  const handleSend = async () => {
-    const prompt = inputValue.trim()
-
+  const submitPrompt = async (prompt: string) => {
     if (!prompt || isLoading) {
       return;
     }
 
     setInputValue('')
-    await onSend(prompt)
+    await onSend?.(prompt)
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (!isTouchDevice && e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
-      handleSend()
+      submitPrompt(inputValue.trim())
     }
   }
 
   const handleCancel = () => {
-    onCancel()
+    onCancel?.()
   }
 
   return (
-    <div className="w-full end p-4 transition duration-300 border-t border-slate-200 dark:border-slate-800">
+    <>
       {error && (
-        <div 
+        <div
           className="max-w-4xl mx-auto mb-3 p-3 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900/50 rounded-xl text-red-700 dark:text-red-400 text-sm flex items-center justify-between backdrop-blur-sm"
           role="alert"
         >
@@ -77,7 +91,7 @@ const Input: React.FC<InputProps> = ({
           </button>
         </div>
       )}
-      <div className="max-w-4xl mx-auto flex items-center gap-3">
+      <div className="flex items-center gap-3">
         <div className="grow relative">
           <textarea
             ref={textareaRef}
@@ -86,12 +100,12 @@ const Input: React.FC<InputProps> = ({
             onKeyDown={handleKeyDown}
             placeholder="Ask me anything..."
             className="w-full resize-none overflow-y-hidden p-4 text-base 
-                        bg-background text-foreground
-                        rounded-3xl border border-slate-200 dark:border-slate-800
-                        focus:outline-none focus:ring-slate-500/50 dark:focus:ring-slate-400/50
-                        focus:border-slate-400 dark:focus:border-slate-500
-                        transition duration-300 placeholder:text-slate-400 dark:placeholder:text-slate-500
-                        disabled:opacity-50 disabled:cursor-not-allowed shadow-inner h-min-[52px]"
+                      bg-background text-foreground
+                      rounded-3xl border border-slate-200 dark:border-slate-800
+                      focus:outline-none focus:ring-slate-500/50 dark:focus:ring-slate-400/50
+                      focus:border-slate-400 dark:focus:border-slate-500
+                      transition duration-300 placeholder:text-slate-400 dark:placeholder:text-slate-500
+                      disabled:opacity-50 disabled:cursor-not-allowed shadow-inner h-min-[52px]"
             style={{ height: '56px', maxHeight: '200px' }}
             aria-label="Message input"
             aria-describedby="input-help"
@@ -105,45 +119,43 @@ const Input: React.FC<InputProps> = ({
           <button
             onClick={handleCancel}
             type="button"
-            className="p-3 rounded-full shadow-lg shadow-slate-900/20 dark:shadow-slate-950/50 transition-all duration-300 
-                      bg-slate-500 hover:bg-slate-600 dark:bg-slate-600 dark:hover:bg-slate-700 
-                      text-white transform hover:scale-105 hover:shadow-xl hover:shadow-slate-900/30 dark:hover:shadow-slate-950/70 focus:outline-none focus:ring-2 focus:ring-slate-400"
+            className="p-3 rounded-full border-2 border-slate-400 dark:border-slate-600 text-slate-700 dark:text-slate-300 hover:bg-slate-400 dark:hover:bg-slate-600 hover:text-slate-900 dark:hover:text-slate-100 transition-all duration-300 hover:scale-110 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-slate-400"
             aria-label="Cancel request"
           >
-            <CancelIcon className="w-6 h-6" />
+            <CancelIcon />
           </button>
         ) : (
           <button
-            onClick={handleSend}
+            onClick={() => submitPrompt(inputValue.trim())}
             type="submit"
             disabled={!inputValue.trim() || isLoading}
-            className={`p-3 rounded-full shadow-lg shadow-slate-900/20 dark:shadow-slate-950/50 transition-all duration-300 
-                  ${inputValue.trim() && !isLoading
-                ? 'bg-slate-600 dark:bg-slate-700 hover:bg-slate-700 dark:hover:bg-slate-600 text-white transform hover:scale-105 hover:shadow-xl hover:shadow-slate-900/30 dark:hover:shadow-slate-950/70 focus:outline-none focus:ring-2 focus:ring-slate-500/50 cursor-pointer'
-                : 'bg-background text-foreground cursor-not-allowed'
+            className={`p-3 rounded-full border-2 transition-all duration-300 hover:scale-110 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-slate-400
+                ${inputValue.trim() && !isLoading
+                ? 'border-slate-400 dark:border-slate-600 text-slate-700 dark:text-slate-300 hover:bg-slate-400 dark:hover:bg-slate-600 hover:text-slate-900 dark:hover:text-slate-100 cursor-pointer'
+                : 'border-slate-300 dark:border-slate-700 text-slate-400 dark:text-slate-600 cursor-not-allowed opacity-50'
               }`}
             aria-label="Send message"
           >
-            <SendIcon className="w-6 h-6" />
+            <SendIcon />
+          </button>
+        )}
+
+
+        {showExpandButton && (
+          <button
+            onClick={onExpand}
+            type="button"
+            className="p-3 rounded-full border-2 border-slate-400 dark:border-slate-600 text-slate-700 dark:text-slate-300 hover:bg-slate-400 dark:hover:bg-slate-600 hover:text-slate-900 dark:hover:text-slate-100 transition-all duration-300 hover:scale-110 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-slate-400"
+            aria-label="Expand chat"
+          >
+            <ExpandIcon />
           </button>
         )}
       </div>
-    </div>
+    </>
   );
 };
 
-const SendIcon: React.FC<{ className?: string }> = ({ className = "w-6 h-6" }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-    <line x1="22" y1="2" x2="11" y2="13"></line>
-    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-  </svg>
-);
 
-const CancelIcon: React.FC<{ className?: string }> = ({ className = "w-6 h-6" }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-    <line x1="18" y1="6" x2="6" y2="18"></line>
-    <line x1="6" y1="6" x2="18" y2="18"></line>
-  </svg>
-);
 
 export default Input;

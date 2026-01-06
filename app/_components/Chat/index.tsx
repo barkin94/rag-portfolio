@@ -1,9 +1,10 @@
 'use client';
 
 import React, { useCallback, useReducer, useRef, useState } from "react";
+import { redirect, RedirectType } from 'next/navigation'
+
 import Input from "./Input";
 import Messages, { Message } from "./Messages";
-
 const decoder = new TextDecoder();
 
 type ChatState = {
@@ -16,8 +17,6 @@ type ChatState = {
 }
 
 type ChatAction =
-  | { type: 'OPEN_CHAT' }
-  | { type: 'CLOSE_CHAT' }
   | { type: 'RESET_CHAT' }
   | { type: 'START_RESPONSE' }
   | { type: 'CHUNK_RETRIEVED'; payload: string }
@@ -71,28 +70,16 @@ function chatReducer(state: ChatState, action: ChatAction): ChatState {
           { content: action.payload, owner: 'human' },
         ],
       };
-    
-      case 'OPEN_CHAT':
-        return {
-          ...state,
-          isOpen: true,
-        };
 
-      case 'CLOSE_CHAT':
-        return {
-          ...state,
-          isOpen: false
-        };
-
-      case 'RESET_CHAT':
-        return {
-          ...state,
-          messages: [],
-          streamingMessage: {
-            content: '',
-            loading: false
-          }
-        };
+    case 'RESET_CHAT':
+      return {
+        ...state,
+        messages: [],
+        streamingMessage: {
+          content: '',
+          loading: false
+        }
+      };
 
     default:
       throw new Error(`Unknown action: ${action}`);
@@ -112,17 +99,13 @@ const Chat: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
 
-  const handleChatIconClicked = () => {
-    dispatch({ type: 'OPEN_CHAT' });
-  }
-
   const handleChatCloseClicked = () => {
-    dispatch({ type: 'CLOSE_CHAT' });
+    redirect('/', RedirectType.replace);
   }
 
   const handleChatResetClicked = () => {
     dispatch({ type: 'RESET_CHAT' });
-  }  
+  }
 
   const handleSend = useCallback(async (prompt: string) => {
     dispatch({ type: 'SEND_MESSAGE', payload: prompt });
@@ -199,23 +182,14 @@ const Chat: React.FC = () => {
     await handleSend(text);
   }, [handleSend]);
 
-
-  const chatHeightClass = state.isOpen ? 'h-9/10 lg:h-4/5' : 'h-0 bottom-[-2px]';
-
   return (
-    <>
-      <button
-        onClick={handleChatIconClicked}
-        className="animate-bounce fixed text-6xl p-5 bottom-6 right-6 z-50 bg-background text-foreground transition-all duration-300 hover:scale-110 shadow-2xl hover:shadow-lg rounded-full w-20 h-20 flex items-center justify-center focus:outline-none cursor-pointer">
-          🤖
-      </button>
-
-      <section
-        id="chat"
-        className={`flex flex-col z-50 transition-all ease-in-out duration-1000 ${chatHeightClass} fixed bottom-0 right-0 lg:right-4 w-full lg:w-3/4 xl:w-2/5 bg-background rounded-3xl shadow-2xl shadow-blue-700/30  border border-slate-200 dark:border-slate-800 overflow-hidden`}
+    <div className={`flex flex-col h-full w-full z-100`}>
+      <div
+        id="chat-frame"
+        className={`flex flex-col grow overflow-hidden`}
         aria-label="Chat interface"
       >
-        <div className="p-4 flex items-center border-b border-slate-200 dark:border-slate-800">
+        <div className="flex items-center border-b border-slate-200 dark:border-slate-800 p-4">
           <div className="grow">
             <h2 className="text-lg font-semibold text-foreground">Chat with me</h2>
             <p className="text-sm text-foreground">I am here to help you with your questions.</p>
@@ -237,22 +211,29 @@ const Chat: React.FC = () => {
           </button>
         </div>
 
-        <Messages
+        <div className="self-center w-full lg:w-3/4 xl:w-1/2 p-4">
+          <div className="mt-16"></div>
+
+          <Messages
             initialMessages={state.messages}
             streamedMessage={state.streamingMessage.content}
             loading={state.streamingMessage.loading}
             onStarterClick={handleStarterClick}
           />
-        <Input
-          isFocused={state.isOpen}
-          isLoading={state.streamingMessage.loading}
-          error={error}
-          onSend={handleSend}
-          onCancel={handleCancel}
-          onDismissError={handleDismissError}
-        />
-      </section>
-    </>
+
+          <div className="mb-16"></div>
+
+          <Input
+            isFocused={true}
+            isLoading={state.streamingMessage.loading}
+            error={error}
+            onSend={handleSend}
+            onCancel={handleCancel}
+            onDismissError={handleDismissError}
+          />
+        </div>
+      </div>
+    </div>
   );
 }
 
