@@ -11,7 +11,7 @@ export default function ChatInputWithRedirect() {
   };
 
   const handleSend = (prompt: string) => {
-    localStorage.setItem('prompt', prompt);
+    localStorage.setItem('autoPrompt', prompt);
     router.replace('/ama');
   };
 

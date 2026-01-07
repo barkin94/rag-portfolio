@@ -6,8 +6,7 @@ import { redirect, RedirectType } from 'next/navigation'
 import Input from "./Input";
 import Messages, { Message } from "./Messages";
 import { LeftArrowIcon } from "@/app/_components/Icons";
-
-const decoder = new TextDecoder();
+import { useStreamingFetch } from "@/app/_hooks/useStreamingFetch";
 
 type ChatState = {
   error: string | null;
@@ -131,30 +130,19 @@ const Chat: React.FC = () => {
     error: null,
   });
 
-  const abortControllerRef = useRef<AbortController | null>(null);
+  const { send, cancel } = useStreamingFetch({
+    url: '/api/prompt',
+    method: 'POST',
+    onStart: () => dispatch({ type: 'START_RESPONSE' }),
+    onChunk: (chunk) => dispatch({ type: 'CHUNK_RETRIEVED', payload: chunk }),
+    onDone: () => dispatch({ type: 'DONE_RETRIEVING' }),
+    onError: (error) => dispatch({ type: 'SET_ERROR', payload: error }),
+  });
 
-  useEffect(() => {
-    dispatch({ type: 'INIT_MESSAGES_FROM_LOCAL_STORAGE' });
-
-    const initialPrompt = localStorage.getItem('prompt') ?? '';
-
-    // if initial prompt is set, reset chat and send prompt
-    if (initialPrompt) {
-      localStorage.removeItem('prompt');
-
-      handleSend(initialPrompt)
-    }
-  }, [])
-
-  const handleSend = useCallback(async (prompt: string) => {
-    // prevent sending multiple messages at the same time
-    if(abortControllerRef.current) {
-      abortControllerRef.current = null;
-      return;
-    }
-
+  const sendPrompt = useCallback(async (prompt: string) => {
     dispatch({ type: 'ADD_HUMAN_MESSAGE', payload: prompt });
     dispatch({ type: 'SET_ERROR', payload: null });
+    
     // Convert client messages to server format (owner -> type)
     // Only send previous conversation history, not the current prompt
     const serverMessages = state.messages.map(msg => ({
@@ -162,70 +150,34 @@ const Chat: React.FC = () => {
       content: msg.content
     }));
 
-    // Create new abort controller for this request
-    abortControllerRef.current = new AbortController();
+    await send({ prompt, messages: serverMessages });
+  }, [state.messages, send]);
 
-    try {
-      const response = await fetch('/api/prompt', {
-        signal: abortControllerRef.current.signal,
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt, messages: serverMessages }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Server error: ${response.status} ${response.statusText}`);
-      }
-
-      if (!response.body) {
-        throw new Error('No response body received');
-      }
-
-      dispatch({ type: 'START_RESPONSE' });
-
-      const reader = response.body.getReader();
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) {
-          abortControllerRef.current = null;
-          dispatch({ type: 'DONE_RETRIEVING' });
-          break;
-        }
-
-        const chunk = decoder.decode(value, { stream: true });
-        dispatch({ type: 'CHUNK_RETRIEVED', payload: chunk });
-      }
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        if (err.name === 'AbortError') {
-          // Request was cancelled, don't show error
-          return;
-        }
-        dispatch({ type: 'SET_ERROR', payload: err.message || 'Failed to send message. Please try again.' });
-      } else {
-        dispatch({ type: 'SET_ERROR', payload: 'An unexpected error occurred. Please try again.' });
-      }
-      dispatch({ type: 'DONE_RETRIEVING' });
-    }
-  }, [state.messages]);
-
-  const handleCancel = useCallback(() => {
-    if (abortControllerRef.current) {
-      abortControllerRef.current.abort();
-      abortControllerRef.current = null;
-    }
+  const cancelStream = useCallback(() => {
+    cancel();
     dispatch({ type: 'DONE_RETRIEVING' });
     dispatch({ type: 'SET_ERROR', payload: null });
-  }, []);
+  }, [cancel]);
 
-  const handleDismissError = useCallback(() => {
+  useEffect(() => {
+    dispatch({ type: 'INIT_MESSAGES_FROM_LOCAL_STORAGE' });
+    
+    const autoPrompt = localStorage.getItem('autoPrompt') ?? '';
+
+    if (autoPrompt) {
+      localStorage.removeItem('autoPrompt');
+
+      sendPrompt(autoPrompt);
+    }
+  }, [])
+
+  const dismissError = useCallback(() => {
     dispatch({ type: 'SET_ERROR', payload: null });
   }, []);
 
   const handleStarterClick = useCallback(async (text: string) => {
-    await handleSend(text);
-  }, [handleSend]);
+    await sendPrompt(text);
+  }, [sendPrompt]);
 
   return (
     <div className={`flex flex-col h-full w-full z-100`}>
@@ -274,9 +226,9 @@ const Chat: React.FC = () => {
             isFocused={true}
             isLoading={state.streamingMessage.loading}
             error={state.error}
-            onSend={handleSend}
-            onCancel={handleCancel}
-            onDismissError={handleDismissError}
+            onSend={sendPrompt}
+            onCancel={cancelStream}
+            onDismissError={dismissError}
           />
         </div>
       </div>
