@@ -43,8 +43,7 @@ const Messages: React.FC<MessagesProps> = ({
           <div className="text-6xl mb-4 opacity-60">🤖</div>
           <h2 className="text-2xl font-bold text-foreground mb-6">Welcome!</h2>
           <p className="text-foreground max-w-md mb-6">
-            I am a bot, ask me anything about my portfolio, experience, or
-            projects. I'm here to help!
+            Ask me anything about my portfolio, experience, or projects. I'm here to help!
           </p>
           <div
             id="chat-starter-messages"
