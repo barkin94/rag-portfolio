@@ -1,16 +1,18 @@
 'use client';
 
-import { RedirectType, redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Input from "../Chat/Input";
 
 export default function ChatInputWithRedirect() {
+  const router = useRouter();
+
   const handleExpand = () => {
-    redirect('/ama', RedirectType.replace);
+    router.replace('/ama');
   };
 
   const handleSend = (prompt: string) => {
-    sessionStorage.setItem('prompt', prompt);
-    redirect('/ama', RedirectType.replace);
+    localStorage.setItem('prompt', prompt);
+    router.replace('/ama');
   };
 
   return (

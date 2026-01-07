@@ -8,7 +8,7 @@ interface InputProps {
   isLoading?: boolean
   error?: string | null
   showExpandButton?: boolean
-  onSend?: (prompt: string) => Promise<void>
+  onSend?: (prompt: string) => void
   onCancel?: () => void
   onDismissError?: () => void
   onExpand?: () => void
@@ -31,13 +31,6 @@ const Input: React.FC<InputProps> = ({
   useEffect(() => {
     const userAgent = navigator.userAgent.toLowerCase();
     isSetTouchDevice(userAgent.includes('mobile'));
-
-    const initialPrompt = sessionStorage.getItem('prompt') ?? '';
-
-    sessionStorage.removeItem('prompt')
-    if(initialPrompt) {
-      submitPrompt(initialPrompt)
-    }
   }, []);
 
   // Auto-resize textarea

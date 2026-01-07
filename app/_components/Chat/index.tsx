@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useReducer, useRef, useState } from "react";
+import React, { useCallback, useEffect, useReducer, useRef } from "react";
 import { redirect, RedirectType } from 'next/navigation'
 
 import Input from "./Input";
@@ -10,7 +10,7 @@ import { LeftArrowIcon } from "@/app/_components/Icons";
 const decoder = new TextDecoder();
 
 type ChatState = {
-  isOpen: boolean;
+  error: string | null;
   messages: Message[];
   streamingMessage: {
     loading: boolean;
@@ -20,15 +20,16 @@ type ChatState = {
 
 type ChatAction =
   | { type: 'RESET_CHAT' }
+  | { type: 'SET_ERROR'; payload: string | null }
   | { type: 'START_RESPONSE' }
   | { type: 'CHUNK_RETRIEVED'; payload: string }
   | { type: 'DONE_RETRIEVING' }
-  | { type: 'SEND_MESSAGE'; payload: string };
-
+  | { type: 'ADD_HUMAN_MESSAGE'; payload: string }
+  | { type: 'INIT_MESSAGES_FROM_LOCAL_STORAGE' };
 
 function chatReducer(state: ChatState, action: ChatAction): ChatState {
   switch (action.type) {
-    case 'START_RESPONSE':
+    case 'START_RESPONSE': {
       return {
         ...state,
         streamingMessage: {
@@ -36,8 +37,9 @@ function chatReducer(state: ChatState, action: ChatAction): ChatState {
           content: ''
         },
       };
+    }
 
-    case 'CHUNK_RETRIEVED':
+    case 'CHUNK_RETRIEVED': {
       return {
         ...state,
         streamingMessage: {
@@ -45,35 +47,48 @@ function chatReducer(state: ChatState, action: ChatAction): ChatState {
           loading: false
         },
       };
+    }
 
-    case 'DONE_RETRIEVING':
+    case 'DONE_RETRIEVING': {
+      const messages: Message[] = [
+        ...state.messages,
+        { content: state.streamingMessage.content, owner: 'ai' },
+      ];
+
+      localStorage.setItem('messages', JSON.stringify(messages));
+
       return {
         ...state,
-        messages: [
-          ...state.messages,
-          { content: state.streamingMessage.content, owner: 'ai' },
-        ],
+        messages,
         streamingMessage: {
           ...state.streamingMessage,
           loading: false,
           content: ''
         },
       };
+    }
 
-    case 'SEND_MESSAGE':
+    case 'ADD_HUMAN_MESSAGE': {
+      const messages: Message[] = [
+        ...state.messages,
+        { content: action.payload, owner: 'human' },
+      ];
+
+      localStorage.setItem('messages', JSON.stringify(messages));
+
       return {
         ...state,
         streamingMessage: {
           ...state.streamingMessage,
           loading: true,
         },
-        messages: [
-          ...state.messages,
-          { content: action.payload, owner: 'human' },
-        ],
+        messages,
       };
+    }
 
-    case 'RESET_CHAT':
+    case 'RESET_CHAT': {
+      localStorage.removeItem('messages');
+
       return {
         ...state,
         messages: [],
@@ -82,9 +97,27 @@ function chatReducer(state: ChatState, action: ChatAction): ChatState {
           loading: false
         }
       };
+    }
 
-    default:
+    case 'SET_ERROR': {
+      return {
+        ...state,
+        error: action.payload,
+      };
+    }
+
+    case 'INIT_MESSAGES_FROM_LOCAL_STORAGE': {
+      const messages = localStorage.getItem('messages') ?? '[]';
+      
+      return {
+        ...state,
+        messages: JSON.parse(messages) as Message[]
+      };
+    }
+
+    default: {
       throw new Error(`Unknown action: ${action}`);
+    }
   }
 }
 
@@ -95,24 +128,33 @@ const Chat: React.FC = () => {
       content: '',
       loading: false
     },
-    isOpen: false,
+    error: null,
   });
 
-  const [error, setError] = useState<string | null>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
 
-  const handleChatCloseClicked = () => {
-    redirect('/', RedirectType.replace);
-  }
+  useEffect(() => {
+    dispatch({ type: 'INIT_MESSAGES_FROM_LOCAL_STORAGE' });
 
-  const handleChatResetClicked = () => {
-    dispatch({ type: 'RESET_CHAT' });
-  }
+    const initialPrompt = localStorage.getItem('prompt') ?? '';
+
+    // if initial prompt is set, reset chat and send prompt
+    if (initialPrompt) {
+      localStorage.removeItem('prompt');
+
+      handleSend(initialPrompt)
+    }
+  }, [])
 
   const handleSend = useCallback(async (prompt: string) => {
-    dispatch({ type: 'SEND_MESSAGE', payload: prompt });
-    setError(null);
+    // prevent sending multiple messages at the same time
+    if(abortControllerRef.current) {
+      abortControllerRef.current = null;
+      return;
+    }
 
+    dispatch({ type: 'ADD_HUMAN_MESSAGE', payload: prompt });
+    dispatch({ type: 'SET_ERROR', payload: null });
     // Convert client messages to server format (owner -> type)
     // Only send previous conversation history, not the current prompt
     const serverMessages = state.messages.map(msg => ({
@@ -146,6 +188,7 @@ const Chat: React.FC = () => {
       while (true) {
         const { done, value } = await reader.read();
         if (done) {
+          abortControllerRef.current = null;
           dispatch({ type: 'DONE_RETRIEVING' });
           break;
         }
@@ -159,9 +202,9 @@ const Chat: React.FC = () => {
           // Request was cancelled, don't show error
           return;
         }
-        setError(err.message || 'Failed to send message. Please try again.');
+        dispatch({ type: 'SET_ERROR', payload: err.message || 'Failed to send message. Please try again.' });
       } else {
-        setError('An unexpected error occurred. Please try again.');
+        dispatch({ type: 'SET_ERROR', payload: 'An unexpected error occurred. Please try again.' });
       }
       dispatch({ type: 'DONE_RETRIEVING' });
     }
@@ -173,11 +216,11 @@ const Chat: React.FC = () => {
       abortControllerRef.current = null;
     }
     dispatch({ type: 'DONE_RETRIEVING' });
-    setError(null);
+    dispatch({ type: 'SET_ERROR', payload: null });
   }, []);
 
   const handleDismissError = useCallback(() => {
-    setError(null);
+    dispatch({ type: 'SET_ERROR', payload: null });
   }, []);
 
   const handleStarterClick = useCallback(async (text: string) => {
@@ -187,13 +230,13 @@ const Chat: React.FC = () => {
   return (
     <div className={`flex flex-col h-full w-full z-100`}>
       <div
-        id="chat-frame"
+        id="chat"
         className={`flex flex-col grow overflow-hidden`}
         aria-label="Chat interface"
       >
         <div className="flex items-center border-b border-slate-200 dark:border-slate-800 p-4">
-        <button
-            onClick={handleChatCloseClicked}
+          <button
+            onClick={() => redirect('/', RedirectType.replace)}
             title="Go back"
             className="mr-4 bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-foreground rounded-full w-8 h-8 flex items-center justify-center shadow focus:outline-none cursor-pointer"
             aria-label="Go back"
@@ -206,7 +249,7 @@ const Chat: React.FC = () => {
             <p className="text-sm text-foreground">I am here to help you with your questions.</p>
           </div>
           <button
-            onClick={handleChatResetClicked}
+            onClick={() => dispatch({ type: 'RESET_CHAT' })}
             title="Reset chat"
             className="bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-foreground rounded-full w-8 h-8 flex items-center justify-center shadow focus:outline-none cursor-pointer"
             aria-label="Reset chat"
@@ -230,7 +273,7 @@ const Chat: React.FC = () => {
           <Input
             isFocused={true}
             isLoading={state.streamingMessage.loading}
-            error={error}
+            error={state.error}
             onSend={handleSend}
             onCancel={handleCancel}
             onDismissError={handleDismissError}
