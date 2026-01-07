@@ -10,6 +10,8 @@ const textEncoder = new TextEncoder();
 export async function POST(request: Request) {
   const { prompt, messages: clientMessages = [] } = await request.json()
 
+  logger.info("Prompt: " + prompt);
+
   // Convert client messages to LangChain format
   const messages: (HumanMessage | AIMessage)[] = messageMapper.toLangchain(clientMessages)
 
