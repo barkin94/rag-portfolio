@@ -25,7 +25,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const isDark = (await cookies()).get('isDark')?.value === '1';
+  const isDark = (await cookies()).get('isDark')?.value === '1' || true;
 
   return (
     <html lang="en" className={isDark ? 'dark' : ''}>
