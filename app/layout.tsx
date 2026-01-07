@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Barkin Buyuksagin",
+  title: "Barkin Buyuksagin's Portfolio",
 };
 
 export default async function RootLayout({
