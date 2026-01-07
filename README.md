@@ -1,36 +1,93 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# RAG Portfolio
+
+A Next.js portfolio website with a RAG-powered "Ask Me Anything" (AMA) chat feature. Built with LangChain, supporting multiple LLM providers and streaming responses.
+
+## Features
+
+- **Portfolio Sections**: Home, Tech Stack, and Journey
+- **AMA Chat**: Interactive Q&A powered by RAG (Retrieval-Augmented Generation)
+- **Streaming Responses**: Real-time streaming chat interface
+- **Multiple LLM Providers**: Support for Gemini, OpenRouter, and Ollama
+- **Vector Store**: Embeddings-based retrieval system
+
+## Tech Stack
+
+- **Frontend**: Next.js 16, React 19, Tailwind CSS
+- **Backend**: LangChain, Hugging Face embeddings
+- **LLM Providers**: Google Gemini, OpenRouter, Ollama
+- **Infrastructure**: Redis (via Docker Compose)
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
+- Node.js 18+
+- Docker (for Redis)
+
+### Installation
+
+1. Clone the repository:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone <repository-url>
+cd rag-portfolio
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Install dependencies:
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Set up environment variables:
+```bash
+# Required for all providers
+HF_EMBEDDINGS_API_KEY=your_huggingface_api_key
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# Choose one LLM provider:
 
-## Learn More
+# Option 1: Gemini
+LLM_PROVIDER=gemini
+GEMINI_API_KEY=your_gemini_api_key
+GEMINI_MODEL=gemini-2.5-flash-lite  # optional
+GEMINI_TEMPERATURE=0.1  # optional
 
-To learn more about Next.js, take a look at the following resources:
+# Option 2: OpenRouter
+LLM_PROVIDER=openrouter
+OPENROUTER_API_KEY=your_openrouter_api_key
+OPENROUTER_MODEL=xiaomi/mimo-v2-flash:free  # optional
+OPENROUTER_TEMPERATURE=0.1  # optional
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# Option 3: Ollama (local)
+LLM_PROVIDER=ollama
+OLLAMA_MODEL=llama3.1:8b-instruct-q4_K_M  # optional
+OLLAMA_BASE_URL=http://localhost:11434  # optional
+OLLAMA_TEMPERATURE=0.1  # optional
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+4. Run the development server:
+```bash
+npm run dev
+```
 
-## Deploy on Vercel
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Scripts
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run start` - Start production server
+- `npm run lint` - Run ESLint
+
+## Project Structure
+
+```
+├── app/              # Next.js app directory
+│   ├── ama/         # AMA chat page
+│   └── api/         # API routes
+├── backend/          # LangChain agent and tools
+├── common/           # Shared components and hooks
+└── public/           # Static assets
+```
+
+## License
+
+Private project
