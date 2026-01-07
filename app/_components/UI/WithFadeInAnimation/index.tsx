@@ -14,21 +14,14 @@ export default function WithFadeInAnimation({ children }: WithFadeInAnimationPro
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            entry.target.classList.add('fade-in-visible');
+            entry.target.classList.add('fading-in');
             // Optionally disconnect after first appearance
             observer.unobserve(entry.target);
-
-            // after animation is finished, remove css classes containing "transform" property 
-            // because children with "position: fixed" won't work properly
-            setTimeout(() => {
-              entry.target.classList.remove('fade-in-section', 'fade-in-visible');
-            }, 1500);
           }
         });
       },
       {
         threshold: 0.5,
-        //rootMargin: '0px 0px -50px 0px',
       }
     );
 
@@ -45,7 +38,7 @@ export default function WithFadeInAnimation({ children }: WithFadeInAnimationPro
   }, []);
 
   return (
-    <div ref={sectionRef} className="fade-in-section">
+    <div ref={sectionRef} className="fading-section">
       {children}
     </div>
   );

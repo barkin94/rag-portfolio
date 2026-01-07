@@ -29,23 +29,17 @@ body {
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* Fade-in animation for sections */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+
+.fading-section {
+  transition: opacity ease-out 1s, transform ease-out 1s;
 }
 
-.fade-in-section {
-  opacity: 0;
-  transform: translateY(20px) scale(0.95);
-  transition: opacity 1s ease-out, transform 1s ease-out;
-}
-
-.fade-in-section.fade-in-visible {
+.fading-section.fading-in {
   opacity: 1;
   transform: translateY(0) scale(1);
+}
+
+.fading-section.fading-out {
+  opacity: 0;
+  transform: translateY(20px) scale(0.95);
 }
