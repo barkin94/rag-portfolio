@@ -94,7 +94,7 @@ const Input: React.FC<InputProps> = ({
             placeholder="Ask me anything..."
             className="w-full resize-none overflow-y-hidden p-4 text-base 
                       bg-background text-foreground
-                      rounded-3xl border border-slate-200 dark:border-slate-800
+                      rounded-3xl border border-slate-300 dark:border-slate-800
                       focus:outline-none focus:ring-slate-500/50 dark:focus:ring-slate-400/50
                       focus:border-slate-400 dark:focus:border-slate-500
                       transition duration-300 placeholder:text-slate-400 dark:placeholder:text-slate-500
@@ -124,10 +124,10 @@ const Input: React.FC<InputProps> = ({
             title="Send message"
             type="submit"
             disabled={!inputValue.trim() || isLoading}
-            className={`p-3 rounded-full border-2 transition-all duration-300 hover:scale-110 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-slate-400
+            className={`p-3 rounded-full border-2 transition-all duration-300 hover:scale-110 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-slate-400 border-slate-400
                 ${inputValue.trim() && !isLoading
-                ? 'border-slate-400 dark:border-slate-600 text-slate-700 dark:text-slate-300 hover:bg-slate-400 dark:hover:bg-slate-600 hover:text-slate-900 dark:hover:text-slate-100 cursor-pointer'
-                : 'border-slate-300 dark:border-slate-700 text-slate-400 dark:text-slate-600 cursor-not-allowed opacity-50'
+                ? 'dark:border-slate-600 text-slate-700 dark:text-slate-300 hover:bg-slate-400 dark:hover:bg-slate-600 hover:text-slate-900 dark:hover:text-slate-100 cursor-pointer'
+                : 'dark:border-slate-700 text-slate-400 dark:text-slate-600 cursor-not-allowed opacity-50'
               }`}
             aria-label="Send message"
           >
