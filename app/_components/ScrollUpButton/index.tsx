@@ -1,7 +1,7 @@
 'use client';
 
 import React from "react";
-import { ScrollUpIcon } from "../Icons";
+import { ScrollUpIcon } from "../UI/Icons";
 
 const ScrollUpButton: React.FC = () => {
   const handleScrollToTop = () => {

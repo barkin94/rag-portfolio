@@ -5,7 +5,7 @@ import { redirect, RedirectType } from 'next/navigation'
 
 import Input from "./Input";
 import Messages, { Message } from "./Messages";
-import { LeftArrowIcon } from "@/app/_components/Icons";
+import { LeftArrowIcon } from "@/app/_components/UI/Icons";
 import { useStreamingFetch } from "@/app/_hooks/useStreamingFetch";
 
 type ChatState = {

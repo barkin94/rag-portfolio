@@ -2,7 +2,6 @@ import Journey from "./_components/Journey";
 import Header from "./_components/Header";
 import TechStack from "./_components/TechStack";
 import Home from "./_components/Home";
-import ParticlesBackground from "./_components/ParticlesBackground";
 import Footer from "./_components/Footer";
 import ScrollUpButton from "./_components/ScrollUpButton";
 

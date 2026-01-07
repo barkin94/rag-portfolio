@@ -1,6 +1,6 @@
 'use client'
 
-import { CancelIcon, ExpandIcon, SendIcon } from "@/app/_components/Icons";
+import { CancelIcon, ExpandIcon, SendIcon } from "@/app/_components/UI/Icons";
 import { useState, useRef, useEffect } from "react";
 
 interface InputProps {

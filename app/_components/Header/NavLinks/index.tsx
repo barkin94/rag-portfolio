@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import Link from "next/link";
 
@@ -9,19 +9,28 @@ const navItems = [
   ['Journey', '/#journey']
 ];
 
-export default () => (
-    <div className="flex items-center justify-center flex-1 gap-6">
-    {
-        navItems.map(([label, url], index) => (
-            <Link 
-            key={index}
-            href={url} 
-            onNavigate={(e) => console.log(e)}
-            className="text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 transition-colors"
-          >
-            {label}
-          </Link>
-        ))
-    }
-    </div>
-) 
+type NavLinksProps = {
+  className?: string;
+  aftertLinkClick?: () => void;
+};
+
+  const NavLinks: React.FC<NavLinksProps> = ({ className = '', aftertLinkClick }) => {
+    return (
+      <div className={`flex items-center gap-6 ${className}`}>
+        {
+          navItems.map(([label, url], index) => (
+            <Link
+              key={index}
+              href={url}
+              onClick={() => aftertLinkClick?.()}
+              className="text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 transition-colors"
+            >
+              {label}
+            </Link>
+          ))
+        }
+      </div>
+    )
+  }
+
+export default NavLinks;
