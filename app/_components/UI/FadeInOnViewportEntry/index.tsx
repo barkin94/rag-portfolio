@@ -2,11 +2,11 @@
 
 import { useEffect, useRef } from 'react';
 
-interface WithFadeInAnimationProps {
+interface FadeInOnViewportEntryProps {
   children: React.ReactNode;
 }
 
-export default function WithFadeInAnimation({ children }: WithFadeInAnimationProps) {
+export default function FadeInOnViewportEntry({ children }: FadeInOnViewportEntryProps) {
   const sectionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -14,6 +14,7 @@ export default function WithFadeInAnimation({ children }: WithFadeInAnimationPro
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
+            entry.target.classList.remove('fading-out');
             entry.target.classList.add('fading-in');
             // Optionally disconnect after first appearance
             observer.unobserve(entry.target);
@@ -38,7 +39,7 @@ export default function WithFadeInAnimation({ children }: WithFadeInAnimationPro
   }, []);
 
   return (
-    <div ref={sectionRef} className="fading-section">
+    <div ref={sectionRef} className="fading-section fading-out">
       {children}
     </div>
   );

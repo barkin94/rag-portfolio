@@ -1,6 +1,6 @@
 import { workExperienceData } from '@/backend/data';
 import Card from '../UI/Card';
-import WithFadeInAnimation from '../UI/WithFadeInAnimation';
+import WithFadeInAnimation from '../UI/FadeInOnViewportEntry';
 
 interface TimelineItem {
   role: string;

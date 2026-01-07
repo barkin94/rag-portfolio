@@ -1,6 +1,6 @@
 import TypingText from "../UI/TypingText";
 import About from "./About";
-import WithFadeInAnimation from "../UI/WithFadeInAnimation";
+import WithFadeInAnimation from "../UI/FadeInOnViewportEntry";
 import ChatInputWithRedirect from "../ChatInputWithRedirect";
 
 export default function Home() {

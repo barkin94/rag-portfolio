@@ -1,6 +1,6 @@
 import React from 'react';
 import Card from '../UI/Card';
-import WithFadeInAnimation from '../UI/WithFadeInAnimation';
+import WithFadeInAnimation from '../UI/FadeInOnViewportEntry';
 
 const skills = {
   "Programming Languages": [
