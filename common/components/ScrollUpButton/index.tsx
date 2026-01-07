@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from "react";
+
 import { ScrollUpIcon } from "../Icons";
 
 const ScrollUpButton: React.FC = () => {

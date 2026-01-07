@@ -1,6 +1,7 @@
 'use client'
 
 import { ReactNode } from 'react';
+
 import { CancelIcon, HamburgerIcon } from '../Icons';
 
 interface SideBarProps {

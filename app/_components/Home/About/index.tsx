@@ -1,4 +1,4 @@
-import { LinkedInIcon, GitHubIcon, EmailIcon, ResumeIcon } from "../../UI/Icons";
+import { LinkedInIcon, GitHubIcon, EmailIcon, ResumeIcon } from "@/common/components/Icons";
 
 export default () => (
   <div

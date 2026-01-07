@@ -1,7 +1,7 @@
 'use client'
 
-import { CancelIcon, ExpandIcon, SendIcon } from "@/app/_components/UI/Icons";
 import { useState, useRef, useEffect } from "react";
+import { CancelIcon, SendIcon, ExpandIcon } from "../Icons";
 
 interface InputProps {
   isFocused?: boolean,

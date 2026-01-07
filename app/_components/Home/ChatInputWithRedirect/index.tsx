@@ -1,7 +1,6 @@
 'use client';
 
 import { useRouter } from "next/navigation";
-
 import Input from "@/common/components/Input";
 
 export default function ChatInputWithRedirect() {

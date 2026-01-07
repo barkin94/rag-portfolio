@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from "react";
+import React, { useRef } from "react";
 
 export type Message = {
   content: string;

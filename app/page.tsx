@@ -3,7 +3,7 @@ import Header from "./_components/Header";
 import TechStack from "./_components/TechStack";
 import Home from "./_components/Home";
 import Footer from "./_components/Footer";
-import ScrollUpButton from "./_components/UI/ScrollUpButton";
+import ScrollUpButton from "@/common/components/ScrollUpButton";
 
 export default async function Main() { 
   return (

@@ -3,7 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import "./globals.css";
 import { cookies } from "next/headers";
-import ParticlesBackground from "./_components/UI/ParticlesBackground";
+
+import ParticlesBackground from "@/common/components/ParticlesBackground";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

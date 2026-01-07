@@ -1,9 +1,10 @@
 'use client'
 
 import React, { useState } from "react";
+
 import NavLinks from "../NavLinks"
 import ThemeToggleButton from "../ThemeToggleButton"
-import ToggleableSideBar from "../../UI/SideBar";
+import ToggleableSideBar from "@/common/components/SideBar";
 
 type SideBarProps = {
     isDark: boolean;

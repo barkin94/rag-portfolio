@@ -1,7 +1,7 @@
-import TypingText from "../UI/TypingText";
+import TypingText from "@/common/components/TypingText";
 import About from "./About";
-import WithFadeInAnimation from "../UI/FadeInOnViewportEntry";
-import ChatInputWithRedirect from "../ChatInputWithRedirect";
+import WithFadeInAnimation from "@/common/components/FadeInOnViewportEntry";
+import ChatInputWithRedirect from "./ChatInputWithRedirect";
 
 export default function Home() {
   return (

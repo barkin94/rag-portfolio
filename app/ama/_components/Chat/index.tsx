@@ -1,12 +1,13 @@
 'use client';
 
-import React, { useCallback, useEffect, useReducer, useRef } from "react";
+import React, { useCallback, useEffect, useReducer } from "react";
 import { redirect, RedirectType } from 'next/navigation'
 
-import Input from "./Input";
+import Input from "@/common/components/Input";
 import Messages, { Message } from "./Messages";
-import { LeftArrowIcon } from "@/app/_components/UI/Icons";
-import { useStreamingFetch } from "@/app/_hooks/useStreamingFetch";
+import { LeftArrowIcon } from "@/common/components/Icons";
+import { useStreamingFetch } from "@/common/hooks/useStreamingFetch";
+
 
 type ChatState = {
   error: string | null;

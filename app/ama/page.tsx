@@ -1,5 +1,5 @@
-import Chat from "../_components/Chat";
-import WithFadeInAnimation from "../_components/UI/FadeInOnViewportEntry";
+import WithFadeInAnimation from "@/common/components/FadeInOnViewportEntry";
+import Chat from "./_components/Chat";
 
 export default function AmaPage() {
   return (
