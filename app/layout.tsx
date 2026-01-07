@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import "./globals.css";
-import { cookies } from "next/headers";
 
 import ParticlesBackground from "@/common/components/ParticlesBackground";
+import { Theme } from "@/common/enums/theme";
+import { getThemeCookieInServer } from "@/common/utils/cookie";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,10 +26,10 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const isDark = (await cookies()).get('isDark')?.value === '1' || true;
+  const theme = await getThemeCookieInServer();
 
   return (
-    <html lang="en" className={isDark ? 'dark' : ''}>
+    <html lang="en" className={theme === Theme.Dark ? 'dark' : ''}>
       {process.env.NODE_ENV === 'production' && <SpeedInsights />}
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
