@@ -20,7 +20,7 @@ export default function Timeline() {
   }));
 
   return (
-    <section id='journey' className="container mx-auto px-4 py-8 max-w-4xl">
+    <section id='journey' className="container mx-auto px-4 py-20 max-w-4xl">
       <WithFadeInAnimation>
         <h1 className="text-4xl font-bold text-center mb-4">My Journey</h1>
         <p className="text-xl text-center text-slate-600 dark:text-slate-300 mb-12">The path of building, scaling...</p>
