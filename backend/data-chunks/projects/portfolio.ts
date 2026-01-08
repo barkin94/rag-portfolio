@@ -1,5 +1,19 @@
 import { Document } from "langchain";
 
+const PROJECT_NAME = "rag-portfolio";
+const RAG_PORTFOLIO_TECHNOLOGIES: string[] = [
+  "Next.js",
+  "React",
+  "Tailwind",
+  "TypeScript",
+  "LangChain",
+  "Hugging Face",
+  "RAG",
+  "Gemini",
+  "OpenRouter",
+  "Ollama",
+];
+
 const portfolioProjectChunks: Document[] = [
   new Document({
     pageContent: `RAG PORTFOLIO WEBSITE
@@ -13,10 +27,9 @@ const portfolioProjectChunks: Document[] = [
   The portfolio showcases my work and includes an interactive AMA chat powered by RAG (Retrieval-Augmented Generation), enabling natural conversations about my professional background. The chat uses semantic search to retrieve relevant information from a vector store and generates responses using multiple LLM providers.`,
     metadata: {
       section: "projects",
-      projectName: "rag-portfolio",
-      projectType: "personal",
-      status: "active",
-      topics: ["portfolio", "rag", "nextjs", "langchain"],
+      projectName: PROJECT_NAME,
+      topics: ["portfolio", "rag", "nextjs", "langchain", "chat"],
+      technologies: RAG_PORTFOLIO_TECHNOLOGIES,
     },
   }),
 
@@ -33,8 +46,9 @@ const portfolioProjectChunks: Document[] = [
   The AMA chat feature allows visitors to ask questions about my portfolio, experience, or projects, with the agent providing accurate, context-aware responses based on the vector store data.`,
     metadata: {
       section: "projects",
-      projectName: "rag-portfolio",
+      projectName: PROJECT_NAME,
       topics: ["features", "capabilities", "ama-chat"],
+      technologies: RAG_PORTFOLIO_TECHNOLOGIES,
     },
   }),
 
@@ -57,8 +71,9 @@ const portfolioProjectChunks: Document[] = [
   • TypeScript for type safety across the codebase`,
     metadata: {
       section: "projects",
-      projectName: "rag-portfolio",
-      topics: ["technologies", "tech-stack", "nextjs", "react", "langchain"],
+      projectName: PROJECT_NAME,
+      topics: ["technologies", "tech-stack", "nextjs", "react", "langchain", "hugging-face", "gemini", "openrouter", "ollama"],
+      technologies: RAG_PORTFOLIO_TECHNOLOGIES,
     },
   }),
 
@@ -77,7 +92,7 @@ const portfolioProjectChunks: Document[] = [
   The system allows the agent to answer questions about portfolio, experience, and projects by retrieving relevant information from the vector store and using it as context for the LLM.`,
     metadata: {
       section: "projects",
-      projectName: "rag-portfolio",
+      projectName: PROJECT_NAME,
       feature: "rag-system",
       topics: [
         "rag",
@@ -86,6 +101,7 @@ const portfolioProjectChunks: Document[] = [
         "langchain",
         "architecture",
       ],
+      technologies: RAG_PORTFOLIO_TECHNOLOGIES,
     },
   }),
 
@@ -108,9 +124,10 @@ const portfolioProjectChunks: Document[] = [
   • Accurate retrieval through semantic search and metadata filtering`,
     metadata: {
       section: "projects",
-      projectName: "rag-portfolio",
+      projectName: PROJECT_NAME,
       topic: "architecture",
       topics: ["architecture", "design-decisions", "rag"],
+      technologies: RAG_PORTFOLIO_TECHNOLOGIES,
     },
   }),
 
@@ -138,8 +155,9 @@ const portfolioProjectChunks: Document[] = [
   • public/ - Static assets`,
     metadata: {
       section: "projects",
-      projectName: "rag-portfolio",
+      projectName: PROJECT_NAME,
       topics: ["project-structure", "organization"],
+      technologies: RAG_PORTFOLIO_TECHNOLOGIES,
     },
   }),
 ];

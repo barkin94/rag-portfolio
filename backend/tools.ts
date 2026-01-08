@@ -16,6 +16,29 @@ enum Section {
 }
 
 // ============================================
+// HELPER FUNCTIONS
+// ============================================
+
+/**
+ * Checks if any of the provided technologies match technologies in the document's metadata.
+ * Checks both the technologies array and topics array for flexible matching.
+ * Returns true if any provided technology matches, or if no technologies are provided.
+ */
+const matchesTechnologies = (
+  doc: { metadata: Record<string, any> },
+  technologies: string[]
+): boolean => {
+  // Check if any of the provided technologies match
+  return technologies.some((technology) => {
+    const techLower = technology.toLowerCase();
+
+    return doc.metadata.technologies.some((tech: string) =>
+      tech.toLowerCase().includes(techLower)
+    )
+  });
+};
+
+// ============================================
 // TOOL 1: GET GENERAL INFO
 // ============================================
 
@@ -217,7 +240,7 @@ export const getAchievementsTool = () => tool(
 // ============================================
 
 export const getProjectsTool = () => tool(
-  async ({ query, projectName, technology }) => {
+  async ({ query, projectName, technologies }) => {
     const results = await vectorStore.similaritySearch(
       query,
       projectName ? 2 : 4,
@@ -229,24 +252,15 @@ export const getProjectsTool = () => tool(
           return doc.metadata.projectName.toLowerCase().includes(projectName.toLowerCase());
         }
         
-        // Filter by technology if specified
-        if (technology && doc.metadata.technologies) {
-          const techArray = Array.isArray(doc.metadata.technologies) 
-            ? doc.metadata.technologies 
-            : [];
-          return techArray.some(tech => 
-            tech.toLowerCase().includes(technology.toLowerCase())
-          );
-        }
+        // Filter by technologies if specified
+        if (technologies.length > 0) {
+          return technologies.some((technology) => {
+            const techLower = technology.toLowerCase();
         
-        // Filter by technology in topics if specified
-        if (technology && doc.metadata.topics) {
-          const topicsArray = Array.isArray(doc.metadata.topics) 
-            ? doc.metadata.topics 
-            : [];
-          return topicsArray.some(topic => 
-            topic.toLowerCase().includes(technology.toLowerCase())
-          );
+            return doc.metadata.technologies.some((tech: string) =>
+              tech.toLowerCase().includes(techLower)
+            )
+          });
         }
         
         return true;
@@ -275,7 +289,7 @@ export const getProjectsTool = () => tool(
     schema: z.object({
       query: z.string().describe("What the person is asking about projects, features, or implementations"),
       projectName: z.string().optional().describe("Specific project name if asking about a particular project (e.g., 'rag-portfolio', 'rag portfolio')"),
-      technology: z.string().optional().describe("Technology to filter by (e.g., 'React', 'Next.js', 'RAG', 'LangChain')"),
+      technologies: z.array(z.string()).describe("Array of technologies to filter by (e.g., ['React', 'Next.js'], ['RAG', 'LangChain'])"),
     })
   }
 );
