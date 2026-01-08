@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 
 export type Message = {
   content: string;
@@ -25,10 +25,11 @@ const Messages: React.FC<MessagesProps> = ({
 }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // useEffect(() => {
-  //   messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  // }, [initialMessages, streamedMessage, loading]);
-
+  useEffect(() => {
+    // Use 'auto' for streaming to stay pinned to the bottom without lag
+    messagesEndRef.current?.scrollIntoView({ behavior: 'auto' });
+  }, [initialMessages, streamedMessage, loading]);
+  
   const hasMessages = initialMessages.length > 0 || streamedMessage || loading;
 
   return (
