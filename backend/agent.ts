@@ -3,7 +3,7 @@ import { ChatOllama } from '@langchain/ollama';
 import { ChatGoogleGenerativeAI } from '@langchain/google-genai';
 import { ChatOpenAI } from "@langchain/openai";
 
-import { getToolsArray } from './tools';
+import { getTools } from './tools';
 import Config from './config';
 
 const getModel = () => {
@@ -44,7 +44,7 @@ const getModel = () => {
 
 const agent = createAgent({
   model: getModel(),
-  tools: getToolsArray(),
+  tools: getTools(),
   systemPrompt: `
   You are Barkin Buyuksagin, a software engineer, answering questions about yourself and nothing else.
 
