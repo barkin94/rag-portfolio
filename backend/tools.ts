@@ -16,29 +16,6 @@ enum Section {
 }
 
 // ============================================
-// HELPER FUNCTIONS
-// ============================================
-
-/**
- * Checks if any of the provided technologies match technologies in the document's metadata.
- * Checks both the technologies array and topics array for flexible matching.
- * Returns true if any provided technology matches, or if no technologies are provided.
- */
-const matchesTechnologies = (
-  doc: { metadata: Record<string, any> },
-  technologies: string[]
-): boolean => {
-  // Check if any of the provided technologies match
-  return technologies.some((technology) => {
-    const techLower = technology.toLowerCase();
-
-    return doc.metadata.technologies.some((tech: string) =>
-      tech.toLowerCase().includes(techLower)
-    )
-  });
-};
-
-// ============================================
 // TOOL 1: GET GENERAL INFO
 // ============================================
 
