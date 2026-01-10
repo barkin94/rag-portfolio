@@ -4,15 +4,15 @@ import React, { useCallback, useEffect, useReducer } from "react";
 import { redirect, RedirectType } from 'next/navigation'
 
 import Input from "@/common/components/Input";
-import Messages, { Message } from "./Messages";
+import MessageHistory, { Message } from "./MessageHistory";
 import { LeftArrowIcon } from "@/common/components/Icons";
 import { useStreamingFetch } from "@/common/hooks/useStreamingFetch";
 
-
-type ChatState = {
+export type ChatState = {
   error: string | null;
   messages: Message[];
-  streamingMessage: {
+  responseMessage: {
+    isActive: boolean;
     loading: boolean;
     content: string;
   }
@@ -32,8 +32,9 @@ function chatReducer(state: ChatState, action: ChatAction): ChatState {
     case 'START_RESPONSE': {
       return {
         ...state,
-        streamingMessage: {
-          ...state.streamingMessage,
+        responseMessage: {
+          isActive: true,
+          loading: true,
           content: ''
         },
       };
@@ -42,9 +43,10 @@ function chatReducer(state: ChatState, action: ChatAction): ChatState {
     case 'CHUNK_RETRIEVED': {
       return {
         ...state,
-        streamingMessage: {
-          content: state.streamingMessage.content + action.payload,
-          loading: false
+        responseMessage: {
+          isActive: true,
+          loading: false,
+          content: state.responseMessage.content + action.payload,
         },
       };
     }
@@ -52,7 +54,7 @@ function chatReducer(state: ChatState, action: ChatAction): ChatState {
     case 'DONE_RETRIEVING': {
       const messages: Message[] = [
         ...state.messages,
-        { content: state.streamingMessage.content, owner: 'ai' },
+        { content: state.responseMessage.content, owner: 'ai' },
       ];
 
       localStorage.setItem('messages', JSON.stringify(messages));
@@ -60,8 +62,8 @@ function chatReducer(state: ChatState, action: ChatAction): ChatState {
       return {
         ...state,
         messages,
-        streamingMessage: {
-          ...state.streamingMessage,
+        responseMessage: {
+          isActive: false,
           loading: false,
           content: ''
         },
@@ -78,9 +80,10 @@ function chatReducer(state: ChatState, action: ChatAction): ChatState {
 
       return {
         ...state,
-        streamingMessage: {
-          ...state.streamingMessage,
+        responseMessage: {
+          isActive: true,
           loading: true,
+          content: '',
         },
         messages,
       };
@@ -92,9 +95,10 @@ function chatReducer(state: ChatState, action: ChatAction): ChatState {
       return {
         ...state,
         messages: [],
-        streamingMessage: {
+        responseMessage: {
+          isActive: false,
+          loading: false,
           content: '',
-          loading: false
         }
       };
     }
@@ -124,9 +128,10 @@ function chatReducer(state: ChatState, action: ChatAction): ChatState {
 const Chat: React.FC = () => {
   const [state, dispatch] = useReducer(chatReducer, {
     messages: [],
-    streamingMessage: {
+    responseMessage: {
+      isActive: false,
+      loading: false,
       content: '',
-      loading: false
     },
     error: null,
   });
@@ -214,10 +219,9 @@ const Chat: React.FC = () => {
         <div className="self-center w-full lg:w-3/4 xl:w-1/2 p-4">
           <div className="mt-16"></div>
 
-          <Messages
-            initialMessages={state.messages}
-            streamedMessage={state.streamingMessage.content}
-            loading={state.streamingMessage.loading}
+          <MessageHistory
+            messages={state.messages}
+            responseMessage={state.responseMessage}
             onStarterClick={handleStarterClick}
           />
 
@@ -225,7 +229,7 @@ const Chat: React.FC = () => {
 
           <Input
             isFocused={true}
-            isLoading={state.streamingMessage.loading}
+            isLoading={state.responseMessage.loading}
             error={state.error}
             onSend={sendPrompt}
             onCancel={cancelStream}
