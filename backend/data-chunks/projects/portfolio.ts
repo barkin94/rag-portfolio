@@ -1,3 +1,4 @@
+import { Topic } from "@/backend/enums";
 import { Document } from "langchain";
 
 const PROJECT_NAME = "rag-portfolio";
@@ -22,14 +23,10 @@ const portfolioProjectChunks: Document[] = [
   
   Project Type: Personal Portfolio
   Status: Active
-  Year: 2024-2025
   
   The portfolio showcases my work and includes an interactive AMA chat powered by RAG (Retrieval-Augmented Generation), enabling natural conversations about my professional background. The chat uses semantic search to retrieve relevant information from a vector store and generates responses using multiple LLM providers.`,
     metadata: {
-      section: "projects",
-      projectName: PROJECT_NAME,
-      topics: ["portfolio", "rag", "nextjs", "langchain", "chat"],
-      technologies: RAG_PORTFOLIO_TECHNOLOGIES,
+      tags: [Topic.Projects],
     },
   }),
 
@@ -45,10 +42,7 @@ const portfolioProjectChunks: Document[] = [
   
   The AMA chat feature allows visitors to ask questions about my portfolio, experience, or projects, with the agent providing accurate, context-aware responses based on the vector store data.`,
     metadata: {
-      section: "projects",
-      projectName: PROJECT_NAME,
-      topics: ["features", "capabilities", "ama-chat"],
-      technologies: RAG_PORTFOLIO_TECHNOLOGIES,
+      tags: [Topic.Projects],
     },
   }),
 
@@ -67,13 +61,9 @@ const portfolioProjectChunks: Document[] = [
   • MemoryVectorStore for document storage and retrieval
   
   Infrastructure:
-  • Redis (via Docker Compose) for caching and session management
   • TypeScript for type safety across the codebase`,
     metadata: {
-      section: "projects",
-      projectName: PROJECT_NAME,
-      topics: ["technologies", "tech-stack", "nextjs", "react", "langchain", "hugging-face", "gemini", "openrouter", "ollama"],
-      technologies: RAG_PORTFOLIO_TECHNOLOGIES,
+      tags: [Topic.Projects],
     },
   }),
 
@@ -91,17 +81,7 @@ const portfolioProjectChunks: Document[] = [
   
   The system allows the agent to answer questions about portfolio, experience, and projects by retrieving relevant information from the vector store and using it as context for the LLM.`,
     metadata: {
-      section: "projects",
-      projectName: PROJECT_NAME,
-      feature: "rag-system",
-      topics: [
-        "rag",
-        "embeddings",
-        "vector-store",
-        "langchain",
-        "architecture",
-      ],
-      technologies: RAG_PORTFOLIO_TECHNOLOGIES,
+      tags: [Topic.Projects],
     },
   }),
 
@@ -123,43 +103,39 @@ const portfolioProjectChunks: Document[] = [
   • Supports multiple LLM backends (Gemini, OpenRouter, Ollama)
   • Accurate retrieval through semantic search and metadata filtering`,
     metadata: {
-      section: "projects",
-      projectName: PROJECT_NAME,
-      topic: "architecture",
-      topics: ["architecture", "design-decisions", "rag"],
-      technologies: RAG_PORTFOLIO_TECHNOLOGIES,
+      tags: [Topic.Projects],
     },
   }),
 
-  new Document({
-    pageContent: `RAG PORTFOLIO - PROJECT STRUCTURE
+  // new Document({
+  //   pageContent: `RAG PORTFOLIO - PROJECT STRUCTURE
   
-  The project is organized as follows:
+  // The project is organized as follows:
   
-  • app/ - Next.js app directory containing pages and API routes
-    - ama/ - AMA chat page with interactive chat interface
-    - api/ - API routes for handling chat requests
-    - _components/ - React components for portfolio sections
+  // • app/ - Next.js app directory containing pages and API routes
+  //   - ama/ - AMA chat page with interactive chat interface
+  //   - api/ - API routes for handling chat requests
+  //   - _components/ - React components for portfolio sections
   
-  • backend/ - LangChain agent and tools
-    - agent.ts - Main agent configuration and streaming
-    - tools.ts - RAG tools for retrieving information
-    - vector-store.ts - Vector store setup and document chunks
-    - config.ts - Configuration for LLM providers and embeddings
+  // • backend/ - LangChain agent and tools
+  //   - agent.ts - Main agent configuration and streaming
+  //   - tools.ts - RAG tools for retrieving information
+  //   - vector-store.ts - Vector store setup and document chunks
+  //   - config.ts - Configuration for LLM providers and embeddings
   
-  • common/ - Shared components and hooks
-    - components/ - Reusable UI components
-    - hooks/ - Custom React hooks
-    - utils/ - Utility functions
+  // • common/ - Shared components and hooks
+  //   - components/ - Reusable UI components
+  //   - hooks/ - Custom React hooks
+  //   - utils/ - Utility functions
   
-  • public/ - Static assets`,
-    metadata: {
-      section: "projects",
-      projectName: PROJECT_NAME,
-      topics: ["project-structure", "organization"],
-      technologies: RAG_PORTFOLIO_TECHNOLOGIES,
-    },
-  }),
+  // • public/ - Static assets`,
+  //   metadata: {
+  //     section: "projects",
+  //     projectName: PROJECT_NAME,
+  //     topics: ["project-structure", "organization"],
+  //     technologies: RAG_PORTFOLIO_TECHNOLOGIES,
+  //   },
+  // }),
 ];
 
 export default portfolioProjectChunks;

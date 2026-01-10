@@ -1,298 +1,58 @@
 import { tool } from 'langchain';
 import { z } from 'zod';
+import { Document } from 'langchain';
+
 import vectorStore from './vector-store';
+import { Topic } from './enums';
 
-// ============================================
-// SIMPLIFIED SECTION TYPES
-// ============================================
+// const TOPIC_K_MAP: Record<Topic, number> = {
+//   [Topic.GeneralInfo]: 2,
+//   [Topic.Contact]: 1,
+//   [Topic.Education]: 2,
+//   [Topic.Skills]: 4,
+//   [Topic.WorkExperience]: 5,
+//   [Topic.Projects]: 6,
+//   [Topic.Achievements]: 3,
+// };
 
-enum Section {
-  OVERVIEW = 'overview',
-  WORK = 'work',
-  SKILLS = 'skills',
-  EDUCATION = 'education',
-  ACHIEVEMENTS = 'achievements',
-  PROJECTS = 'projects'
-}
+// function kFromTopics(topics?: Topic[]) {
+//   if (!topics || topics.length === 0) return 4;
 
-// ============================================
-// TOOL 1: GET GENERAL INFO
-// ============================================
+//   return 20;
+//   //return Math.max(...topics.map(topic => TOPIC_K_MAP[topic]));
+// }
 
-export const getInfoTool = () => tool(
-  async ({ query, includeContact }) => {
+export const getInfoTool = tool(
+  async ({ query, topics, subjects }) => {
     const results = await vectorStore.similaritySearch(
       query,
-      3,
-      (doc) => {
-        // Always include overview section
-        if (doc.metadata.section === Section.OVERVIEW) return true;
-        
-        // Optionally include contact info
-        if (includeContact && doc.metadata.topics?.includes('contact')) return true;
-        
-        return false;
-      }
-    );
+      20, // overfetch and filter later due to MemoryVectorStore limitation
+      (doc: Document) => (doc.metadata.tags as string[]).some(tag => {
+        return topics?.includes(tag as Topic)
+      })
+    )
 
     if (results.length === 0) {
       return "No information found.";
     }
+
     return results.map(chunk => chunk.pageContent).join("\n\n---\n\n");
   },
   {
     name: 'get_info',
     description: `
-    Retrieves general information about Barkin - professional summary, background, expertise, and contact details.
-    
-    Use when asked about:
-    - "Tell me about yourself"
-    - Professional background or summary
-    - Contact information (email, LinkedIn, location)
-    - Work preferences or availability
-    - General introduction
+      Retrieves information about yourself from the knowledge base.
+      
+      Use this when you require information about yourself.
     `,
     schema: z.object({
-      query: z.string().describe("What the person is asking about general information or background"),
-      includeContact: z.boolean().default(false).describe("Set to true if specifically asking for contact information (email, LinkedIn, location)"),
+      query: z.string().describe("The full prompt from the user."),
+      topics: z.array(z.nativeEnum(Topic)).describe(`
+        High-level categories to filter the search. Map the user's intent to one or more of these predefined categories.
+      `),
+      subjects: z.array(z.string()).describe(`
+        Specific entities, technologies, or keywords mentioned in the prompt (e.g., 'React', 'University of Toronto', 'AWS').
+      `),
     })
   }
 );
-
-// ============================================
-// TOOL 2: GET WORK EXPERIENCE
-// ============================================
-
-export const getWorkExperienceTool = () => tool(
-  async ({ query, company }) => {
-    const results = await vectorStore.similaritySearch(
-      query,
-      company ? 2 : 4, // Fewer results if filtering by company
-      (doc) => {
-        if (doc.metadata.section !== Section.WORK) return false;
-        
-        // Filter by company if specified
-        if (company && doc.metadata.company) {
-          return doc.metadata.company.toLowerCase().includes(company.toLowerCase());
-        }
-        
-        return true;
-      }
-    );
-
-    if (results.length === 0) {
-      return "No information found.";
-    }
-    return results.map(chunk => chunk.pageContent).join("\n\n---\n\n");
-  },
-  {
-    name: 'get_work_experience',
-    description: `
-    Retrieves work experience and career history - past jobs, companies, roles, projects, technologies used, and achievements.
-    
-    Use when asked about:
-    - Work history or career progression
-    - Specific companies or roles
-    - Projects worked on
-    - Technologies and tools used professionally
-    - Job responsibilities and achievements
-    - Experience with specific tech stacks
-    `,
-    schema: z.object({
-      query: z.string().describe("What the person is asking about work experience, roles, companies, projects, or technologies"),
-      company: z.string().optional().describe("Specific company name if asking about a particular employer (e.g., 'Getir', 'Cubicl')"),      
-    })
-  }
-);
-
-// ============================================
-// TOOL 3: GET TECHNICAL SKILLS
-// ============================================
-
-export const getTechnicalSkillsTool = () => tool(
-  async ({ query }) => {
-    const results = await vectorStore.similaritySearch(
-      query,
-      2,
-      (doc) => doc.metadata.section === Section.SKILLS
-    );
-
-    if (results.length === 0) {
-      return "No information found.";
-    }
-    return results.map(chunk => chunk.pageContent).join("\n\n---\n\n");
-  },
-  {
-    name: 'get_technical_skills',
-    description: `
-    Retrieves technical skills, technologies, programming languages, frameworks, and tools expertise.
-        
-    Use when asked about:
-    - Technical skills or stack
-    - Programming languages known
-    - Frameworks and libraries
-    - Databases and infrastructure
-    - DevOps tools
-    - Specific technology expertise
-    `,
-    schema: z.object({
-      query: z.string().describe("What the person is asking about technical skills, technologies, or tools"),
-    })
-  }
-);
-
-// ============================================
-// TOOL 4: GET EDUCATION
-// ============================================
-
-export const getEducationTool = () => tool(
-  async ({ query }) => {
-    const results = await vectorStore.similaritySearch(
-      query,
-      2,
-      (doc) => doc.metadata.section === Section.EDUCATION
-    );
-
-    if (results.length === 0) {
-      return "No information found.";
-    }
-    return results.map(chunk => chunk.pageContent).join("\n\n---\n\n");
-  },
-  {
-    name: 'get_education',
-    description: `
-    Retrieves education background - degrees, universities, certifications, and academic achievements.
-    
-    Use when asked about:
-    - Education or academic background
-    - University or college attended
-    - Degree obtained
-    - Certifications or courses
-    - Where studied
-
-    `,
-    schema: z.object({
-      query: z.string().describe("What the person is asking about education, degrees, universities, or certifications"),
-    })
-  }
-);
-
-// ============================================
-// TOOL 5: GET ACHIEVEMENTS
-// ============================================
-
-export const getAchievementsTool = () => tool(
-  async ({ query }) => {
-    const results = await vectorStore.similaritySearch(
-      query,
-      2,
-      (doc) => doc.metadata.section === Section.ACHIEVEMENTS
-    );
-
-    if (results.length === 0) {
-      return "No information found.";
-    }
-    return results.map(chunk => chunk.pageContent).join("\n\n---\n\n");
-  },
-  {
-    name: 'get_achievements',
-    description: `
-    Retrieves notable achievements, project highlights, and significant contributions.
-        
-    Use when asked about:
-    - Notable achievements or accomplishments
-    - Project highlights
-    - Performance improvements made
-    - Impact and results delivered
-    - Success stories
-    `,
-    schema: z.object({
-      query: z.string().describe("What the person is asking about achievements, accomplishments, or impact"),
-    })
-  }
-);
-
-// ============================================
-// TOOL 6: GET PROJECTS
-// ============================================
-
-export const getProjectsTool = () => tool(
-  async ({ query, projectName, technologies }) => {
-    const results = await vectorStore.similaritySearch(
-      query,
-      projectName ? 2 : 4,
-      (doc) => {
-        if (doc.metadata.section !== Section.PROJECTS) return false;
-        
-        // Filter by project name if specified
-        if (projectName && doc.metadata.projectName) {
-          return doc.metadata.projectName.toLowerCase().includes(projectName.toLowerCase());
-        }
-        
-        // Filter by technologies if specified
-        if (technologies.length > 0) {
-          return technologies.some((technology) => {
-            const techLower = technology.toLowerCase();
-        
-            return doc.metadata.technologies.some((tech: string) =>
-              tech.toLowerCase().includes(techLower)
-            )
-          });
-        }
-        
-        return true;
-      }
-    );
-
-    if (results.length === 0) {
-      return "No project information found.";
-    }
-    return results.map(chunk => chunk.pageContent).join("\n\n---\n\n");
-  },
-  {
-    name: 'get_projects',
-    description: `
-    Retrieves information about portfolio projects, personal projects, and side projects.
-    
-    Use when asked about:
-    - Portfolio projects or personal projects
-    - Side projects or hobby projects
-    - Projects built outside of work
-    - Open source contributions
-    - Project details, features, or architecture
-    - Technologies used in specific projects
-    - The RAG portfolio website itself
-    `,
-    schema: z.object({
-      query: z.string().describe("What the person is asking about projects, features, or implementations"),
-      projectName: z.string().optional().describe("Specific project name if asking about a particular project (e.g., 'rag-portfolio', 'rag portfolio')"),
-      technologies: z.array(z.string()).describe("Array of technologies to filter by (e.g., ['React', 'Next.js'], ['RAG', 'LangChain'])"),
-    })
-  }
-);
-
-// ============================================
-// TOOL FACTORY & EXPORT
-// ============================================
-
-/**
- * Creates all tools with the given vector store
- */
-export function createRAGTools() {
-  return {
-    getInfoTool: getInfoTool(),
-    getWorkExperienceTool: getWorkExperienceTool(),
-    getTechnicalSkillsTool: getTechnicalSkillsTool(),
-    getEducationTool: getEducationTool(),
-    getAchievementsTool: getAchievementsTool(),
-    getProjectsTool: getProjectsTool()
-  };
-}
-
-/**
- * Get all tools as an array (useful for LangChain agent)
- */
-export function getTools() {
-  const tools = createRAGTools();
-  return Object.values(tools);
-}

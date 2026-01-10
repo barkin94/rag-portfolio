@@ -1,13 +1,9 @@
-
-
-import { Document } from 'langchain';
 import { MemoryVectorStore } from "@langchain/classic/vectorstores/memory";
 import { HuggingFaceInferenceEmbeddings } from "@langchain/community/embeddings/hf";
 
 import Config from "./config";
 import resumeChunks from './data-chunks/resume';
 import portfolioProjectChunks from './data-chunks/projects/portfolio';
-
 
 const embeddings = new HuggingFaceInferenceEmbeddings({
   apiKey: Config.HF_EMBEDDINGS_API_KEY,
