@@ -3,7 +3,7 @@ import { ChatOllama } from '@langchain/ollama';
 import { ChatGoogleGenerativeAI } from '@langchain/google-genai';
 import { ChatOpenAI } from "@langchain/openai";
 
-import { getTools } from './tools';
+import { getInfoTool } from './tools';
 import Config from './config';
 
 const getModel = () => {
