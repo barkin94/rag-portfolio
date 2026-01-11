@@ -12,6 +12,9 @@ const BaseSchema = z.object({
 
     HF_EMBEDDINGS_MODEL: z.string().default('sentence-transformers/all-MiniLM-L6-v2'),
     HF_EMBEDDINGS_API_KEY: z.string().min(1),
+
+    TG_BOT_TOKEN: z.string().min(1).optional(),
+    TG_CHAT_ID: z.string().optional(),
 });
 
 // 1. Define sub-schemas for each LLM_PROVIDER value
@@ -51,11 +54,7 @@ try {
     config = configSchema.parse(process.env);
 } catch (error) {
     if (error instanceof z.ZodError) {
-        console.error("Environment Variable Validation Failed: " + error.flatten().fieldErrors);
-        // logger.error({
-        //     msg: "Environment Variable Validation Failed",
-        //     details: error.flatten().fieldErrors,
-        // });
+        console.error("Environment Variable Validation Failed: " + JSON.stringify(error.flatten().fieldErrors));
     }
 
     process.exit(1);
