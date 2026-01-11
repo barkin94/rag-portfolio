@@ -14,7 +14,7 @@ const skills = {
     "Redux-Saga",
     "Jest",
     "Storybook",
-    "styled-components",
+    "Tailwind CSS",
   ],
   "Backend": [
     "Node.js",
@@ -36,8 +36,8 @@ const skills = {
     "Kubernetes",
     "Docker",
     "Terraform",
-    "New Relic",
-    "Jaeger",
+    "Grafana",
+    "OpenTelemetry",
     "Vault",
   ],
 };

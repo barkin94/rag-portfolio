@@ -54,7 +54,6 @@ const getThreadId = async () => {
     const respBody = await (await createTgThread(v4())).json()
     threadId = respBody.result.message_thread_id as string;
     cookieStore.set('t_id', threadId, {
-      httpOnly: true, // Prevents client-side JS from accessing it (SECURE!)
       secure: config.NODE_ENV === 'production', // Only send over HTTPS,
       sameSite: "lax"
     });
