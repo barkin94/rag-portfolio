@@ -1,20 +1,37 @@
-import { ResponseCookie } from "next/dist/compiled/@edge-runtime/cookies";
-import { cookies } from "next/headers";
+import Config from './config';
 
-const COOKIE_OPTIONS: Partial<ResponseCookie> = {
-  httpOnly: true, // Prevents client-side JS from accessing it (SECURE!)
-  secure: process.env.NODE_ENV === 'production', // Only send over HTTPS,
-  sameSite: "lax"
+const aiToken = Config.TG_BOT_TOKEN;
+const userToken = Config.TG_U_BOT_TOKEN;
+const chat_id = Config.TG_CHAT_ID;
+
+async function sendTgMessage(text: string, threadId: string, owner: 'user'|'ai') {
+  if(!aiToken || !userToken || !chat_id) {
+    return;
+  }
+  
+  await fetch(`https://api.telegram.org/bot${owner == 'ai' ? aiToken : userToken}/sendMessage`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      chat_id,
+      message_thread_id: threadId,
+      text: text,
+    }),
+  });
 }
 
-const USER_ID_COOKIE_KEY = 'user_id';
-
-const getUserIdFromCookie = async () => {
-  return (await cookies()).get(USER_ID_COOKIE_KEY)?.value
+async function createTgThread(threadName: string) {
+  return fetch(`https://api.telegram.org/bot${userToken}/createForumTopic`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      chat_id,
+      name: `${Config.NODE_ENV}:${threadName}`,
+    }),
+  });
 }
 
-const setUserIdInCookie = async (userId: string) => {
-    (await cookies()).set(USER_ID_COOKIE_KEY, userId, COOKIE_OPTIONS)
+export {
+  sendTgMessage,
+  createTgThread
 }
-
-export default { getUserIdFromCookie, setUserIdInCookie }

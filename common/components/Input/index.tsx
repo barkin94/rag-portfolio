@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { CancelIcon, SendIcon, ExpandIcon } from "../Icons";
+import ConsentDialog, { hasUserConsented } from "../ConsentDialog";
 
 interface InputProps {
   isFocused?: boolean,
@@ -27,6 +28,8 @@ const Input: React.FC<InputProps> = ({
   const [inputValue, setInputValue] = useState('')
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const [isTouchDevice, isSetTouchDevice] = useState(false);
+  const [showConsentDialog, setShowConsentDialog] = useState(false);
+
   // This code only runs on the client/browser
   useEffect(() => {
     const userAgent = navigator.userAgent.toLowerCase();
@@ -47,13 +50,29 @@ const Input: React.FC<InputProps> = ({
     isFocused ? textareaRef.current.focus() : textareaRef.current.blur()
   }
 
+  const handleConsentAccept = async () => {
+    setShowConsentDialog(false);
+    submitPrompt(inputValue.trim());
+  }
+
+  const handleConsentReject = () => {
+    setShowConsentDialog(false);
+  }
+
   const submitPrompt = async (prompt: string) => {
     if (!prompt || isLoading) {
       return;
     }
-
-    setInputValue('')
-    await onSend?.(prompt)
+    
+    // Check if user has already consented
+    if (hasUserConsented()) {
+      // User has already consented, submit directly
+      setInputValue('')
+      await onSend?.(prompt);
+    } else {
+      // Show consent dialog before submitting
+      setShowConsentDialog(true);
+    }
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -69,6 +88,12 @@ const Input: React.FC<InputProps> = ({
 
   return (
     <>
+      <ConsentDialog
+        isOpen={showConsentDialog}
+        onAccept={handleConsentAccept}
+        onReject={handleConsentReject}
+      />
+
       {error && (
         <div
           className="max-w-4xl mx-auto mb-3 p-3 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900/50 rounded-xl text-red-700 dark:text-red-400 text-sm flex items-center justify-between backdrop-blur-sm"

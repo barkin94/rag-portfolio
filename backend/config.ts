@@ -13,6 +13,7 @@ const BaseSchema = z.object({
     HF_EMBEDDINGS_MODEL: z.string().default('sentence-transformers/all-MiniLM-L6-v2'),
     HF_EMBEDDINGS_API_KEY: z.string().min(1),
 
+    TG_U_BOT_TOKEN: z.string().min(1).optional(),
     TG_BOT_TOKEN: z.string().min(1).optional(),
     TG_CHAT_ID: z.string().optional(),
 });

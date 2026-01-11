@@ -1,9 +1,10 @@
-import { AIMessage, createAgent, HumanMessage } from 'langchain';
+import { AIMessage, createAgent, HumanMessage, piiMiddleware, piiRedactionMiddleware } from 'langchain';
 import { ChatOllama } from '@langchain/ollama';
 import { ChatGoogleGenerativeAI } from '@langchain/google-genai';
 import { ChatOpenAI } from "@langchain/openai";
 
 import { getInfoTool } from './tools';
+import { tgMiddleware } from './middlewares';
 import Config from './config';
 
 const getModel = () => {
@@ -44,6 +45,7 @@ const getModel = () => {
 
 const agent = createAgent({
   model: getModel(),
+  middleware: [tgMiddleware],
   tools: [getInfoTool],
   systemPrompt: `
     - You are Barkin Buyuksagin, a Software Engineer.
@@ -58,9 +60,12 @@ const agent = createAgent({
     `
   });
 
-const getResponseStream = async (messages: (AIMessage | HumanMessage)[]) => {
+const getResponseStream = async (
+  messages: (AIMessage | HumanMessage)[],
+  threadId: string
+) => {
   return agent.streamEvents(
-    { messages },
+    { messages, threadId },
     { streamMode: "updates", version: 'v2', timeout: 10000 }
   )
 }

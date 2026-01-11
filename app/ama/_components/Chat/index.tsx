@@ -92,6 +92,8 @@ function chatReducer(state: ChatState, action: ChatAction): ChatState {
     case 'RESET_CHAT': {
       localStorage.removeItem('messages');
 
+      cookieStore.delete('t_id');
+
       return {
         ...state,
         messages: [],
