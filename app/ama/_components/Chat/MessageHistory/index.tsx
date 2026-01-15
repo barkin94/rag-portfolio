@@ -70,7 +70,13 @@ const MessageHistory: React.FC<MessageHistoryProps> = ({
           <div>
             {responseMessage.loading && (
               <>
-                <div className="px-4 flex gap-1.5">
+                <div className="flex gap-1.5 items-center pt-4">
+                  <span
+                    className="pr-4 text-lg shrink-0 opacity-70"
+                    aria-hidden="true"
+                  >
+                    🤖
+                  </span>
                   <span
                     className="w-2 h-2 bg-foreground rounded-full animate-bounce"
                     style={{ animationDelay: "0ms" }}
