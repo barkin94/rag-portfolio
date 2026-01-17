@@ -1,41 +1,43 @@
 
-import { AIMessage, HumanMessage } from "langchain";
-import { v4 } from 'uuid';
 import { cookies } from "next/headers";
+import { HumanMessage } from "langchain";
 
 import agent from "@/backend/agent"
-import messageMapper from '@/backend/message-mapper'
 import logger from "@/logger";
-import { createTgThread } from "@/backend/utils";
+import mongodb from '@/backend/mongodb'
 import config from "@/backend/config";
 
 const textEncoder = new TextEncoder();
 
 export async function POST(request: Request) {
+  const { prompt } = await request.json()
+
   const threadId = await getThreadId();
 
-  const { prompt, messages: clientMessages = [] } = await request.json()
-
-  // Convert client messages to LangChain format
-  const messages: (HumanMessage | AIMessage)[] = messageMapper.toLangchain(clientMessages)
-
-  // Add the new prompt
-  messages.push(new HumanMessage(prompt))
+  const asyncStream = await agent.stream(
+    {
+      messages: [new HumanMessage(prompt)],
+      threadId,
+    } as any, // used any because zod.optional() in schema isn't working. langchain issue,
+    {
+      streamMode: "messages",
+      timeout: config.TIMEOUT,
+      configurable: {
+        thread_id: threadId
+      },
+    }
+  )
 
   return new Response(
     new ReadableStream({
       async start(controller) {
         try {
-          for await (const event of await agent.getResponseStream(messages, String(threadId))) {
-            if (event.event === "on_chat_model_stream") {
-              const content = event.data.chunk.content;
-              if (content) controller.enqueue(textEncoder.encode(content));
+          for await (const [token, metadata] of await asyncStream) {
+            if(token.content && metadata.langgraph_node === 'model_request') {
+              controller.enqueue(token.content);
             }
           }
         } catch (err) {
-          if(err instanceof Error) {
-            logger.error("Stream Interrupted: " + err.message);
-          }
           controller.enqueue(textEncoder.encode("\n[Error: Connection lost]"));
         } finally {
           controller.close();
@@ -51,8 +53,8 @@ const getThreadId = async () => {
   let threadId = cookieStore.get('t_id')?.value;
   
   if(!threadId) {
-    const respBody = await (await createTgThread(v4())).json()
-    threadId = respBody.result.message_thread_id as string;
+    threadId = mongodb.createThreadIdString();
+    
     cookieStore.set('t_id', threadId, {
       secure: config.NODE_ENV === 'production', // Only send over HTTPS,
       sameSite: "lax"

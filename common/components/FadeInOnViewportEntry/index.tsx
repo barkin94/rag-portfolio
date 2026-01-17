@@ -4,9 +4,10 @@ import { useEffect, useRef } from 'react';
 
 interface FadeInOnViewportEntryProps {
   children: React.ReactNode;
+  threshold?: number;
 }
 
-export default function FadeInOnViewportEntry({ children }: FadeInOnViewportEntryProps) {
+export default function FadeInOnViewportEntry({ children, threshold }: FadeInOnViewportEntryProps) {
   const sectionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -21,9 +22,7 @@ export default function FadeInOnViewportEntry({ children }: FadeInOnViewportEntr
           }
         });
       },
-      {
-        threshold: 0.5,
-      }
+      { threshold }
     );
 
     const currentRef = sectionRef.current;

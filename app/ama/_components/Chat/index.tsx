@@ -1,12 +1,13 @@
 'use client';
 
-import React, { useCallback, useEffect, useReducer } from "react";
+import React, { useCallback, useEffect, useReducer, useTransition } from "react";
 import { redirect, RedirectType } from 'next/navigation'
 
 import Input from "@/common/components/Input";
-import MessageHistory, { Message } from "./MessageHistory";
+import MessageHistory from "./MessageHistory";
 import { LeftArrowIcon } from "@/common/components/Icons";
 import { useStreamingFetch } from "@/common/hooks/useStreamingFetch";
+import { Message } from "@/common/types";
 
 export type ChatState = {
   error: string | null;
@@ -24,8 +25,7 @@ type ChatAction =
   | { type: 'START_RESPONSE' }
   | { type: 'CHUNK_RETRIEVED'; payload: string }
   | { type: 'DONE_RETRIEVING' }
-  | { type: 'ADD_HUMAN_MESSAGE'; payload: string }
-  | { type: 'INIT_MESSAGES_FROM_LOCAL_STORAGE' };
+  | { type: 'ADD_HUMAN_MESSAGE'; payload: string };
 
 function chatReducer(state: ChatState, action: ChatAction): ChatState {
   switch (action.type) {
@@ -54,10 +54,8 @@ function chatReducer(state: ChatState, action: ChatAction): ChatState {
     case 'DONE_RETRIEVING': {
       const messages: Message[] = [
         ...state.messages,
-        { content: state.responseMessage.content, owner: 'ai' },
+        { content: state.responseMessage.content, role: 'assistant' },
       ];
-
-      localStorage.setItem('messages', JSON.stringify(messages));
 
       return {
         ...state,
@@ -73,10 +71,8 @@ function chatReducer(state: ChatState, action: ChatAction): ChatState {
     case 'ADD_HUMAN_MESSAGE': {
       const messages: Message[] = [
         ...state.messages,
-        { content: action.payload, owner: 'human' },
+        { content: action.payload, role: 'user' },
       ];
-
-      localStorage.setItem('messages', JSON.stringify(messages));
 
       return {
         ...state,
@@ -90,10 +86,6 @@ function chatReducer(state: ChatState, action: ChatAction): ChatState {
     }
 
     case 'RESET_CHAT': {
-      localStorage.removeItem('messages');
-
-      cookieStore.delete('t_id');
-
       return {
         ...state,
         messages: [],
@@ -112,24 +104,19 @@ function chatReducer(state: ChatState, action: ChatAction): ChatState {
       };
     }
 
-    case 'INIT_MESSAGES_FROM_LOCAL_STORAGE': {
-      const messages = localStorage.getItem('messages') ?? '[]';
-      
-      return {
-        ...state,
-        messages: JSON.parse(messages) as Message[]
-      };
-    }
-
     default: {
       throw new Error(`Unknown action: ${action}`);
     }
   }
 }
 
-const Chat: React.FC = () => {
+type ChatProps = {
+  initialMessages: Message[];
+};
+
+const Chat: React.FC<ChatProps> = ({ initialMessages }) => {
   const [state, dispatch] = useReducer(chatReducer, {
-    messages: [],
+    messages: initialMessages,
     responseMessage: {
       isActive: false,
       loading: false,
@@ -150,15 +137,8 @@ const Chat: React.FC = () => {
   const sendPrompt = useCallback(async (prompt: string) => {
     dispatch({ type: 'ADD_HUMAN_MESSAGE', payload: prompt });
     dispatch({ type: 'SET_ERROR', payload: null });
-    
-    // Convert client messages to server format (owner -> type)
-    // Only send previous conversation history, not the current prompt
-    const serverMessages = state.messages.map(msg => ({
-      type: msg.owner,
-      content: msg.content
-    }));
 
-    await send({ prompt, messages: serverMessages });
+    await send({ prompt });
   }, [state.messages, send]);
 
   const cancelStream = useCallback(() => {
@@ -167,17 +147,15 @@ const Chat: React.FC = () => {
     dispatch({ type: 'SET_ERROR', payload: null });
   }, [cancel]);
 
+  // when entered a prompt directly on home page, retrieve it from local storage and send it immediately
   useEffect(() => {
-    dispatch({ type: 'INIT_MESSAGES_FROM_LOCAL_STORAGE' });
-    
     const autoPrompt = localStorage.getItem('autoPrompt') ?? '';
 
     if (autoPrompt) {
       localStorage.removeItem('autoPrompt');
-
       sendPrompt(autoPrompt);
     }
-  }, [])
+  }, [sendPrompt])
 
   const dismissError = useCallback(() => {
     dispatch({ type: 'SET_ERROR', payload: null });
@@ -186,6 +164,15 @@ const Chat: React.FC = () => {
   const handleStarterClick = useCallback(async (text: string) => {
     await sendPrompt(text);
   }, [sendPrompt]);
+
+  const handleResetChat = () => {
+    if(state.messages.length === 0) {
+      return;
+    }
+
+    dispatch({ type: 'RESET_CHAT' });
+    fetch('/api/messages', { method: 'DELETE' })
+  }
 
   return (
     <div className={`flex flex-col h-full w-full z-100`}>
@@ -209,7 +196,7 @@ const Chat: React.FC = () => {
             <p className="text-sm text-foreground">I am here to help you with your questions.</p>
           </div>
           <button
-            onClick={() => dispatch({ type: 'RESET_CHAT' })}
+            onClick={handleResetChat}
             title="Reset chat"
             className="bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-foreground rounded-full w-8 h-8 flex items-center justify-center shadow focus:outline-none cursor-pointer"
             aria-label="Reset chat"

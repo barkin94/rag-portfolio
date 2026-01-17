@@ -18,6 +18,7 @@ const resumeChunks: Document[] = [
     metadata: {
       tags: [Topic.GeneralInfo],
     },
+    id: "resume-summary",
   }),
 
   new Document({
@@ -28,6 +29,7 @@ const resumeChunks: Document[] = [
     metadata: {
       tags: [Topic.Contact],
     },
+    id: "resume-contact",
   }),
 
   new Document({
@@ -52,6 +54,7 @@ const resumeChunks: Document[] = [
     metadata: {
       tags: [Topic.WorkExperience],
     },
+    id: "resume-work-getir-backend",
   }),
 
   new Document({
@@ -75,6 +78,7 @@ const resumeChunks: Document[] = [
     metadata: {
       tags: [Topic.WorkExperience],
     },
+    id: "resume-work-getir-frontend",
   }),
 
   new Document({
@@ -99,6 +103,7 @@ const resumeChunks: Document[] = [
     metadata: {
       tags: [Topic.WorkExperience],
     },
+    id: "resume-work-bilisim",
   }),
 
   new Document({
@@ -123,6 +128,7 @@ const resumeChunks: Document[] = [
     metadata: {
       tags: [Topic.WorkExperience],
     },
+    id: "resume-work-cubicl",
   }),
 
   new Document({
@@ -152,6 +158,7 @@ const resumeChunks: Document[] = [
     metadata: {
       tags: [Topic.Skills],
     },
+    id: "resume-skills",
   }),
 
   new Document({
@@ -174,6 +181,7 @@ const resumeChunks: Document[] = [
     metadata: {
       tags: [Topic.Education],
     },
+    id: "resume-education",
   }),
 
   new Document({
@@ -196,6 +204,7 @@ const resumeChunks: Document[] = [
     metadata: {
       tags: [Topic.Achievements],
     },
+    id: "resume-achievements",
   }),
 ];
 

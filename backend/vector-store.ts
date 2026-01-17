@@ -1,24 +1,23 @@
-import { MemoryVectorStore } from "@langchain/classic/vectorstores/memory";
+import { UpstashVectorStore } from "@langchain/community/vectorstores/upstash";
 import { HuggingFaceInferenceEmbeddings } from "@langchain/community/embeddings/hf";
+import { Index } from "@upstash/vector";
 
-import Config from "./config";
-import resumeChunks from './data-chunks/resume';
-import portfolioProjectChunks from './data-chunks/projects/portfolio';
+import config from "./config";
 
 const embeddings = new HuggingFaceInferenceEmbeddings({
-  apiKey: Config.HF_EMBEDDINGS_API_KEY,
-  model: Config.HF_EMBEDDINGS_MODEL, 
+  apiKey: config.HF_EMBEDDINGS_API_KEY,
+  model: config.HF_EMBEDDINGS_MODEL, 
   provider: "hf-inference",
   maxRetries: 3
 });
 
+const indexWithEmbeddings = new Index({
+  url: config.UPSTASH_VECTOR_REST_URL,
+  token: config.UPSTASH_VECTOR_REST_TOKEN,
+});
 
-const vectorStore = new MemoryVectorStore(embeddings);
+const vectorStore = new UpstashVectorStore(embeddings, {
+  index: indexWithEmbeddings,
+});
 
-await vectorStore.addDocuments([
-  ...resumeChunks,
-  ...portfolioProjectChunks
-])
-
-// Export everything
 export default vectorStore;

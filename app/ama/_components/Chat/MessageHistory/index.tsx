@@ -1,10 +1,7 @@
 import React, { useEffect, useRef } from "react";
-import { ChatState } from "..";
 
-export type Message = {
-  content: string;
-  owner: "human" | "ai";
-};
+import { ChatState } from "..";
+import { Message } from "@/common/types";
 
 export type StreamingMessage = {
   isActive: boolean;
@@ -62,8 +59,8 @@ const MessageHistory: React.FC<MessageHistoryProps> = ({
       )}
 
       <div className="my-4">
-        {messages.map(({ content, owner }, index) => (
-          <MessageComponent key={index} owner={owner} content={content} />
+        {messages.map(({ content, role }, index) => (
+          <MessageComponent key={index} role={role} content={content} />
         ))}
 
         {responseMessage.isActive && <div className="flex w-full justify-start">
@@ -94,7 +91,7 @@ const MessageHistory: React.FC<MessageHistoryProps> = ({
               </>
             )}
             {responseMessage.content && (
-              <MessageComponent owner="ai" content={responseMessage.content} />
+              <MessageComponent role="assistant" content={responseMessage.content} />
             )}
           </div>
         </div>}
@@ -107,21 +104,21 @@ const MessageHistory: React.FC<MessageHistoryProps> = ({
 
 export default MessageHistory;
 
-const MessageComponent: React.FC<Message> = ({ owner, content }) => {
+const MessageComponent: React.FC<Message> = ({ role, content }) => {
   return (
     <div
-      className={`flex w-full ${owner === "human" ? "justify-end" : "justify-start"
+      className={`flex w-full ${role === "user" ? "justify-end" : "justify-start"
         }`}
     >
       <div
-        className={`rounded-2xl py-4 ${owner === "human"
+        className={`rounded-2xl py-4 ${role === "user"
           ? "bg-slate-600 dark:bg-slate-700 text-white rounded-br-sm max-w-7/10"
           : "text-foreground rounded-bl-sm"
           }`}
-        role={owner === "human" ? "user-message" : "assistant-message"}
+        role={role === "user" ? "user-message" : "assistant-message"}
       >
         <div className="flex items-start gap-2">
-          {owner === "ai" && (
+          {role === "assistant" && (
             <span
               className="text-lg shrink-0 opacity-70"
               aria-hidden="true"
@@ -132,7 +129,7 @@ const MessageComponent: React.FC<Message> = ({ owner, content }) => {
           <div id="message-content" className="text-base pl-4 leading-relaxed whitespace-pre-wrap wrap-break-words">
             {content}
           </div>
-          {owner === "human" && (
+          {role === "user" && (
             <span
               className="text-lg shrink-0 opacity-80 pr-2"
               aria-hidden="true"

@@ -6,6 +6,8 @@ const BaseSchema = z.object({
         .enum(['development', 'test', 'production'])
         .default('development'),
 
+    TIMEOUT: z.coerce.number().default(60000),
+
     LOG_LEVEL: z
         .enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'silent'])
         .default('info'),
@@ -13,6 +15,18 @@ const BaseSchema = z.object({
     HF_EMBEDDINGS_MODEL: z.string().default('sentence-transformers/all-MiniLM-L6-v2'),
     HF_EMBEDDINGS_API_KEY: z.string().min(1),
 
+    MONGODB_URI: z.string().url(),
+    MONGODB_DBNAME: z.string().min(1),
+
+    UPSTASH_VECTOR_REST_URL: z.string().url(),
+    UPSTASH_VECTOR_REST_TOKEN: z.string().min(1),
+
+    ENABLE_TG_SENDER: z
+        .preprocess(
+            (val) => val === 'true' || val === '1', 
+            z.boolean()
+        )
+        .default(false),
     TG_U_BOT_TOKEN: z.string().min(1).optional(),
     TG_BOT_TOKEN: z.string().min(1).optional(),
     TG_CHAT_ID: z.string().optional(),

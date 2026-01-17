@@ -1,23 +1,9 @@
 import { Topic } from "@/backend/enums";
 import { Document } from "langchain";
 
-const PROJECT_NAME = "rag-portfolio";
-const RAG_PORTFOLIO_TECHNOLOGIES: string[] = [
-  "Next.js",
-  "React",
-  "Tailwind",
-  "TypeScript",
-  "LangChain",
-  "Hugging Face",
-  "RAG",
-  "Gemini",
-  "OpenRouter",
-  "Ollama",
-];
-
 const portfolioProjectChunks: Document[] = [
   new Document({
-    pageContent: `RAG PORTFOLIO WEBSITE
+    pageContent: `RAG PORTFOLIO - OVERVIEW
   
   A Next.js portfolio website with a RAG-powered "Ask Me Anything" chat feature that allows visitors to ask questions about my experience, projects, and background.
   
@@ -28,6 +14,7 @@ const portfolioProjectChunks: Document[] = [
     metadata: {
       tags: [Topic.Projects],
     },
+    id: "rag-portfolio-overview",
   }),
 
   new Document({
@@ -44,6 +31,7 @@ const portfolioProjectChunks: Document[] = [
     metadata: {
       tags: [Topic.Projects],
     },
+    id: "rag-portfolio-features",
   }),
 
   new Document({
@@ -65,6 +53,7 @@ const portfolioProjectChunks: Document[] = [
     metadata: {
       tags: [Topic.Projects],
     },
+    id: "rag-portfolio-tech-stack",
   }),
 
   new Document({
@@ -83,6 +72,7 @@ const portfolioProjectChunks: Document[] = [
     metadata: {
       tags: [Topic.Projects],
     },
+    id: "rag-portfolio-rag-implementation",
   }),
 
   new Document({
@@ -105,6 +95,7 @@ const portfolioProjectChunks: Document[] = [
     metadata: {
       tags: [Topic.Projects],
     },
+    id: "rag-portfolio-architecture-decisions",
   }),
 
   // new Document({

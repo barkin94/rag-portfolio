@@ -1,9 +1,9 @@
 import { tool } from 'langchain';
 import { z } from 'zod';
-import { Document } from 'langchain';
 
-import vectorStore from './vector-store';
-import { Topic } from './enums';
+import vectorStore from '@/backend/vector-store';
+import { Topic } from '@/backend/enums';
+import logger from '@/logger';
 
 // const TOPIC_K_MAP: Record<Topic, number> = {
 //   [Topic.GeneralInfo]: 2,
@@ -24,13 +24,16 @@ import { Topic } from './enums';
 
 export const getInfoTool = tool(
   async ({ query, topics, subjects }) => {
-    const results = await vectorStore.similaritySearch(
-      query,
-      20, // overfetch and filter later due to MemoryVectorStore limitation
-      (doc: Document) => (doc.metadata.tags as string[]).some(tag => {
-        return topics?.includes(tag as Topic)
-      })
+    console.log(query, topics, subjects)
+
+    const results = await vectorStore.similaritySearch(query,
+      4,
+      topics
+        .map(tag => `tags CONTAINS '${tag}'`)
+        .join(' OR '),
     )
+
+    //logger.info(results)
 
     if (results.length === 0) {
       return "No information found.";
@@ -46,7 +49,7 @@ export const getInfoTool = tool(
       Use this when you require information about yourself.
     `,
     schema: z.object({
-      query: z.string().describe("The full prompt from the user."),
+      query: z.string().describe("The current focus of the conversation"),
       topics: z.array(z.nativeEnum(Topic)).describe(`
         High-level categories to filter the search. Map the user's intent to one or more of these predefined categories.
       `),

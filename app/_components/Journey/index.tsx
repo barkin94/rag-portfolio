@@ -20,13 +20,13 @@ export default function Timeline() {
 
   return (
     <section id='journey' className="container mx-auto px-4 py-20 max-w-4xl">
-      <WithFadeInAnimation>
+      <WithFadeInAnimation threshold={0.5}>
         <h1 className="text-4xl font-bold text-center mb-4">My Journey</h1>
         <p className="text-xl text-center text-slate-600 dark:text-slate-300 mb-12">The path of building, scaling...</p>
       </WithFadeInAnimation>
 
       {timelineItems.map((item, index) => (
-        <WithFadeInAnimation key={index}>
+        <WithFadeInAnimation key={index} threshold={0.5}>
           <div className="mb-8 flex items-start w-full relative border-l-2 border-slate-200 dark:border-slate-700">
             <div className="relative z-1 shrink-0 w-5 h-5 bg-background border-slate-500 border-3 border-solid rounded-full -mt-1.5 -ml-2.75">
               <div className="absolute right-[3.5px] top-[3.5px] z-2 shrink-0 w-1.75 h-1.75 bg-foreground rounded-full"></div>
