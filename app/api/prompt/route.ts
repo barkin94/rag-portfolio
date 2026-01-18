@@ -3,7 +3,6 @@ import { cookies } from "next/headers";
 import { HumanMessage } from "langchain";
 
 import agent from "@/backend/agent"
-import logger from "@/logger";
 import mongodb from '@/backend/mongodb'
 import config from "@/backend/config";
 

@@ -24,16 +24,12 @@ import logger from '@/logger';
 
 export const getInfoTool = tool(
   async ({ query, topics, subjects }) => {
-    console.log(query, topics, subjects)
-
     const results = await vectorStore.similaritySearch(query,
       4,
       topics
         .map(tag => `tags CONTAINS '${tag}'`)
         .join(' OR '),
     )
-
-    //logger.info(results)
 
     if (results.length === 0) {
       return "No information found.";
