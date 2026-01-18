@@ -1,6 +1,6 @@
 import resumeChunks from "@/backend/data-chunks/resume";
 import portfolioChunks from "@/backend/data-chunks/portfolio";
-import interviewQnAChunks from "@/backend/data-chunks/resume";
+import interviewQnAChunks from "@/backend/data-chunks/interview-QnA";
 import vectorStore from "@/backend/vector-store";
 import logger from "@/logger";
 
