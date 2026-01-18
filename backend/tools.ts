@@ -24,18 +24,23 @@ import logger from '@/logger';
 
 export const getInfoTool = tool(
   async ({ query, topics, subjects }) => {
-    const results = await vectorStore.similaritySearch(query,
-      4,
-      topics
-        .map(tag => `tags CONTAINS '${tag}'`)
-        .join(' OR '),
-    )
+    try {
+      const results = await vectorStore.similaritySearch(query,
+        4,
+        topics
+          .map(tag => `tags CONTAINS '${tag}'`)
+          .join(' OR '),
+      )
 
-    if (results.length === 0) {
-      return "No information found.";
+      if (results.length === 0) {
+        return "No information found.";
+      }
+
+      return results.map(chunk => chunk.pageContent).join("\n\n---\n\n");
+    } catch (error) {
+      logger.error(error, "Error in getInfoTool");
+      return "An error occurred while retrieving information.";
     }
-
-    return results.map(chunk => chunk.pageContent).join("\n\n---\n\n");
   },
   {
     name: 'get_info',
