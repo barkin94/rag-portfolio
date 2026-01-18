@@ -44,12 +44,14 @@ const portfolioProjectChunks: Document[] = [
   
   Backend & AI:
   • LangChain for agent orchestration and tool management
-  • Hugging Face embeddings for vectorization and semantic search
+  • Hugging Face Inference API for embeddings and semantic search
+  • Upstash Vector Store for document storage and retrieval
   • Multiple LLM providers: Google Gemini, OpenRouter, and Ollama for flexibility
-  • MemoryVectorStore for document storage and retrieval
   
   Infrastructure:
-  • TypeScript for type safety across the codebase`,
+  • MongoDB for conversation persistence and checkpoints
+  • TypeScript for type safety across the codebase
+  • Zod for environment variable validation`,
     metadata: {
       tags: [Topic.Projects],
     },
@@ -61,14 +63,15 @@ const portfolioProjectChunks: Document[] = [
   
   The RAG (Retrieval-Augmented Generation) system architecture:
   
-  • Vector Store: Uses Hugging Face Inference API embeddings with MemoryVectorStore
-  • Document Chunking: Section-based chunking strategy with rich metadata (overview, work, skills, education, achievements, projects)
-  • Semantic Search: Similarity search to retrieve relevant context from vector store
-  • Multiple Tools: 5 specialized retrieval tools for different data types (info, work experience, technical skills, education, achievements, projects)
+  • Vector Store: Uses Upstash Vector Store with Hugging Face Inference API embeddings
+  • Document Chunking: Section-based chunking strategy with rich metadata tags (general_info, contact, work_experience, skills, education, achievements, projects)
+  • Semantic Search: Similarity search with topic-based filtering to retrieve relevant context from vector store
+  • Retrieval Tool: Single getInfoTool that handles all information retrieval with topic filtering for precise results
   • Streaming Responses: Real-time streaming for better user experience
-  • Agent System: LangChain agent that orchestrates tool calls and generates responses
+  • Agent System: LangChain agent with middleware pipeline (summarization, MongoDB persistence, optional Telegram integration)
+  • State Management: MongoDB checkpointer for conversation state persistence
   
-  The system allows the agent to answer questions about portfolio, experience, and projects by retrieving relevant information from the vector store and using it as context for the LLM.`,
+  The system allows the agent to answer questions about portfolio, experience, and projects by retrieving relevant information from the vector store using semantic search with topic filtering, and using it as context for the LLM.`,
     metadata: {
       tags: [Topic.Projects],
     },
@@ -81,11 +84,14 @@ const portfolioProjectChunks: Document[] = [
   Problem: Needed a way to answer questions about portfolio, experience, and projects without hardcoding responses or maintaining a static FAQ.
   
   Solution: Implemented RAG system with:
-  • Structured document chunks with metadata for precise filtering
-  • Section-based organization (overview, work, skills, education, achievements, projects)
+  • Structured document chunks with topic-based metadata tags for precise filtering
+  • Section-based organization (general_info, contact, work_experience, skills, education, achievements, projects)
+  • Upstash Vector Store for scalable document storage and retrieval
+  • Single flexible retrieval tool with topic filtering for all information types
   • Multiple LLM provider support for flexibility and cost optimization
+  • MongoDB for conversation persistence and state management
   • Streaming responses for real-time user feedback
-  • Specialized tools for different information types
+  • Middleware pipeline for conversation summarization and optional monitoring
   
   Result: 
   • Natural conversation flow with context-aware responses
