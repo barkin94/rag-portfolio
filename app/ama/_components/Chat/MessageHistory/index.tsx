@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 
 import { ChatState } from "..";
 import { Message } from "@/common/types";
+import MessageComponent from "./Message";
 
 export type StreamingMessage = {
   isActive: boolean;
@@ -35,7 +36,7 @@ const MessageHistory: React.FC<MessageHistoryProps> = ({
       aria-live="polite"
     >
       {!messages.length && (
-        <div className="flex flex-col items-center justify-center text-center">
+        <div className="flex flex-col items-center justify-center text-center mt-[20%]">
           <div className="text-6xl mb-4 opacity-60">🤖</div>
           <h2 className="text-2xl font-bold text-foreground mb-6">Welcome!</h2>
           <p className="text-foreground max-w-md mb-6">
@@ -104,41 +105,4 @@ const MessageHistory: React.FC<MessageHistoryProps> = ({
 
 export default MessageHistory;
 
-const MessageComponent: React.FC<Message> = ({ role, content }) => {
-  return (
-    <div
-      className={`flex w-full ${role === "user" ? "justify-end" : "justify-start"
-        }`}
-    >
-      <div
-        className={`rounded-2xl py-4 ${role === "user"
-          ? "bg-slate-600 dark:bg-slate-700 text-white rounded-br-sm max-w-7/10"
-          : "text-foreground rounded-bl-sm"
-          }`}
-        role={role === "user" ? "user-message" : "assistant-message"}
-      >
-        <div className="flex items-start gap-2">
-          {role === "assistant" && (
-            <span
-              className="text-lg shrink-0 opacity-70"
-              aria-hidden="true"
-            >
-              🤖
-            </span>
-          )}
-          <div id="message-content" className="text-base pl-4 leading-relaxed whitespace-pre-wrap wrap-break-words">
-            {content}
-          </div>
-          {role === "user" && (
-            <span
-              className="text-lg shrink-0 opacity-80 pr-2"
-              aria-hidden="true"
-            >
-              👤
-            </span>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-};
+
