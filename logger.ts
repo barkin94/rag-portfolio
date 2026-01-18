@@ -19,6 +19,3 @@ const logger: Logger = pino({
 });
 
 export default logger;
-
-// Example usage
-logger.info('Logger initialized');
