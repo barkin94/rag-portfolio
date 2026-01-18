@@ -1,13 +1,13 @@
 'use client';
 
-import React, { useCallback, useEffect, useReducer, useTransition } from "react";
-import { redirect, RedirectType } from 'next/navigation'
+import React, { useCallback, useEffect, useReducer } from "react";
 
 import Input from "@/common/components/Input";
 import MessageHistory from "./MessageHistory";
-import { LeftArrowIcon } from "@/common/components/Icons";
+import ChatHeader from "./Header";
 import { useStreamingFetch } from "@/common/hooks/useStreamingFetch";
 import { Message } from "@/common/types";
+import WithFadeInAnimation from "@/common/components/FadeInOnViewportEntry";
 
 export type ChatState = {
   error: string | null;
@@ -166,7 +166,7 @@ const Chat: React.FC<ChatProps> = ({ initialMessages }) => {
   }, [sendPrompt]);
 
   const handleResetChat = () => {
-    if(state.messages.length === 0) {
+    if (state.messages.length === 0) {
       return;
     }
 
@@ -175,58 +175,39 @@ const Chat: React.FC<ChatProps> = ({ initialMessages }) => {
   }
 
   return (
-    <div className={`flex flex-col h-full w-full z-100`}>
-      <div
-        id="chat"
-        className={`flex flex-col grow overflow-hidden`}
-        aria-label="Chat interface"
-      >
-        <div className="flex items-center border-b border-slate-200 dark:border-slate-800 p-4">
-          <button
-            onClick={() => redirect('/', RedirectType.replace)}
-            title="Go back"
-            className="mr-4 bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-foreground rounded-full w-8 h-8 flex items-center justify-center shadow focus:outline-none cursor-pointer"
-            aria-label="Go back"
+    <>
+      <ChatHeader onResetChat={handleResetChat} />
+      <WithFadeInAnimation>
+        <div className={`flex flex-col h-full w-full z-100`}>
+          <div
+            id="chat"
+            className={`flex flex-col grow overflow-hidden`}
+            aria-label="Chat interface"
           >
-            <LeftArrowIcon className="w-4 h-4" />
-          </button>
+            <div className="self-center w-full lg:w-3/4 xl:w-1/2 p-4">
+              <div className="mt-16"></div>
 
-          <div className="grow">
-            <h2 className="text-lg font-semibold text-foreground">Chat with me</h2>
-            <p className="text-sm text-foreground">I am here to help you with your questions.</p>
+              <MessageHistory
+                messages={state.messages}
+                responseMessage={state.responseMessage}
+                onStarterClick={handleStarterClick}
+              />
+
+              <div className="mb-16"></div>
+
+              <Input
+                isFocused={true}
+                isLoading={state.responseMessage.loading}
+                error={state.error}
+                onSend={sendPrompt}
+                onCancel={cancelStream}
+                onDismissError={dismissError}
+              />
+            </div>
           </div>
-          <button
-            onClick={handleResetChat}
-            title="Reset chat"
-            className="bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-foreground rounded-full w-8 h-8 flex items-center justify-center shadow focus:outline-none cursor-pointer"
-            aria-label="Reset chat"
-          >
-            ↺
-          </button>
         </div>
-
-        <div className="self-center w-full lg:w-3/4 xl:w-1/2 p-4">
-          <div className="mt-16"></div>
-
-          <MessageHistory
-            messages={state.messages}
-            responseMessage={state.responseMessage}
-            onStarterClick={handleStarterClick}
-          />
-
-          <div className="mb-16"></div>
-
-          <Input
-            isFocused={true}
-            isLoading={state.responseMessage.loading}
-            error={state.error}
-            onSend={sendPrompt}
-            onCancel={cancelStream}
-            onDismissError={dismissError}
-          />
-        </div>
-      </div>
-    </div>
+      </WithFadeInAnimation>
+    </>
   );
 }
 

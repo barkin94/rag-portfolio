@@ -1,6 +1,5 @@
 import { cookies } from "next/headers";
 
-import WithFadeInAnimation from "@/common/components/FadeInOnViewportEntry";
 import Chat from "./_components/Chat";
 import mongodb from "@/backend/mongodb";
 import { Message } from "@/common/types";
@@ -9,9 +8,7 @@ export default async function AmaPage() {
   const initialMessages = await getInitialMessages();
 
   return (
-    <WithFadeInAnimation>
-      <Chat initialMessages={initialMessages} />
-    </WithFadeInAnimation>
+    <Chat initialMessages={initialMessages} />
   );
 }
 
