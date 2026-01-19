@@ -1,9 +1,10 @@
 'use client'
 
 import { useState, useRef, useEffect } from "react";
+import Link from "next/link";
+
 import { CancelIcon, SendIcon, ExpandIcon } from "../Icons";
 import ConsentDialog, { hasUserConsented } from "../ConsentDialog";
-
 interface InputProps {
   isFocused?: boolean,
   isLoading?: boolean
@@ -12,7 +13,6 @@ interface InputProps {
   onSend?: (prompt: string) => void
   onCancel?: () => void
   onDismissError?: () => void
-  onExpand?: () => void
 }
 
 const Input: React.FC<InputProps> = ({
@@ -22,7 +22,6 @@ const Input: React.FC<InputProps> = ({
   onSend,
   onCancel,
   onDismissError,
-  onExpand,
   showExpandButton = false,
 }) => {
   const [inputValue, setInputValue] = useState('')
@@ -162,15 +161,15 @@ const Input: React.FC<InputProps> = ({
 
 
         {showExpandButton && (
-          <button
-            onClick={onExpand}
+          <Link
+            href="/ama"
             title="Expand chat"
             type="button"
             className="p-3 rounded-full border-2 border-slate-400 dark:border-slate-600 text-slate-700 dark:text-slate-300 hover:bg-slate-400 dark:hover:bg-slate-600 hover:text-slate-900 dark:hover:text-slate-100 transition-all duration-300 hover:scale-110 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-slate-400"
             aria-label="Expand chat"
           >
             <ExpandIcon />
-          </button>
+          </Link>
         )}
       </div>
     </>

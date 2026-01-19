@@ -1,14 +1,11 @@
 'use client';
 
 import { useRouter } from "next/navigation";
+
 import Input from "@/common/components/Input";
 
 export default function ChatInputWithRedirect() {
   const router = useRouter();
-
-  const handleExpand = () => {
-    router.replace('/ama');
-  };
 
   const handleSend = (prompt: string) => {
     localStorage.setItem('autoPrompt', prompt);
@@ -16,7 +13,7 @@ export default function ChatInputWithRedirect() {
   };
 
   return (
-    <Input showExpandButton={true} onExpand={handleExpand} onSend={handleSend} />
+    <Input showExpandButton={true} onSend={handleSend} />
   );
 }
 
