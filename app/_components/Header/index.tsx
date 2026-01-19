@@ -11,7 +11,7 @@ type HeaderProps = {
 export default function Header({ theme }: HeaderProps) {
   return (
     <HeaderContainer>
-      <div className="shadow-sm px-4 lg:px-[15%] w-full flex items-center justify-between">
+      <div className="px-4 lg:px-[15%] w-full flex items-center justify-between">
         <h4 className="text-xl font-bold text-slate-900 dark:text-slate-100">
           Barkin Buyuksagin
         </h4>
