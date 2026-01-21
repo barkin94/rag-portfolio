@@ -21,6 +21,13 @@ const BaseSchema = z.object({
     UPSTASH_VECTOR_REST_URL: z.string().url(),
     UPSTASH_VECTOR_REST_TOKEN: z.string().min(1),
 
+    CONTACT_EMAIL: z.string().email(),
+
+    SMTP_HOST: z.string().min(1),
+    SMTP_PORT: z.coerce.number().default(587),
+    SMTP_USER: z.string().min(1),
+    SMTP_PASSWORD: z.string().min(1),
+
     ENABLE_TG_SENDER: z
         .preprocess(
             (val) => val === 'true' || val === '1', 

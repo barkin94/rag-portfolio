@@ -6,7 +6,8 @@ const navItems = [
   ['Home', '/#'],
   // ['About', '/#about'],
   ['Tech Stack', '/#tech-stack'],
-  ['Journey', '/#journey']
+  ['Journey', '/#journey'],
+  ['Contact', '/#contact'],
 ];
 
 type NavLinksProps = {

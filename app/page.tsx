@@ -5,6 +5,7 @@ import Footer from "./_components/Footer";
 import ScrollUpButton from "@/common/components/ScrollUpButton";
 import { getThemeCookieInServer } from "@/common/utils/cookie";
 import MainHeader from "./_components/Header";
+import Contact from "./_components/Contact";
 
 export default async function Main() { 
   const theme = await getThemeCookieInServer();
@@ -16,6 +17,7 @@ export default async function Main() {
         <Home />
         <TechStack />
         <Journey />
+        <Contact />
       </main>
       <Footer />
       <ScrollUpButton />
