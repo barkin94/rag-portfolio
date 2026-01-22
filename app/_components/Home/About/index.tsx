@@ -18,7 +18,7 @@ export default () => (
         I love turning complex problems into simple, beautiful solutions.
       </p> */}
     </div>
-    <div className="flex items-center justify-center md:justify-start gap-4 mt-8">
+    <div className="flex items-center justify-start gap-4 mt-8">
       <a
         href="https://linkedin.com/in/barkinsagin"
         target="_blank"
@@ -37,13 +37,7 @@ export default () => (
       >
         <GitHubIcon className="w-5 h-5" />
       </a>
-      <a
-        href="mailto:barkinsagin@gmail.com"
-        className="p-3 rounded-full border-2 border-slate-400 dark:border-slate-600 text-slate-700 dark:text-slate-300 hover:bg-slate-400 dark:hover:bg-slate-600 hover:text-slate-900 dark:hover:text-slate-100 transition-all duration-300 hover:scale-110 shadow-md hover:shadow-lg"
-        aria-label="Email"
-      >
-        <EmailIcon className="w-5 h-5" />
-      </a>
+
       {/* <a
         href="#"
         download

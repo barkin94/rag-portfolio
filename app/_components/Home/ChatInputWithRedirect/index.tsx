@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 
-import Input from "@/common/components/Input";
+import ChatInput from "../../../ama/_components/Chat/ChatInput";
 
 export default function ChatInputWithRedirect() {
   const router = useRouter();
@@ -13,7 +13,7 @@ export default function ChatInputWithRedirect() {
   };
 
   return (
-    <Input showExpandButton={true} onSend={handleSend} />
+    <ChatInput showExpandButton={true} onSend={handleSend} />
   );
 }
 

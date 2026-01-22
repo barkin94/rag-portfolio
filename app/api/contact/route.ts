@@ -4,15 +4,13 @@ import config from "@/backend/config";
 import logger from "@/logger";
 
 const transporter = nodemailer.createTransport({
-    host: config.SMTP_HOST,
-    port: config.SMTP_PORT,
-    auth: {
-      user: config.SMTP_USER,
-      pass: config.SMTP_PASSWORD,
-    },
-  });
-
-//await transporter.verify();
+  host: config.SMTP_HOST,
+  port: config.SMTP_PORT,
+  auth: {
+    user: config.SMTP_USER,
+    pass: config.SMTP_PASSWORD,
+  },
+});
 
 export async function POST(request: Request) {
   try {

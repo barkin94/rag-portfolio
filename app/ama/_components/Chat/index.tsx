@@ -2,7 +2,7 @@
 
 import React, { useCallback, useEffect, useReducer } from "react";
 
-import Input from "@/common/components/Input";
+import ChatInput from "./ChatInput";
 import MessageHistory from "./MessageHistory";
 import ChatHeader from "./Header";
 import { useStreamingFetch } from "@/common/hooks/useStreamingFetch";
@@ -195,7 +195,7 @@ const Chat: React.FC<ChatProps> = ({ initialMessages }) => {
 
               <div className="mb-16"></div>
 
-              <Input
+              <ChatInput
                 isFocused={true}
                 isLoading={state.responseMessage.loading}
                 error={state.error}

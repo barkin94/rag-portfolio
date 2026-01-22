@@ -1,7 +1,10 @@
  "use client";
-
-//import config from "@/backend/config";
+ 
 import { FormEvent, useState } from "react";
+
+import Input from "@/common/components/Input";
+import TextArea from "@/common/components/TextArea";
+import { EmailIcon } from "@/common/components/Icons";
 
 export default function ContactForm() {
   const [name, setName] = useState("");
@@ -44,67 +47,59 @@ export default function ContactForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <label className="block text-sm font-medium mb-1" htmlFor="name">
-          Name
-        </label>
-        <input
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-2">
+        <Input
           id="name"
           type="text"
+          placeholder="Your Name"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="w-full rounded-md border border-neutral-700 bg-neutral-900 px-3 py-2 text-sm outline-none focus:border-neutral-400"
         />
-      </div>
 
-      <div>
-        <label className="block text-sm font-medium mb-1" htmlFor="subject">
-          Subject
-        </label>
-        <input
-          id="subject"
-          type="text"
-          value={subject}
-          onChange={(e) => setSubject(e.target.value)}
-          required
-          className="w-full rounded-md border border-neutral-700 bg-neutral-900 px-3 py-2 text-sm outline-none focus:border-neutral-400"
-        />
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium mb-1" htmlFor="fromEmail">
-          Your Email
-        </label>
-        <input
+        <Input
           id="fromEmail"
           type="email"
           value={fromEmail}
+          placeholder="Your E-mail"
           onChange={(e) => setFromEmail(e.target.value)}
           required
-          className="w-full rounded-md border border-neutral-700 bg-neutral-900 px-3 py-2 text-sm outline-none focus:border-neutral-400"
         />
       </div>
 
-      <div>
-        <label className="block text-sm font-medium mb-1" htmlFor="message">
-          Message
-        </label>
-        <textarea
-          id="message"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          required
-          rows={4}
-          className="w-full rounded-md border border-neutral-700 bg-neutral-900 px-3 py-2 text-sm outline-none focus:border-neutral-400 resize-none"
-        />
-      </div>
+      <Input
+        id="subject"
+        type="text"
+        placeholder="Subject"
+        value={subject}
+        onChange={(e) => setSubject(e.target.value)}
+        required
+      />
+
+      <TextArea
+        id="message"
+        placeholder="Your Message"
+        value={message}
+        style={{ height: 100 }}
+        onChange={(e) => setMessage(e.target.value)}
+        required
+      />
 
       <button
         type="submit"
         disabled={submitting}
-        className="inline-flex items-center justify-center rounded-md bg-neutral-100 px-4 py-2 text-sm font-medium text-neutral-900 hover:bg-white disabled:opacity-60 transition-colors"
-      >
-        {submitting ? "Sending..." : "Send Email"}
+        className="w-full p-3 rounded-full border-2 border-slate-400 dark:border-slate-600
+        text-slate-700 dark:text-slate-300 hover:bg-slate-400
+        dark:hover:bg-slate-600 hover:text-slate-900 dark:hover:text-slate-100
+        transition-all duration-300 shadow-md hover:shadow-lg
+        focus:outline-none focus:ring-2 focus:ring-slate-400 bg-slate-200/50 dark:bg-slate-600/50" 
+        >
+        {submitting
+          ? "Sending..."
+          : <div className="flex items-center gap-2 justify-center">
+              <EmailIcon className="w-5 h-5" />
+              <span>Send</span>
+            </div>
+          }
       </button>
 
       {status === "success" && (
