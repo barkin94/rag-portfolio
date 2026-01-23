@@ -1,4 +1,4 @@
-import Journey from "./_components/Journey";
+import Experience from "./_components/Experience";
 import TechStack from "./_components/TechStack";
 import Home from "./_components/Home";
 import Footer from "./_components/Footer";
@@ -16,7 +16,7 @@ export default async function Main() {
       <main>
         <Home />
         <TechStack />
-        <Journey />
+        <Experience />
         <Contact />
       </main>
       <Footer />

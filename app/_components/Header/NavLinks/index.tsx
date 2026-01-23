@@ -4,7 +4,6 @@ import Link from "next/link";
 
 const navItems = [
   ['Home', '/#'],
-  // ['About', '/#about'],
   ['Tech Stack', '/#tech-stack'],
   ['Journey', '/#journey'],
   ['Contact', '/#contact'],

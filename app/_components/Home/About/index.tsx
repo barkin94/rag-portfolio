@@ -8,17 +8,14 @@ export default () => (
   >
     <div className="relative z-10">
       <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-4 flex items-center gap-2">
-        <span className="text-3xl">🚀</span> About Me
+        <span className="text-2xl">🚀</span> About Me
       </h3>
-      <p className="text-slate-700 dark:text-slate-300 text-lg leading-relaxed mb-4">
+      <p className="text-slate-700 dark:text-slate-300 leading-relaxed mb-4">
         A backend software engineer with full-stack capabilities and 6+ years of experience building
-        scalable systems. Specializing in Javascript ecosystem and cloud technologies, and also bringing more skills to the table.
+        scalable web-based solutions, deep expertise in Javascript ecosystem, and more...
       </p>
-      {/* <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
-        I love turning complex problems into simple, beautiful solutions.
-      </p> */}
     </div>
-    <div className="flex items-center justify-start gap-4 mt-8">
+    <div className="flex items-center justify-start gap-4">
       <a
         href="https://linkedin.com/in/barkinsagin"
         target="_blank"

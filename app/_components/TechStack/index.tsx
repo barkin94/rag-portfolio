@@ -11,16 +11,17 @@ const skills = {
     "React",
     "Next.js",
     "Redux",
-    "Redux-Saga",
     "Jest",
     "Storybook",
     "Tailwind CSS",
   ],
   "Backend": [
     "Node.js",
-    "NestJS",
-    "Spring Boot",
+    "Fastify",
     "Express.js",
+    "NestJS",
+    "Bun",
+    "Spring Boot",
     "Kafka",
     "Socket.io",
   ],
@@ -29,6 +30,7 @@ const skills = {
     "PostgreSQL",
     "Redis",
     "BigQuery",
+    "Upstash Vector"
   ],
   "Cloud & DevOps": [
     "AWS",
@@ -38,7 +40,12 @@ const skills = {
     "Terraform",
     "Grafana",
     "OpenTelemetry",
-    "Vault",
+  ],
+  "AI": [
+    "LangChain",
+    "OpenRouter",
+    "Cursor",
+    "Hugging Face",
   ],
 };
 

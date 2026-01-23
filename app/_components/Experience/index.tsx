@@ -9,7 +9,7 @@ interface TimelineItem {
   description: string[];
 }
 
-export default function Timeline() {
+export default function Experience() {
   const timelineItems: TimelineItem[] = workExperienceData.map(item => ({
     role: item.role,
     company: item.company,
@@ -68,7 +68,7 @@ export const workExperienceData = [
       'Built a batch data pipeline using BigQuery, Cloud Scheduler, and Workflows for periodic data ingestion.',
       'Developed BFF services to control mobile app pages from the backend, reducing the need for frequent app releases.'
     ],
-    technologies: ['NestJS', 'Node.js', 'Spring Boot', 'MongoDB', 'PostgreSQL', 'Redis', 'Kafka', 'Kubernetes', 'Terraform', 'AWS', 'GCP', 'New Relic']
+    technologies: ['Node.js', 'NestJS','Spring Boot', 'MongoDB', 'PostgreSQL', 'Redis', 'Kafka', 'Kubernetes', 'Terraform', 'AWS', 'GCP', 'New Relic']
   },
   {
     role: 'Frontend Software Engineer',
