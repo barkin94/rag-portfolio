@@ -79,7 +79,7 @@ export default function ContactForm() {
         id="message"
         placeholder="Your Message"
         value={message}
-        style={{ height: 100 }}
+        style={{ minHeight: 100 }}
         onChange={(e) => setMessage(e.target.value)}
         required
       />
