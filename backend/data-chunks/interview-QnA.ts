@@ -22,6 +22,7 @@ our PRs to provision the resources.
     `,
     metadata: {
       tags: [Topic.WorkExperience],
+      source: "interview QnA",
     },
     id: "interview-aws-environment",
   }),
@@ -58,6 +59,7 @@ between them. This method respected the API's rate limit and made the system rel
     `,
     metadata: {
       tags: [Topic.WorkExperience, Topic.Achievements],
+      source: "interview QnA",
     },
     id: "interview-typescript-backend",
   },),
@@ -88,6 +90,7 @@ load dropped by 80%, and client timeouts ceased.
     `,
     metadata: {
       tags: [Topic.WorkExperience, Topic.Achievements],
+      source: "interview QnA",
     },
     id: "interview-performance-bottleneck",
   }),
@@ -119,6 +122,7 @@ codebase by at least half.
     `,
     metadata: {
       tags: [Topic.WorkExperience, Topic.Achievements],
+      source: "interview QnA",
     },
     id: "interview-postgresql-bigquery",
   }),
@@ -143,6 +147,7 @@ CDN for global CDN and CloudFront functions for location based domain redirectio
     `,
     metadata: {
       tags: [Topic.WorkExperience],
+      source: "interview QnA",
     },
     id: "interview-frontend-collaboration",
   }),

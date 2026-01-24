@@ -5,18 +5,12 @@ const resumeChunks: Document[] = [
   new Document({
     pageContent: `
   Location: Ankara, Turkey
-  
-  Summary: Back-End Engineer with strong full-stack experience, specializing in building
-  and optimizing high-performance Node.js services and APIs. Focused on enhancing
-  scalability, reducing API latency, and minimizing cloud infrastructure costs to deliver
-  tangible business results. Adept at diagnosing and resolving complex, system-level issues
-  across the backend and infrastructure. Also has commercial experience in Go and Java for
-  distributed systems.
-  
+  Summary: Back-End Engineer with strong full-stack experience, specializing in building and optimizing high-performance Node.js APIs. Proven track record of enhancing scalability, reducing API latency, minimizing cloud infrastructure costs, and resolving complex, system-level issues across entire stacks. Also has commercial experience in Go and Java for distributed systems, and a particular interest in AI-driven development and products.
   Work Preferences: Open to remote, hybrid, or on-site roles. I prefer flexible working hours and value a healthy work-life balance.
   `,
     metadata: {
       tags: [Topic.GeneralInfo],
+      source: "resume summary section",
     },
     id: "resume-summary",
   }),
@@ -28,6 +22,7 @@ const resumeChunks: Document[] = [
     `,
     metadata: {
       tags: [Topic.Contact],
+      source: "resume contact section",
     },
     id: "resume-contact",
   }),
@@ -53,6 +48,7 @@ const resumeChunks: Document[] = [
     `,
     metadata: {
       tags: [Topic.WorkExperience],
+      source: "resume work experience section",
     },
     id: "resume-work-getir-backend",
   }),
@@ -77,6 +73,7 @@ const resumeChunks: Document[] = [
       Technologies: TypeScript, React, Next.js, Redux, Redux-Saga, Jest, Storybook, styled-components, Node.js, New Relic`,
     metadata: {
       tags: [Topic.WorkExperience],
+      source: "resume work experience section",
     },
     id: "resume-work-getir-frontend",
   }),
@@ -102,6 +99,7 @@ const resumeChunks: Document[] = [
     `,
     metadata: {
       tags: [Topic.WorkExperience],
+      source: "resume work experience section",
     },
     id: "resume-work-bilisim",
   }),
@@ -127,44 +125,60 @@ const resumeChunks: Document[] = [
     `,
     metadata: {
       tags: [Topic.WorkExperience],
+      source: "resume work experience section",
     },
     id: "resume-work-cubicl",
   }),
 
   new Document({
     pageContent: `
-      TECHNICAL SKILLS & EXPERTISE
-      
-      Primary Strengths:
-      • Backend Development: Node.js, NestJS, TypeScript, Express.js - extensive experience building scalable APIs and microservices
-      • Frontend Development: React, Next.js, Redux, TypeScript - strong skills in building modern web applications
-      • Databases: PostgreSQL, MongoDB, Redis - proficient in both SQL and NoSQL databases
-      
-      Additional Technologies:
-      • Languages: JavaScript/TypeScript (expert), Java (commercial experience), Go (commercial experience)
-      • Backend Frameworks: Spring Boot, NestJS, Express.js
-      • Infrastructure: AWS, GCP, Docker, Kubernetes, Terraform
-      • Message Queues: Kafka, Redis Pub/Sub
-      • Monitoring: New Relic, Jaeger
-      • Testing: Jest, integration testing, unit testing
-      • Real-time: Socket.io, WebSockets
-      
-      Specializations:
-      • Building and optimizing high-performance backend services
-      • Reducing API latency through caching and database optimization
-      • Event-driven microservices architecture
-      • Scalability improvements and cost optimization
+      Languages & Backend: TypeScript, JavaScript, Node.js (Fastify, Express.js, NestJS), Java (Spring Boot), Go (Fiber, Echo)
+      Database & Messaging: PostgreSQL, MongoDB, Redis, Upstash Vector, Apache Kafka
+      AI: LangChain (TypeScript), OpenRouter, Hugging Face, RAG systems, ETL processes
+      Cloud & Infrastructure: AWS, GCP, Docker, Kubernetes, Terraform
+      Frontend & Tooling: React, Next.js, Redux, Tailwind CSS, Jest, Storybook
+      Monitoring: OpenTelemetry, Grafana
     `,
     metadata: {
       tags: [Topic.Skills],
+      source: "resume skills section",
     },
     id: "resume-skills",
   }),
 
-  new Document({
-    pageContent: `
-      EDUCATION & CERTIFICATIONS
+  // new Document({
+  //   pageContent: `
+  //     TECHNICAL SKILLS & EXPERTISE
       
+  //     Primary Strengths:
+  //     • Backend Development: Node.js, NestJS, TypeScript, Express.js - extensive experience building scalable APIs and microservices
+  //     • Frontend Development: React, Next.js, Redux, TypeScript - strong skills in building modern web applications
+  //     • Databases: PostgreSQL, MongoDB, Redis - proficient in both SQL and NoSQL databases
+      
+  //     Additional Technologies:
+  //     • Languages: JavaScript/TypeScript (expert), Java (commercial experience), Go (commercial experience)
+  //     • Backend Frameworks: Spring Boot, NestJS, Express.js
+  //     • Infrastructure: AWS, GCP, Docker, Kubernetes, Terraform
+  //     • Message Queues: Kafka, Redis Pub/Sub
+  //     • Monitoring: New Relic, Jaeger
+  //     • Testing: Jest, integration testing, unit testing
+  //     • Real-time: Socket.io, WebSockets
+      
+  //     Specializations:
+  //     • Building and optimizing high-performance backend services
+  //     • Reducing API latency through caching and database optimization
+  //     • Event-driven microservices architecture
+  //     • Scalability improvements and cost optimization
+  //   `,
+  //   metadata: {
+  //     tags: [Topic.Skills],
+  //     source: "resume skills section",
+  //   },
+  //   id: "resume-skills",
+  // }),
+
+  new Document({
+    pageContent: `      
       Bachelor of Science in Computer Engineering
       Baskent University, Ankara, Turkey
       2012 - 2018
@@ -180,32 +194,33 @@ const resumeChunks: Document[] = [
     `,
     metadata: {
       tags: [Topic.Education],
+      source: "resume education and certifications section",
     },
     id: "resume-education",
   }),
 
-  new Document({
-    pageContent: `PROJECT HIGHLIGHTS & ACHIEVEMENTS
+//   new Document({
+//     pageContent: `PROJECT HIGHLIGHTS & ACHIEVEMENTS
   
-  Performance Optimization:
-  • Reduced API response times by up to 60% through caching and query optimization
-  • Cut cloud infrastructure costs by optimizing resource usage and implementing auto-scaling
-  • Improved performance monitoring with New Relic
+//   Performance Optimization:
+//   • Reduced API response times by up to 60% through caching and query optimization
+//   • Cut cloud infrastructure costs by optimizing resource usage and implementing auto-scaling
+//   • Improved performance monitoring with New Relic
   
-  Architecture & Scalability:
-  • Designed event-driven microservices handling millions of requests daily
-  • Built robust data pipelines for batch processing
-  • Implemented BFF pattern to decouple mobile apps from backend changes
+//   Architecture & Scalability:
+//   • Designed event-driven microservices handling millions of requests daily
+//   • Built robust data pipelines for batch processing
+//   • Implemented BFF pattern to decouple mobile apps from backend changes
   
-  Code Quality:
-  • Increased test coverage significantly across multiple projects
-  • Built reusable component libraries reducing development time
-  • Mentored junior developers on best practices`,
-    metadata: {
-      tags: [Topic.Achievements],
-    },
-    id: "resume-achievements",
-  }),
+//   Code Quality:
+//   • Increased test coverage significantly across multiple projects
+//   • Built reusable component libraries reducing development time
+//   • Mentored junior developers on best practices`,
+//     metadata: {
+//       tags: [Topic.Achievements],
+//     },
+//     id: "resume-achievements",
+//   }),
 ];
 
 export default resumeChunks;

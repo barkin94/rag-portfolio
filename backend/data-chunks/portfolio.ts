@@ -3,8 +3,7 @@ import { Document } from "langchain";
 
 const portfolioProjectChunks: Document[] = [
   new Document({
-    pageContent: `RAG PORTFOLIO - OVERVIEW
-  
+    pageContent: `
   A Next.js portfolio website with a RAG-powered "Ask Me Anything" chat feature that allows visitors to ask questions about my experience, projects, and background.
   
   Project Type: Personal Portfolio
@@ -13,13 +12,13 @@ const portfolioProjectChunks: Document[] = [
   The portfolio showcases my work and includes an interactive AMA chat powered by RAG (Retrieval-Augmented Generation), enabling natural conversations about my professional background. The chat uses semantic search to retrieve relevant information from a vector store and generates responses using multiple LLM providers.`,
     metadata: {
       tags: [Topic.Projects],
+      source: "rag portfolio docs - overview",
     },
     id: "rag-portfolio-overview",
   }),
 
   new Document({
-    pageContent: `RAG PORTFOLIO - KEY FEATURES
-  
+    pageContent: `
   • Portfolio Sections: Home page, Tech Stack showcase, and Journey timeline displaying work experience
   • AMA Chat: Interactive Q&A powered by RAG with semantic search capabilities
   • Streaming Responses: Real-time streaming chat interface for better user experience
@@ -30,13 +29,13 @@ const portfolioProjectChunks: Document[] = [
   The AMA chat feature allows visitors to ask questions about my portfolio, experience, or projects, with the agent providing accurate, context-aware responses based on the vector store data.`,
     metadata: {
       tags: [Topic.Projects],
+      source: "rag portfolio docs - key features",
     },
     id: "rag-portfolio-features",
   }),
 
   new Document({
-    pageContent: `RAG PORTFOLIO - TECHNOLOGY STACK
-  
+    pageContent: `
   Frontend:
   • Next.js 16 with App Router for server-side rendering and routing
   • React 19 for the user interface
@@ -54,13 +53,13 @@ const portfolioProjectChunks: Document[] = [
   • Zod for environment variable validation`,
     metadata: {
       tags: [Topic.Projects],
+      source: "rag portfolio docs - technology stack",
     },
     id: "rag-portfolio-tech-stack",
   }),
 
   new Document({
-    pageContent: `RAG PORTFOLIO - RAG IMPLEMENTATION
-  
+    pageContent: `
   The RAG (Retrieval-Augmented Generation) system architecture:
   
   • Vector Store: Uses Upstash Vector Store with Hugging Face Inference API embeddings
@@ -74,13 +73,13 @@ const portfolioProjectChunks: Document[] = [
   The system allows the agent to answer questions about portfolio, experience, and projects by retrieving relevant information from the vector store using semantic search with topic filtering, and using it as context for the LLM.`,
     metadata: {
       tags: [Topic.Projects],
+      source: "rag portfolio docs - RAG implementation",
     },
     id: "rag-portfolio-rag-implementation",
   }),
 
   new Document({
-    pageContent: `RAG PORTFOLIO - ARCHITECTURE DECISIONS
-  
+    pageContent: `
   Problem: Needed a way to answer questions about portfolio, experience, and projects without hardcoding responses or maintaining a static FAQ.
   
   Solution: Implemented RAG system with:
@@ -100,6 +99,7 @@ const portfolioProjectChunks: Document[] = [
   • Accurate retrieval through semantic search and metadata filtering`,
     metadata: {
       tags: [Topic.Projects],
+      source: "rag portfolio docs - architecture decisions",
     },
     id: "rag-portfolio-architecture-decisions",
   }),

@@ -12,7 +12,7 @@ export async function PUT() {
   ];
   
   try{
-    await vectorStore.addDocuments(documents, { ids: documents.map((doc) => doc.id as string) })
+    await vectorStore.addDocuments(documents)
   } catch (error) {
     logger.error(error, "Failed to sync database");
     return new Response('Failed to sync database', { status: 500 });
