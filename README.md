@@ -9,6 +9,8 @@ A Next.js portfolio website with a RAG-powered "Ask Me Anything" (AMA) chat feat
 - **Streaming Responses**: Real-time streaming chat interface
 - **Multiple LLM Providers**: Support for Gemini, OpenRouter, and Ollama
 - **Vector Store**: Embeddings-based retrieval system
+- **PWA**: Installable app (manifest, service worker). Add `icon-192.png` and `icon-512.png` in `public/` for better install icons (optional; `favicon.ico` is used otherwise).
+- **Admin page** (optional): Secure `/admin` view of all AMA chat threads from MongoDB when `ADMIN_PAGE_SECRET` is set.
 
 ## Tech Stack
 
@@ -86,6 +88,12 @@ PORT=3000  # optional, defaults to 3000
 NODE_ENV=development  # optional, defaults to 'development'
 LOG_LEVEL=info  # optional, defaults to 'info'
 TIMEOUT=60000  # optional, defaults to 60000ms
+
+# Optional: Admin page (only you can access /admin)
+# Set to a long random string; then visit /admin?token=YOUR_SECRET to unlock.
+# The admin page lists chat threads persisted in MongoDB from the AMA.
+# Omit to leave /admin disabled (visits redirect to home).
+ADMIN_PAGE_SECRET=  # optional
 ```
 
 4. Run the development server:

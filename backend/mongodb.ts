@@ -12,13 +12,17 @@ const checkpointsColl = db.collection("checkpoints");
 const checkpointWritesColl = db.collection("checkpoint_writes");
 
 async function persistMessages(messages: any[], threadId: string) {
+  const now = new Date();
   const result = await threadsColl.updateOne(
     { _id: new ObjectId(threadId) },
-    { $push: { messages: { $each: messages } } } as any,
+    {
+      $push: { messages: { $each: messages } },
+      $set: { updatedAt: now },
+    } as any,
     { upsert: true }
   );
 
-  return result.modifiedCount > 0 ? threadId : null;
+  return result.modifiedCount > 0 || result.upsertedCount > 0 ? threadId : null;
 }
 
 const getMessages = async (threadId: string) => {
@@ -27,6 +31,34 @@ const getMessages = async (threadId: string) => {
   });
 
   return result?.messages;
+};
+
+type ThreadSummary = {
+  id: string;
+  messageCount: number;
+  preview: string;
+  updatedAt: string;
+};
+
+const getThreads = async (limit = 100): Promise<ThreadSummary[]> => {
+  const docs = await threadsColl
+    .find({})
+    .sort({ updatedAt: -1, _id: -1 })
+    .limit(limit)
+    .toArray();
+
+  return docs.map((d) => {
+    const messages = (d.messages ?? []) as { role: string; content: string }[];
+    const firstUser = messages.find((m) => m.role === "user");
+    const doc = d as { _id: ObjectId; updatedAt: Date };
+
+    return {
+      id: doc._id.toHexString(),
+      messageCount: messages.length,
+      preview: (firstUser?.content ?? "").slice(0, 80),
+      updatedAt: doc.updatedAt.toISOString(),
+    };
+  });
 };
 
 const resetMessages = async (threadId: string) => {
@@ -54,6 +86,7 @@ export default {
   client,
   persistMessages,
   getMessages,
+  getThreads,
   resetMessages,
   createThreadIdString,
 };

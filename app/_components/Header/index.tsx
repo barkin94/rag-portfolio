@@ -3,12 +3,16 @@ import NavLinks from './NavLinks';
 import SideBar from './SideBar';
 import ThemeToggleButton from './ThemeToggleButton';
 import HeaderContainer from '@/common/components/HeaderContainer';
+import { cookies } from 'next/headers';
 
 type HeaderProps = {
   theme: Theme;
 };
 
-export default function Header({ theme }: HeaderProps) {
+export default async function Header({ theme }: HeaderProps) {
+  const cookieStore = await cookies();
+  const hasAdminAccess = cookieStore.get("admin_access")?.value == "1";
+
   return (
     <HeaderContainer>
       <div className="px-4 lg:px-[15%] w-full flex items-center justify-between">
@@ -16,7 +20,7 @@ export default function Header({ theme }: HeaderProps) {
           Barkin Buyuksagin
         </h4>
 
-        <NavLinks className='hidden lg:flex' />
+        <NavLinks className='hidden lg:flex' showAdminLink={hasAdminAccess} />
 
         <div className="hidden lg:flex">
           <ThemeToggleButton theme={theme} />

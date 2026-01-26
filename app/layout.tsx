@@ -6,6 +6,7 @@ import { Analytics } from '@vercel/analytics/next';
 import "./globals.css";
 
 import ParticlesBackground from "@/common/components/ParticlesBackground";
+import ServiceWorkerRegistration from "@/common/components/ServiceWorkerRegistration";
 import { Theme } from "@/common/enums/theme";
 import { getThemeCookieInServer } from "@/common/utils/cookie";
 
@@ -41,6 +42,7 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <ServiceWorkerRegistration />
         <ParticlesBackground themeColor={'#3b82f6'} />
         {children}
       </body>
