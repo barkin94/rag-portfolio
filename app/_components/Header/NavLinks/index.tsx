@@ -11,11 +11,11 @@ const navItems = [
 
 type NavLinksProps = {
   className?: string;
+  showAdminLink?: boolean;
   aftertLinkClick?: () => void;
-  showAdminLink: boolean;
 };
 
-  const NavLinks: React.FC<NavLinksProps> = ({ className = '', aftertLinkClick, showAdminLink }) => {
+  const NavLinks: React.FC<NavLinksProps> = ({ className = '', aftertLinkClick, showAdminLink = false }) => {
     return (
       <div className={`flex items-center gap-6 ${className}`}>
         {showAdminLink && <Link

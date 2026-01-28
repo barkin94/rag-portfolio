@@ -37,6 +37,8 @@ const BaseSchema = z.object({
     TG_U_BOT_TOKEN: z.string().min(1).optional(),
     TG_BOT_TOKEN: z.string().min(1).optional(),
     TG_CHAT_ID: z.string().optional(),
+
+    ADMIN_PAGE_SECRET: z.string().min(1),
 });
 
 // 1. Define sub-schemas for each LLM_PROVIDER value

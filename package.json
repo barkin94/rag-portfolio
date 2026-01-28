@@ -24,6 +24,7 @@
     "@upstash/vector": "^1.2.2",
     "@vercel/analytics": "^1.6.1",
     "@vercel/speed-insights": "^1.2.0",
+    "jsonwebtoken": "^9.0.2",
     "langchain": "^1.2.3",
     "next": "^16.1.1",
     "nodemailer": "^6.9.16",
@@ -33,6 +34,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/nodemailer": "^7.0.5",
     "@types/react": "^19",
     "@types/react-dom": "^19",
