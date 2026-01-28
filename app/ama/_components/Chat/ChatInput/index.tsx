@@ -57,18 +57,21 @@ const ChatInput: React.FC<ChatInputProps> = ({
       return;
     }
     
-    // Check if user has already consented
-    if (hasUserConsented()) {
-      // User has already consented, submit directly
-      setInputValue('')
-      await onSend?.(prompt);
-    } else {
-      // Show consent dialog before submitting
-      setShowConsentDialog(true);
-    }
+    setInputValue('')
+    await onSend?.(prompt);
+    // // Check if user has already consented
+    // if (hasUserConsented()) {
+    //   // User has already consented, submit directly
+    //   setInputValue('')
+    //   await onSend?.(prompt);
+    // } else {
+    //   // Show consent dialog before submitting
+    //   setShowConsentDialog(true);
+    // }
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    console.log(!isTouchDevice, e.key === 'Enter', !e.shiftKey)
     if (!isTouchDevice && e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
       submitPrompt(inputValue.trim())
@@ -81,11 +84,11 @@ const ChatInput: React.FC<ChatInputProps> = ({
 
   return (
     <>
-      <ConsentDialog
+      {/* <ConsentDialog
         isOpen={showConsentDialog}
         onAccept={handleConsentAccept}
         onReject={handleConsentReject}
-      />
+      /> */}
 
       {error && (
         <div
