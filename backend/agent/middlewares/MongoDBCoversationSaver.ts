@@ -8,8 +8,8 @@ export default createMiddleware({
     stateSchema,
     afterAgent: async (state) => {
       await Mongodb.persistMessages([
-        { role: 'user', content: state.messages.at(state.nextHumanMessageIndex)!.content },
-        { role: 'assistant', content: state.messages.at(-1)!.content },
+        { role: 'user', content: state.messages.at(state.nextHumanMessageIndex)!.content as string },
+        { role: 'assistant', content: state.messages.at(-1)!.content as string },
       ], state.threadId)
 
       return {

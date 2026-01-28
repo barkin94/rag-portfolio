@@ -9,9 +9,10 @@ import { Theme } from "@/common/enums";
 
 type SideBarProps = {
   theme: Theme;
+  showAdminLink: boolean;
 };
 
-const SideBar: React.FC<SideBarProps> = ({ theme }) => {
+const SideBar: React.FC<SideBarProps> = ({ theme, showAdminLink }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const onHamburgerClick = () => {
@@ -30,6 +31,7 @@ const SideBar: React.FC<SideBarProps> = ({ theme }) => {
         <NavLinks
           aftertLinkClick={closeSideBar}
           className="flex-col items-start py-6"
+          showAdminLink
         />
         <div className="pt-4 border-t border-slate-200 dark:border-slate-800">
           <div className="flex items-center justify-between">

@@ -28,7 +28,7 @@ export default async function Header({ theme }: HeaderProps) {
         </div>
 
         <div className="lg:hidden">
-          <SideBar theme={theme} />
+          <SideBar theme={theme} showAdminLink={hasAdminAccess} />
         </div>
       </div>
     </HeaderContainer>

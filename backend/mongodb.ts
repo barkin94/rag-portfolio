@@ -2,6 +2,7 @@ import { MongoClient, ObjectId } from "mongodb";
 import Config from "./config";
 import config from "./config";
 import logger from "@/logger";
+import { Message } from "@/common/types";
 
 const client = await new MongoClient(Config.MONGODB_URI).connect();
 
@@ -11,7 +12,7 @@ const threadsColl = db.collection("threads");
 const checkpointsColl = db.collection("checkpoints");
 const checkpointWritesColl = db.collection("checkpoint_writes");
 
-async function persistMessages(messages: any[], threadId: string) {
+async function persistMessages(messages: Message[], threadId: string) {
   const now = new Date();
   const result = await threadsColl.updateOne(
     { _id: new ObjectId(threadId) },
@@ -25,7 +26,7 @@ async function persistMessages(messages: any[], threadId: string) {
   return result.modifiedCount > 0 || result.upsertedCount > 0 ? threadId : null;
 }
 
-const getMessages = async (threadId: string) => {
+const getMessages = async (threadId: string): Promise<Message[] | undefined> => {
   const result = await threadsColl.findOne({
     _id: new ObjectId(threadId),
   });

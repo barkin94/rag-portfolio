@@ -17,7 +17,7 @@ export default function SideBar({ children, isOpen, onHamburgerClick, onCloseCli
       {/* Hamburger Button */}
       <button
         onClick={onHamburgerClick}
-        className="p-2 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+        className="p-2 rounded-full text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
         aria-label="Toggle menu"
         aria-expanded={isOpen}
       >
