@@ -2,14 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 
 import AppConfig from "@/backend/config";
+import { CookieName } from "@/common/enums";
 
 const secret = AppConfig.ADMIN_PAGE_SECRET;
-const ADMIN_COOKIE_NAME = "admin_token";
 
 export function proxy(request: NextRequest) {
   const path = request.nextUrl.pathname;
 
-  const cookieToken = request.cookies.get(ADMIN_COOKIE_NAME)?.value;
+  const cookieToken = request.cookies.get(CookieName.ADMIN_TOKEN)?.value;
   
   // If cookie has valid token, allow access
   if (cookieToken && isValidJwt(cookieToken)) {
@@ -52,6 +52,6 @@ function withJwtTokenInCookie(res: NextResponse) {
     sameSite: "lax" as const,
   };
 
-  res.cookies.set(ADMIN_COOKIE_NAME, jwtToken, cookieOpts);
+  res.cookies.set(CookieName.ADMIN_TOKEN, jwtToken, cookieOpts);
   return res;
 }

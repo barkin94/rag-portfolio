@@ -1,9 +1,10 @@
-import { Theme } from '@/common/enums/theme';
+import { cookies } from 'next/headers';
+
 import NavLinks from './NavLinks';
 import SideBar from './SideBar';
 import ThemeToggleButton from './ThemeToggleButton';
 import HeaderContainer from '@/common/components/HeaderContainer';
-import { cookies } from 'next/headers';
+import { Theme, CookieName } from '@/common/enums';
 
 type HeaderProps = {
   theme: Theme;
@@ -11,7 +12,7 @@ type HeaderProps = {
 
 export default async function Header({ theme }: HeaderProps) {
   const cookieStore = await cookies();
-  const hasAdminAccess = cookieStore.get("admin_access")?.value == "1";
+  const hasAdminAccess = !!cookieStore.get(CookieName.ADMIN_TOKEN);
 
   return (
     <HeaderContainer>

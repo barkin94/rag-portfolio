@@ -7,7 +7,7 @@ import "./globals.css";
 
 import ParticlesBackground from "@/common/components/ParticlesBackground";
 import ServiceWorkerRegistration from "@/common/components/ServiceWorkerRegistration";
-import { Theme } from "@/common/enums/theme";
+import { Theme } from "@/common/enums";
 import { getThemeCookieInServer } from "@/common/utils/cookie";
 
 const geistSans = Geist({

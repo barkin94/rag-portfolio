@@ -2,7 +2,7 @@
 
 import { useTransition } from 'react';
 import { setThemeCookie } from '@/common/server-actions/setThemeCookie';
-import { Theme } from '@/common/enums/theme';
+import { Theme } from '@/common/enums';
 
 const ThemeToggleButton = ({ theme }: { theme: Theme }) => {
   const [isPending, startTransition] = useTransition();
