@@ -31,7 +31,7 @@ const SideBar: React.FC<SideBarProps> = ({ theme, showAdminLink }) => {
         <NavLinks
           aftertLinkClick={closeSideBar}
           className="flex-col items-start py-6"
-          showAdminLink
+          showAdminLink={showAdminLink}
         />
         <div className="pt-4 border-t border-slate-200 dark:border-slate-800">
           <div className="flex items-center justify-between">
