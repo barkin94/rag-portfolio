@@ -26,7 +26,9 @@ export function proxy(request: NextRequest) {
     return NextResponse.next({ status: 401 });
   }
 
-  return NextResponse.redirect("/");
+  const { origin } = request.nextUrl
+
+  return NextResponse.redirect(origin);
 }
 
 export const config = {
@@ -43,15 +45,14 @@ function isValidJwt(jwtToken: string) {
   }
 }
 
-function withJwtTokenInCookie(res: NextResponse) {
-  const jwtToken = jwt.sign({}, secret);
-  const cookieOpts = {
+function withJwtTokenInCookie(res: NextResponse) {;
+  res.cookies.set(CookieName.ADMIN_TOKEN, jwt.sign({}, secret), {
     path: "/" as const,
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax" as const,
-  };
+    maxAge: 315360000
+  });
 
-  res.cookies.set(CookieName.ADMIN_TOKEN, jwtToken, cookieOpts);
   return res;
 }
