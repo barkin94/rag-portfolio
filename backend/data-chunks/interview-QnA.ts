@@ -1,5 +1,6 @@
 import { Document } from "langchain";
 import { Topic } from "../enums";
+import page from "@/app/admin/page";
 
 const interviewQnAChunks: Document[] = [
   new Document({
@@ -150,6 +151,49 @@ CDN for global CDN and CloudFront functions for location based domain redirectio
       source: "interview QnA",
     },
     id: "interview-frontend-collaboration",
+  }),
+
+  new Document({
+    pageContent: `
+Q: Give an example of a manual process you automated or transformed into a self-service
+capability. What was the impact on the team or organization?
+
+A: At Getir, I built a self-hosted mock HTTP response server using Mockoon CLI to speed
+up manual end-to-end testing of our mobile application. Previously, our QA engineers had
+to manipulate databases or coordinate with other teams to simulate specific responses
+from their microservices.
+ 
+My tool allowed QA engineers to intercept requests to these external microservices and
+short-circuit them with custom responses on-demand. By moving this to a self-service model,
+the QA team could independently simulate edge cases—like server timeouts or specific error
+codes—in the staging environment. This removed the dependency on external teams and made
+our release testing much faster.
+`,
+    metadata: {
+      tags: [Topic.WorkExperience],
+      source: "interview QnA",
+    },
+    id: "interview-mockoon-self-service",
+  }),
+
+  new Document({
+    pageContent: `
+Q: What is your experience working in cloud-native or containerized environments (Docker,
+Kubernetes, cloud platforms like AWS)?
+
+A: I've always utilized containerization with Docker in my work. Currently, I’m comfortable
+managing the lifecycle of a service—from building Docker images for local development to
+deploying and debugging services in a cloud-native environment.
+ 
+At Getir, I operated within a Kubernetes-managed microservices architecture where our entire
+stack was containerized using Docker, and environmental configurations and secrets were managed
+with standard CI/CD flows.
+`,
+    metadata: {
+      tags: [Topic.WorkExperience, Topic.Skills],
+      source: "interview QnA",
+    },
+    id: "interview-cloud-native-containerization",
   }),
 ];
 

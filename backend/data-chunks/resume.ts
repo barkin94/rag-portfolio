@@ -5,7 +5,7 @@ const resumeChunks: Document[] = [
   new Document({
     pageContent: `
   Location: Ankara, Turkey
-  Summary: Back-End Engineer with strong full-stack experience, specializing in building and optimizing high-performance Node.js APIs. Proven track record of enhancing scalability, reducing API latency, minimizing cloud infrastructure costs, and resolving complex, system-level issues across entire stacks. Also has commercial experience in Go and Java for distributed systems, and a particular interest in AI-driven development and products.
+  Summary: Backend Engineer with strong full-stack experience, specializing in building and optimizing high-performance APIs. Proven track record of enhancing scalability, reducing API latency, minimizing cloud infrastructure costs, and resolving complex, system-level issues across entire stacks. Has commercial experience in Node.js, Go and Java for distributed systems, and a particular interest in AI-driven development and products.
   Work Preferences: Open to remote, hybrid, or on-site roles. I prefer flexible working hours and value a healthy work-life balance.
   `,
     metadata: {
@@ -95,7 +95,7 @@ const resumeChunks: Document[] = [
       • Contributed to backend features, working closely with the Java/Spring Boot backend team
       • Worked with Docker for local development and Jaeger for distributed tracing
   
-    Technologies: TypeScript, React, Java, Spring Boot, PostgreSQL, Docker, Jaeger, Vault
+    Technologies: TypeScript, React, Java 21, Spring Boot, PostgreSQL, Docker, Jaeger, Vault
     `,
     metadata: {
       tags: [Topic.WorkExperience],
@@ -132,7 +132,7 @@ const resumeChunks: Document[] = [
 
   new Document({
     pageContent: `
-      Languages & Backend: TypeScript, JavaScript, Node.js (Fastify, Express.js, NestJS), Java (Spring Boot), Go (Fiber, Echo)
+      Languages & Backend: TypeScript, JavaScript, Node.js (Fastify, Express.js, NestJS), Java 21+(Spring Boot), Go (Fiber, Echo)
       Database & Messaging: PostgreSQL, MongoDB, Redis, Upstash Vector, Apache Kafka
       AI: LangChain (TypeScript), OpenRouter, Hugging Face, RAG systems, ETL processes
       Cloud & Infrastructure: AWS, GCP, Docker, Kubernetes, Terraform
@@ -145,37 +145,6 @@ const resumeChunks: Document[] = [
     },
     id: "resume-skills",
   }),
-
-  // new Document({
-  //   pageContent: `
-  //     TECHNICAL SKILLS & EXPERTISE
-      
-  //     Primary Strengths:
-  //     • Backend Development: Node.js, NestJS, TypeScript, Express.js - extensive experience building scalable APIs and microservices
-  //     • Frontend Development: React, Next.js, Redux, TypeScript - strong skills in building modern web applications
-  //     • Databases: PostgreSQL, MongoDB, Redis - proficient in both SQL and NoSQL databases
-      
-  //     Additional Technologies:
-  //     • Languages: JavaScript/TypeScript (expert), Java (commercial experience), Go (commercial experience)
-  //     • Backend Frameworks: Spring Boot, NestJS, Express.js
-  //     • Infrastructure: AWS, GCP, Docker, Kubernetes, Terraform
-  //     • Message Queues: Kafka, Redis Pub/Sub
-  //     • Monitoring: New Relic, Jaeger
-  //     • Testing: Jest, integration testing, unit testing
-  //     • Real-time: Socket.io, WebSockets
-      
-  //     Specializations:
-  //     • Building and optimizing high-performance backend services
-  //     • Reducing API latency through caching and database optimization
-  //     • Event-driven microservices architecture
-  //     • Scalability improvements and cost optimization
-  //   `,
-  //   metadata: {
-  //     tags: [Topic.Skills],
-  //     source: "resume skills section",
-  //   },
-  //   id: "resume-skills",
-  // }),
 
   new Document({
     pageContent: `      
