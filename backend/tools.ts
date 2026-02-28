@@ -29,10 +29,8 @@ export const getInfoTool = tool(
   {
     name: 'get_info',
     description: `
-      Retrieves information about yourself from the knowledge base.
-
-      Use this when you require information about yourself.
-    `,
+      Retrieves all facts regarding Barkin's professional life, including work history, tech stack, projects, and contact info.
+      Use this whenever a question requires factual data about Barkin that is not in the current chat transcript.`,
     schema: z.object({
       query: z.string().describe("The semantic search string."),
       topics: z.array(z.nativeEnum(Topic)),
