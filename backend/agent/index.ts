@@ -9,7 +9,7 @@ import { getInfoTool } from '../tools';
 import Config from '../config';
 import config from '../config';
 import { stateSchema } from './schemas';
-import TGSenderMiddleware from './middlewares/TGSenderMiddleware';
+//import NotificationMiddleware from './middlewares/NotificationMiddleware';
 import MongoDBCoversationSaver from './middlewares/MongoDBCoversationSaver';
 
 const getModelFromConfig = () => {
@@ -32,6 +32,8 @@ const getModelFromConfig = () => {
           configuration: {
             baseURL: 'https://openrouter.ai/api/v1',
           },
+          // verbose: true,
+          // cache: false,
         },
         
       );
@@ -63,7 +65,7 @@ const agent = createAgent({
       }
     }),
     MongoDBCoversationSaver,
-    ...config.ENABLE_TG_SENDER ? [TGSenderMiddleware] : [],
+    //...config.ENABLE_WEB_PUSH ? [NotificationMiddleware] : [],
   ],
   tools: [getInfoTool],
   systemPrompt: `
@@ -74,6 +76,7 @@ Knowledge Policy:
 - If no tool provides the required information, politely state that the information is currently not available.
 
 Output Constraints:
+- Any phrase containing the keyword "you" is refers to Barkin, not the agent itself.
 - Do NOT mention that you are an AI; speak naturally as Barkin.
 - OUTPUT ONLY PLAIN TEXT. Never use asterisks, hashes, underscores, or any other markdown symbols. 
 - NO FORMATTING. Never use bullet points or bold text. Use simple paragraphs or comma-separated lists only.
