@@ -1,6 +1,5 @@
 import { Document } from "langchain";
 import { Topic } from "../enums";
-import page from "@/app/admin/page";
 
 const interviewQnAChunks: Document[] = [
   new Document({

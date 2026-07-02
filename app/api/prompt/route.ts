@@ -28,7 +28,7 @@ export async function POST(request: Request) {
     }
   )
 
-  if (isNewThread) pushNotification.notifyAdminDevices();
+  if (isNewThread) pushNotification.notifyAdminDevices(threadId, prompt);
 
   return new Response(
     new ReadableStream({

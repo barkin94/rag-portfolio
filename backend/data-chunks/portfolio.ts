@@ -67,7 +67,7 @@ const portfolioProjectChunks: Document[] = [
   • Semantic Search: Similarity search with topic-based filtering to retrieve relevant context from vector store
   • Retrieval Tool: Single getInfoTool that handles all information retrieval with topic filtering for precise results
   • Streaming Responses: Real-time streaming for better user experience
-  • Agent System: LangChain agent with middleware pipeline (summarization, MongoDB persistence, optional Telegram integration)
+  • Agent System: LangChain agent with middleware pipeline (summarization, MongoDB persistence, optional push notifications via Firebase Cloud Messaging)
   • State Management: MongoDB checkpointer for conversation state persistence
   
   The system allows the agent to answer questions about portfolio, experience, and projects by retrieving relevant information from the vector store using semantic search with topic filtering, and using it as context for the LLM.`,

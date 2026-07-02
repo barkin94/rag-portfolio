@@ -11,13 +11,15 @@ admin.initializeApp({
 
 const messaging = await admin.messaging()
 
-const notifyAdminDevices = async () => {
+const notifyAdminDevices = async (threadId: string, prompt: string) => {
+  const preview = prompt.length > 120 ? prompt.slice(0, 120) + '…' : prompt;
   try {
     await messaging.send({
       notification: {
-        title: 'Firebase Alert',
-        body: 'Minimum code, maximum power.'
+        title: 'New thread',
+        body: preview,
       },
+      data: { threadId },
       topic: 'prompt_entered'
     });
   } catch (error) {
