@@ -1,44 +1,34 @@
 "use client";
 
-import { FC, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FirebaseOptions, initializeApp, getApps, getApp } from "firebase/app";
 import { getMessaging, getToken } from "firebase/messaging";
 
-type Props = {
-  firebaseConfig: FirebaseOptions;
-  vapidKey: string;
-};
+type Props = { firebaseConfig: FirebaseOptions; vapidKey: string };
 
-const resolveApp = (config: FirebaseOptions) =>
-  getApps().length ? getApp() : initializeApp(config);
-
-const AdminNotifications: FC<Props> = ({ firebaseConfig, vapidKey }) => {
+const AdminNotifications = ({ firebaseConfig, vapidKey }: Props) => {
   const swRef = useRef<ServiceWorkerRegistration | null>(null);
   const [subscribed, setSubscribed] = useState(false);
 
   const syncToken = async (reg: ServiceWorkerRegistration) => {
-    const token = await getToken(getMessaging(resolveApp(firebaseConfig)), {
-      serviceWorkerRegistration: reg,
-      vapidKey,
+    const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+    const token = await getToken(getMessaging(app), { serviceWorkerRegistration: reg, vapidKey });
+    if (!token || token === localStorage.getItem("fcm_token")) return;
+    await fetch("/api/admin/push-subscribe", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token }),
     });
-    if (token && token !== localStorage.getItem('fcm_token')) {
-      await fetch('/api/admin/push-subscribe', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token }),
-      });
-      localStorage.setItem('fcm_token', token);
-    }
+    localStorage.setItem("fcm_token", token);
   };
 
   useEffect(() => {
     if (!("serviceWorker" in navigator)) return;
-
     navigator.serviceWorker
-      .register('/firebase-messaging-sw.js', { scope: '/admin/threads' })
+      .register("/firebase-messaging-sw.js", { scope: "/admin/threads" })
       .then(async (reg) => {
         swRef.current = reg;
-        if (Notification.permission !== 'granted') return;
+        if (Notification.permission !== "granted") return;
         await syncToken(reg).catch(() => {});
         setSubscribed(true);
       })
@@ -46,9 +36,7 @@ const AdminNotifications: FC<Props> = ({ firebaseConfig, vapidKey }) => {
   }, []);
 
   const enable = async () => {
-    if (!swRef.current) return;
-    const permission = await Notification.requestPermission();
-    if (permission !== 'granted') return;
+    if (!swRef.current || (await Notification.requestPermission()) !== "granted") return;
     await syncToken(swRef.current);
     setSubscribed(true);
   };
