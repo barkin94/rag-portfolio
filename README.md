@@ -77,11 +77,9 @@ OLLAMA_MODEL=llama3.1:8b-instruct-q4_K_M  # optional
 OLLAMA_BASE_URL=http://localhost:11434  # optional
 OLLAMA_TEMPERATURE=0.1  # optional
 
-# Optional: Telegram Integration (for monitoring/debugging)
-ENABLE_TG_SENDER=false  # Set to 'true' to enable
-TG_BOT_TOKEN=your_telegram_bot_token  # Required if ENABLE_TG_SENDER=true
-TG_U_BOT_TOKEN=your_user_bot_token    # Required if ENABLE_TG_SENDER=true
-TG_CHAT_ID=your_telegram_chat_id      # Required if ENABLE_TG_SENDER=true
+## Optional: Push Notifications (Firebase Cloud Messaging)
+FIREBASE_SERVICE_ACCOUNT_BASE64=  # base64-encoded Firebase service account JSON (server-side)
+NEXT_PUBLIC_FIREBASE_VAPID_KEY=   # Web Push certificate key from Firebase Console → Project Settings → Cloud Messaging → Web Push certificates (client-side)
 
 # Optional: Server Configuration
 PORT=3000  # optional, defaults to 3000
@@ -122,7 +120,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 │   │   ├── schemas.ts            # Agent state schema definitions
 │   │   └── middlewares/          # Custom agent middlewares
 │   │       ├── MongoDBCoversationSaver.ts  # Persists conversations to MongoDB
-│   │       └── TGSenderMiddleware.ts       # Optional Telegram integration
+│   │       └── NotificationMiddleware.ts   # Optional push notification on new thread
 │   ├── data-chunks/ # Vector store document chunks
 │   │   ├── resume.ts             # Resume information chunks
 │   │   ├── portfolio.ts          # Portfolio project chunks
@@ -147,7 +145,7 @@ The core of the RAG system is a LangChain agent that orchestrates conversations:
 - **Middleware Pipeline**:
   - **Summarization Middleware**: Keeps conversation context manageable by summarizing older messages
   - **MongoDB Conversation Saver**: Persists user and assistant messages to MongoDB for history
-  - **Telegram Sender Middleware** (optional): Sends conversations to Telegram for monitoring/debugging
+  - **Notification Middleware** (optional): Sends a push notification when a new AMA thread is created
 
 ### Vector Store (`backend/vector-store.ts`)
 
@@ -179,7 +177,7 @@ Comprehensive environment variable validation using Zod:
 
 - **Base Configuration**: MongoDB, Upstash Vector Store, Hugging Face embeddings, logging
 - **LLM Provider Configuration**: Discriminated union supporting Gemini, OpenRouter, or Ollama
-- **Optional Features**: Telegram integration (disabled by default)
+- **Optional Features**: Push notification integration via Firebase Cloud Messaging (disabled by default)
 
 ### MongoDB (`backend/mongodb.ts`)
 

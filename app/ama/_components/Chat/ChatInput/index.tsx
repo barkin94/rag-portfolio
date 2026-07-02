@@ -71,8 +71,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    console.log(!isTouchDevice, e.key === 'Enter', !e.shiftKey)
-    if (!isTouchDevice && e.key === 'Enter' && !e.shiftKey) {
+if (!isTouchDevice && e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
       submitPrompt(inputValue.trim())
     }

@@ -5,13 +5,14 @@ import { HumanMessage } from "langchain";
 import agent from "@/backend/agent"
 import mongodb from '@/backend/mongodb'
 import config from "@/backend/config";
+import pushNotification from "@/backend/push-notification";
 
 const textEncoder = new TextEncoder();
 
 export async function POST(request: Request) {
   const { prompt } = await request.json()
 
-  const threadId = await getThreadId();
+  const { threadId, isNewThread } = await getThreadId();
 
   const asyncStream = await agent.stream(
     {
@@ -26,6 +27,8 @@ export async function POST(request: Request) {
       },
     }
   )
+
+  if (isNewThread) pushNotification.notifyAdminDevices();
 
   return new Response(
     new ReadableStream({
@@ -50,15 +53,15 @@ export async function POST(request: Request) {
 const getThreadId = async () => {
   const cookieStore = await cookies();
   let threadId = cookieStore.get('t_id')?.value;
-  
-  if(!threadId) {
+
+  if (!threadId) {
     threadId = mongodb.createThreadIdString();
-    
     cookieStore.set('t_id', threadId, {
-      secure: config.NODE_ENV === 'production', // Only send over HTTPS,
+      secure: config.NODE_ENV === 'production',
       sameSite: "lax"
     });
+    return { threadId, isNewThread: true };
   }
-  
-  return threadId;
+
+  return { threadId, isNewThread: false };
 }

@@ -9,7 +9,6 @@ import { getInfoTool } from '../tools';
 import Config from '../config';
 import config from '../config';
 import { stateSchema } from './schemas';
-//import NotificationMiddleware from './middlewares/NotificationMiddleware';
 import MongoDBCoversationSaver from './middlewares/MongoDBCoversationSaver';
 
 const getModelFromConfig = () => {
@@ -65,7 +64,6 @@ const agent = createAgent({
       }
     }),
     MongoDBCoversationSaver,
-    //...config.ENABLE_WEB_PUSH ? [NotificationMiddleware] : [],
   ],
   tools: [getInfoTool],
   systemPrompt: `

@@ -28,18 +28,12 @@ const BaseSchema = z.object({
     SMTP_USER: z.string().min(1),
     SMTP_PASSWORD: z.string().min(1),
 
-    ENABLE_TG_SENDER: z
-        .preprocess(
-            (val) => val === 'true' || val === '1', 
-            z.boolean()
-        )
-        .default(false),
-    TG_U_BOT_TOKEN: z.string().min(1).optional(),
-    TG_BOT_TOKEN: z.string().min(1).optional(),
-    TG_CHAT_ID: z.string().optional(),
+    FIREBASE_SERVICE_ACCOUNT_BASE64: z.string().min(1),
+    FIREBASE_VAPID_KEY: z.string().min(1),
 
     ADMIN_PAGE_SECRET: z.string().min(1),
 });
+
 
 // 1. Define sub-schemas for each LLM_PROVIDER value
 const GeminiSchema = z.object({
