@@ -1,6 +1,8 @@
 import { Document } from "langchain";
 import { Topic } from "../enums";
 
+const source = "interview QnA";
+
 const interviewQnAChunks: Document[] = [
   new Document({
     pageContent: `
@@ -21,8 +23,8 @@ pull request to the main IaC repositories. The platform team would review and me
 our PRs to provision the resources.
     `,
     metadata: {
-      tags: [Topic.WorkExperience],
-      source: "interview QnA",
+      tags: [Topic.WorkExperience, Topic.Skills],
+      source
     },
     id: "interview-aws-environment",
   }),
@@ -33,33 +35,23 @@ Q: Detail your professional experience building backend systems with TypeScript.
 Please describe a specific, challenging feature you built using a Node.js
 framework (like NestJS, if applicable) and what made it challenging.
 
-A: I'm a Software Engineer with over 6 years of full-stack experience, specializing
-in TypeScript and the Node.js ecosystem. My expertise with Node.js ranges from
-vanilla Node.js development with Express.js/Fastify, to framework-based development
-with NestJS.
+A: TypeScript is one of my most used tools across my 6+ years of experience. A good
+example of a challenging feature is an event aggregation service I built at Getir. It listened to
+multiple Kafka topics emitting product-related events (details, price changes,
+stock status), combining them into one complete "product aggregate" entity —
+tricky because I had to manage state carefully to avoid errors and inconsistencies.
 
-Over the years, I've worked across a variety of architectures, from monolithic
-systems to monorepos and microservices running in containerized environments. I
-have built both RESTful and event-driven services, designed scalable APIs and data
-models, and integrated systems with third-party services.
-
-A specific challenging feature was writing an event aggregation service at Getir.
-This service listened to multiple Kafka topics sending out product related events
-(like product details, price changes, and stock statuses etc.), and combined these
-into one complete "product aggregate" entity. It was difficult because I had to
-manage the state carefully to avoid errors and inconsistencies.
-
-After creating these entities, I had to send them to an external API. However, this
-API had strict rate limits. My initial approach of sending each entity immediately
-failed because it sent too many requests too fast.
-
-I solved this with RxJS streams. I changed the code to collect the entities for a
-short time, group them into small batches, and then send each batch with a delay
-between them. This method respected the API's rate limit and made the system reliable.
+These aggregated entities then had to be sent to an external API with strict rate
+limits. Sending each one immediately overwhelmed the API, and since this service
+ran as multiple replicas, an in-process limiter wasn't enough — each pod would
+independently allow its own quota, multiplying the effective request rate. I solved
+this with a Redis-backed token bucket, giving all instances a single shared rate
+limit enforced atomically, which respected the API's limit and kept the system
+reliable.
     `,
     metadata: {
-      tags: [Topic.WorkExperience, Topic.Achievements],
-      source: "interview QnA",
+      tags: [Topic.WorkExperience, Topic.Achievements, Topic.Skills],
+      source
     },
     id: "interview-typescript-backend",
   },),
@@ -89,8 +81,8 @@ The fix eliminated latency spikes immediately. P99 latency returned to ~200ms, d
 load dropped by 80%, and client timeouts ceased.
     `,
     metadata: {
-      tags: [Topic.WorkExperience, Topic.Achievements],
-      source: "interview QnA",
+      tags: [Topic.WorkExperience, Topic.Achievements, Topic.Skills],
+      source
     },
     id: "interview-performance-bottleneck",
   }),
@@ -121,8 +113,8 @@ I had to revise a lot of SQL logic into dynamic SQL which cut the size of the en
 codebase by at least half.
     `,
     metadata: {
-      tags: [Topic.WorkExperience, Topic.Achievements],
-      source: "interview QnA",
+      tags: [Topic.WorkExperience, Topic.Achievements, Topic.Skills],
+      source
     },
     id: "interview-postgresql-bigquery",
   }),
@@ -146,8 +138,8 @@ development, Storybook for detailed component testing shared UI libraries, Cloud
 CDN for global CDN and CloudFront functions for location based domain redirections.
     `,
     metadata: {
-      tags: [Topic.WorkExperience],
-      source: "interview QnA",
+      tags: [Topic.WorkExperience, Topic.Skills],
+      source
     },
     id: "interview-frontend-collaboration",
   }),
@@ -169,8 +161,8 @@ codes—in the staging environment. This removed the dependency on external team
 our release testing much faster.
 `,
     metadata: {
-      tags: [Topic.WorkExperience],
-      source: "interview QnA",
+      tags: [Topic.WorkExperience, Topic.Achievements],
+      source
     },
     id: "interview-mockoon-self-service",
   }),
@@ -190,7 +182,7 @@ with standard CI/CD flows.
 `,
     metadata: {
       tags: [Topic.WorkExperience, Topic.Skills],
-      source: "interview QnA",
+      source
     },
     id: "interview-cloud-native-containerization",
   }),
