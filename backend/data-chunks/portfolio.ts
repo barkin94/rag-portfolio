@@ -104,35 +104,6 @@ const portfolioProjectChunks: Document[] = [
     id: "rag-portfolio-architecture-decisions",
   }),
 
-  // new Document({
-  //   pageContent: `RAG PORTFOLIO - PROJECT STRUCTURE
-  
-  // The project is organized as follows:
-  
-  // • app/ - Next.js app directory containing pages and API routes
-  //   - ama/ - AMA chat page with interactive chat interface
-  //   - api/ - API routes for handling chat requests
-  //   - _components/ - React components for portfolio sections
-  
-  // • backend/ - LangChain agent and tools
-  //   - agent.ts - Main agent configuration and streaming
-  //   - tools.ts - RAG tools for retrieving information
-  //   - vector-store.ts - Vector store setup and document chunks
-  //   - config.ts - Configuration for LLM providers and embeddings
-  
-  // • common/ - Shared components and hooks
-  //   - components/ - Reusable UI components
-  //   - hooks/ - Custom React hooks
-  //   - utils/ - Utility functions
-  
-  // • public/ - Static assets`,
-  //   metadata: {
-  //     section: "projects",
-  //     projectName: PROJECT_NAME,
-  //     topics: ["project-structure", "organization"],
-  //     technologies: RAG_PORTFOLIO_TECHNOLOGIES,
-  //   },
-  // }),
 ];
 
 export default portfolioProjectChunks;

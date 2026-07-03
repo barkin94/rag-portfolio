@@ -12,31 +12,35 @@ const textEncoder = new TextEncoder();
 export async function POST(request: Request) {
   const { prompt } = await request.json()
 
+  if (typeof prompt !== "string" || prompt.trim().length === 0) {
+    return new Response("Prompt must be a non-empty string.", { status: 400 });
+  }
+
   const { threadId, isNewThread } = await getThreadId();
-
-  const asyncStream = await agent.stream(
-    {
-      messages: [new HumanMessage(prompt)],
-      threadId,
-    } as any, // used any because zod.optional() in schema isn't working. langchain issue,
-    {
-      streamMode: "messages",
-      timeout: config.TIMEOUT,
-      configurable: {
-        thread_id: threadId
-      },
-    }
-  )
-
-  if (isNewThread) pushNotification.notifyAdminDevices(threadId, prompt);
 
   return new Response(
     new ReadableStream({
       async start(controller) {
         try {
-          for await (const [token, metadata] of await asyncStream) {
-            if(token.content && metadata.langgraph_node === 'model_request') {
-              controller.enqueue(token.content);
+          const asyncStream = await agent.stream(
+            {
+              messages: [new HumanMessage(prompt)],
+              threadId,
+            } as any, // used any because zod.optional() in schema isn't working. langchain issue,
+            {
+              streamMode: "messages",
+              timeout: config.TIMEOUT,
+              configurable: {
+                thread_id: threadId
+              },
+            }
+          )
+
+          if (isNewThread) pushNotification.notifyAdminDevices(threadId, prompt);
+
+          for await (const [token, metadata] of asyncStream) {
+            if (token.content && metadata.langgraph_node === 'model_request') {
+              controller.enqueue(textEncoder.encode(token.content as string));
             }
           }
         } catch (err) {

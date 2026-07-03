@@ -8,7 +8,9 @@ import logger from '@/logger';
 export const getInfoTool = tool(
   async ({ query, topics, expandingKeywords }) => {
     try {
-      const topicFilters = topics.map(t => `tags CONTAINS '${t}'`).join(' OR ');
+      const topicFilters = topics.length > 0
+        ? topics.map(t => `tags CONTAINS '${t}'`).join(' OR ')
+        : undefined;
 
       const results = await vectorStore.similaritySearch(`${query} ${expandingKeywords}`, 6, topicFilters);
 

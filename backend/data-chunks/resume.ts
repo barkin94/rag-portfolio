@@ -47,7 +47,7 @@ const resumeChunks: Document[] = [
       Technologies: NestJS, Node.js, Spring Boot, MongoDB, PostgreSQL, Redis, Kafka, Kubernetes, Terraform, AWS, GCP, New Relic
     `,
     metadata: {
-      tags: [Topic.WorkExperience],
+      tags: [Topic.WorkExperience, Topic.Achievements],
       source: "resume work experience section",
     },
     id: "resume-work-getir-backend",
@@ -72,7 +72,7 @@ const resumeChunks: Document[] = [
       
       Technologies: TypeScript, React, Next.js, Redux, Redux-Saga, Jest, Storybook, styled-components, Node.js, New Relic`,
     metadata: {
-      tags: [Topic.WorkExperience],
+      tags: [Topic.WorkExperience, Topic.Achievements],
       source: "resume work experience section",
     },
     id: "resume-work-getir-frontend",
@@ -98,7 +98,7 @@ const resumeChunks: Document[] = [
     Technologies: TypeScript, React, Java 21, Spring Boot, PostgreSQL, Docker, Jaeger, Vault
     `,
     metadata: {
-      tags: [Topic.WorkExperience],
+      tags: [Topic.WorkExperience, Topic.Achievements],
       source: "resume work experience section",
     },
     id: "resume-work-bilisim",
@@ -124,7 +124,7 @@ const resumeChunks: Document[] = [
       Technologies: TypeScript, React, Redux, MongoDB, NestJS, Express.js, Node.js, Socket.io, Docker, AWS
     `,
     metadata: {
-      tags: [Topic.WorkExperience],
+      tags: [Topic.WorkExperience, Topic.Achievements],
       source: "resume work experience section",
     },
     id: "resume-work-cubicl",
@@ -167,29 +167,6 @@ const resumeChunks: Document[] = [
     },
     id: "resume-education",
   }),
-
-//   new Document({
-//     pageContent: `PROJECT HIGHLIGHTS & ACHIEVEMENTS
-  
-//   Performance Optimization:
-//   • Reduced API response times by up to 60% through caching and query optimization
-//   • Cut cloud infrastructure costs by optimizing resource usage and implementing auto-scaling
-//   • Improved performance monitoring with New Relic
-  
-//   Architecture & Scalability:
-//   • Designed event-driven microservices handling millions of requests daily
-//   • Built robust data pipelines for batch processing
-//   • Implemented BFF pattern to decouple mobile apps from backend changes
-  
-//   Code Quality:
-//   • Increased test coverage significantly across multiple projects
-//   • Built reusable component libraries reducing development time
-//   • Mentored junior developers on best practices`,
-//     metadata: {
-//       tags: [Topic.Achievements],
-//     },
-//     id: "resume-achievements",
-//   }),
 ];
 
 export default resumeChunks;
