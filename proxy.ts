@@ -13,7 +13,7 @@ export async function proxy(request: NextRequest) {
   // --- Maintenance mode check (runs first, applies to all non-excluded paths) ---
   const maintenanceMode = await db.isInMaintenance();
   if (maintenanceMode) {
-    const isMaintenancePage = path === "/maintenance";
+    const isMaintenancePage = path.startsWith("/maintenance");
     const isExcluded = path.startsWith("/api") ||
                        path.startsWith("/admin") ||
                        path.startsWith("/_next") ||
