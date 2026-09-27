@@ -40,27 +40,33 @@ export async function proxy(request: NextRequest) {
     }
   }
 
-  // --- Admin auth (only runs on admin routes per matcher config) ---
-  const cookieToken = request.cookies.get(CookieName.ADMIN_TOKEN)?.value;
+  // --- Admin auth: ONLY for admin routes ---
+  const isAdminRoute = path.startsWith("/admin");
 
-  // If cookie has valid token, allow access
-  if (cookieToken && isValidJwt(cookieToken)) {
-    return NextResponse.next();
+  if (isAdminRoute) {
+    const cookieToken = request.cookies.get(CookieName.ADMIN_TOKEN)?.value;
+
+    // If cookie has valid token, allow access
+    if (cookieToken && isValidJwt(cookieToken)) {
+      return NextResponse.next();
+    }
+
+    // If url has valid token, set cookie and allow access
+    if (request.nextUrl.searchParams.get("token") === secret) {
+      return withJwtTokenInCookie(NextResponse.next());
+    }
+
+    // At this point there's no valid token so block access.
+    if (path.startsWith("/api")) {
+      return NextResponse.next({ status: 401 });
+    }
+
+    const { origin } = request.nextUrl;
+    return NextResponse.redirect(origin);
   }
 
-  // If url has valid token, set cookie and allow access
-  if (request.nextUrl.searchParams.get("token") === secret) {
-    return withJwtTokenInCookie(NextResponse.next());
-  }
-
-  // At this point there's no valid token so block access.
-  if (path.startsWith("/api")) {
-    return NextResponse.next({ status: 401 });
-  }
-
-  const { origin } = request.nextUrl
-
-  return NextResponse.redirect(origin);
+  // Non-admin routes: allow through
+  return NextResponse.next();
 }
 
 export const config = {
