@@ -9,8 +9,23 @@ const secret = AppConfig.ADMIN_PAGE_SECRET;
 export function proxy(request: NextRequest) {
   const path = request.nextUrl.pathname;
 
+  // --- Maintenance mode check (runs first, applies to all non-excluded paths) ---
+  if (AppConfig.MAINTENANCE_MODE) {
+    const isMaintenancePage = path === "/maintenance";
+    const isExcluded = path.startsWith("/api") ||
+                       path.startsWith("/_next") ||
+                       path.startsWith("/favicon") ||
+                       path.startsWith("/sitemap") ||
+                       path.startsWith("/robots");
+
+    if (!isMaintenancePage && !isExcluded) {
+      return NextResponse.redirect(new URL("/maintenance", request.url));
+    }
+  }
+
+  // --- Admin auth (only runs on admin routes per matcher config) ---
   const cookieToken = request.cookies.get(CookieName.ADMIN_TOKEN)?.value;
-  
+
   // If cookie has valid token, allow access
   if (cookieToken && isValidJwt(cookieToken)) {
     return NextResponse.next();
@@ -32,7 +47,13 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin", "/admin/:path*", "/api/admin", "/api/admin/:path*"],
+  matcher: [
+    // Maintenance mode: all routes except API, static assets, metadata
+    "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|maintenance).*)",
+    // Admin routes (also covered by above, but explicit for clarity)
+    "/admin/:path*",
+    "/api/admin/:path*",
+  ],
 };
 
 

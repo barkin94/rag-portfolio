@@ -32,6 +32,9 @@ const BaseSchema = z.object({
     FIREBASE_VAPID_KEY: z.string().min(1),
 
     ADMIN_PAGE_SECRET: z.string().min(1),
+
+    // Maintenance mode - toggle via env var (no redeploy needed on Vercel)
+    MAINTENANCE_MODE: z.coerce.boolean().default(false),
 });
 
 
