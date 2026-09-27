@@ -15,6 +15,7 @@ export async function proxy(request: NextRequest) {
   if (maintenanceMode) {
     const isMaintenancePage = path === "/maintenance";
     const isExcluded = path.startsWith("/api") ||
+                       path.startsWith("/admin") ||
                        path.startsWith("/_next") ||
                        path.startsWith("/favicon") ||
                        path.startsWith("/sitemap") ||
