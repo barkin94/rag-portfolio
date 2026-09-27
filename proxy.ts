@@ -4,19 +4,26 @@ import jwt from "jsonwebtoken";
 import AppConfig from "@/backend/config";
 import { CookieName } from "@/common/enums";
 import db from "@/backend/mongodb";
+import logger from "@/logger";
 
 const secret = AppConfig.ADMIN_PAGE_SECRET;
 
 export async function proxy(request: NextRequest) {
   const path = request.nextUrl.pathname;
+  const method = request.method;
+
+  logger.debug({ path, method, maintenanceMode: "check" }, "proxy: request received");
 
   // --- Early return for maintenance page (defensive: works even if matcher fails in Edge) ---
   if (path.startsWith("/maintenance")) {
+    logger.debug({ path }, "proxy: maintenance page - early return");
     return NextResponse.next();
   }
 
   // --- Maintenance mode check (runs first, applies to all non-excluded paths) ---
   const maintenanceMode = await db.isInMaintenance();
+  logger.debug({ path, maintenanceMode }, "proxy: maintenance mode check");
+
   if (maintenanceMode) {
     const isExcluded = path.startsWith("/api") ||
                        path.startsWith("/admin") ||
@@ -25,7 +32,10 @@ export async function proxy(request: NextRequest) {
                        path.startsWith("/sitemap") ||
                        path.startsWith("/robots");
 
+    logger.debug({ path, isExcluded }, "proxy: exclusion check");
+
     if (!isExcluded) {
+      logger.warn({ path, redirectTo: "/maintenance" }, "proxy: redirecting to maintenance");
       return NextResponse.redirect(new URL("/maintenance", request.url));
     }
   }
