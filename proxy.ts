@@ -10,10 +10,14 @@ const secret = AppConfig.ADMIN_PAGE_SECRET;
 export async function proxy(request: NextRequest) {
   const path = request.nextUrl.pathname;
 
+  // --- Early return for maintenance page (defensive: works even if matcher fails in Edge) ---
+  if (path.startsWith("/maintenance")) {
+    return NextResponse.next();
+  }
+
   // --- Maintenance mode check (runs first, applies to all non-excluded paths) ---
   const maintenanceMode = await db.isInMaintenance();
   if (maintenanceMode) {
-    const isMaintenancePage = path.startsWith("/maintenance");
     const isExcluded = path.startsWith("/api") ||
                        path.startsWith("/admin") ||
                        path.startsWith("/_next") ||
@@ -21,7 +25,7 @@ export async function proxy(request: NextRequest) {
                        path.startsWith("/sitemap") ||
                        path.startsWith("/robots");
 
-    if (!isMaintenancePage && !isExcluded) {
+    if (!isExcluded) {
       return NextResponse.redirect(new URL("/maintenance", request.url));
     }
   }
