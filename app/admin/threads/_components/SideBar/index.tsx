@@ -15,7 +15,7 @@ type ThreadSummary = {
 
 const AdminSideBar: React.FC = () => {
   const { threadId } = useParams()
-  const [isOpen, setIsOpen] = useState(!threadId);
+  const [isOpen, setIsOpen] = useState(false);
 
   const onHamburgerClick = () => {
     setIsOpen(true);
