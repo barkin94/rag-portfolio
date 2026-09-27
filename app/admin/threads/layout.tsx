@@ -2,8 +2,9 @@ import { FirebaseOptions } from "firebase/app";
 import AdminHeader from "../threads/_components/Header";
 import AdminNotifications from "./_components/AdminNotifications";
 import config from "@/backend/config";
+import db from "@/backend/mongodb";
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const firebaseConfig: FirebaseOptions = {
     apiKey: "AIzaSyDwgw4Vy2Rill0MtKD1lADzwiVjc02SXXw",
     authDomain: "portfolio-76cfc.firebaseapp.com",
@@ -14,8 +15,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     measurementId: "G-BTN9ND25D0"
   };
 
+  const maintenance = await db.isInMaintenance();
+
   return <>
-    <AdminHeader />
+    <AdminHeader maintenance={maintenance} />
     <div className="mt-25 px-4">
       { children }
     </div>

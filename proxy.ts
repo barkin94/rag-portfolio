@@ -3,14 +3,16 @@ import jwt from "jsonwebtoken";
 
 import AppConfig from "@/backend/config";
 import { CookieName } from "@/common/enums";
+import db from "@/backend/mongodb";
 
 const secret = AppConfig.ADMIN_PAGE_SECRET;
 
-export function proxy(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const path = request.nextUrl.pathname;
 
   // --- Maintenance mode check (runs first, applies to all non-excluded paths) ---
-  if (AppConfig.MAINTENANCE_MODE) {
+  const maintenanceMode = await db.isInMaintenance();
+  if (maintenanceMode) {
     const isMaintenancePage = path === "/maintenance";
     const isExcluded = path.startsWith("/api") ||
                        path.startsWith("/_next") ||

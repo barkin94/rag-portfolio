@@ -11,6 +11,7 @@ const db = client.db(config.MONGODB_DBNAME);
 const threadsColl = db.collection("threads");
 const checkpointsColl = db.collection("checkpoints");
 const checkpointWritesColl = db.collection("checkpoint_writes");
+const configColl = db.collection("config");
 
 async function persistMessages(messages: Message[], threadId: string) {
   const now = new Date();
@@ -83,6 +84,19 @@ const resetMessages = async (threadId: string) => {
 
 const createThreadIdString = () => new ObjectId().toHexString();
 
+async function isInMaintenance(): Promise<boolean> {
+  const doc = await configColl.findOne({ key: "maintenance" });
+  return doc?.value === true;
+}
+
+async function setMaintenanceMode(enabled: boolean): Promise<void> {
+  await configColl.updateOne(
+    { key: "maintenance" },
+    { $set: { value: enabled, updatedAt: new Date() } },
+    { upsert: true }
+  );
+}
+
 export default {
   client,
   persistMessages,
@@ -90,4 +104,6 @@ export default {
   getThreads,
   resetMessages,
   createThreadIdString,
+  isInMaintenance,
+  setMaintenanceMode,
 };
