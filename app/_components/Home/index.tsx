@@ -3,7 +3,19 @@ import About from "./About";
 import WithFadeInAnimation from "@/common/components/FadeInOnViewportEntry";
 import ChatInputWithRedirect from "./ChatInputWithRedirect";
 
-export default function Home() {
+interface HomeProps {
+  summary: {
+    location: string;
+    summary: string;
+    workPreferences: string;
+  };
+  contact: {
+    linkedin: string;
+    github?: string | null;
+  };
+}
+
+export default function Home({ summary, contact }: HomeProps) {
   return (
     <WithFadeInAnimation threshold={0.5}>
       <section id="home" role="log" aria-live="polite" className="flex flex-col justify-center mx-auto max-w-4xl min-h-screen px-4">
@@ -18,7 +30,7 @@ export default function Home() {
               ]}
             />
           </h1>
-          <About />
+          <About summary={summary} contact={contact} />
         </div>
         <ChatInputWithRedirect />
       </section>

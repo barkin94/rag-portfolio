@@ -12,15 +12,17 @@ const threadsColl = db.collection("threads");
 const checkpointsColl = db.collection("checkpoints");
 const checkpointWritesColl = db.collection("checkpoint_writes");
 const configColl = db.collection("config");
+const cvColl = db.collection("cv_data");
+const cvSyncStatusColl = db.collection("cv_sync_status");
 
 async function persistMessages(messages: Message[], threadId: string) {
   const now = new Date();
   const result = await threadsColl.updateOne(
     { _id: new ObjectId(threadId) },
     {
-      $push: { messages: { $each: messages } },
+      $push: { messages: { $each: messages } } as any,
       $set: { updatedAt: now },
-    } as any,
+    },
     { upsert: true }
   );
 
@@ -65,13 +67,9 @@ const getThreads = async (limit = 100): Promise<ThreadSummary[]> => {
 
 const resetMessages = async (threadId: string) => {
   try {
-    // Execute all deletions in parallel for better performance
     await Promise.all([
-      // 1. Delete items with ids matching threadId from threads collection
       threadsColl.deleteOne({ _id: new ObjectId(threadId) }),
-      // 2. Delete items with thread_id matching threadId in checkpoints collection
       checkpointsColl.deleteMany({ thread_id: threadId }),
-      // 3. Delete items with thread_id matching threadId in checkpoint_writes collection
       checkpointWritesColl.deleteMany({ thread_id: threadId }),
     ]);
   } catch (error) {
@@ -97,6 +95,86 @@ async function setMaintenanceMode(enabled: boolean): Promise<void> {
   );
 }
 
+type CvSummary = {
+  location: string;
+  summary: string;
+  workPreferences: string;
+};
+
+type CvContact = {
+  email: string;
+  linkedin: string;
+  github?: string | null;
+};
+
+type CvExperience = {
+  role: string;
+  company: string;
+  duration: string;
+  location?: string | null;
+  type?: string | null;
+  bullets: string[];
+};
+
+type CvSkills = {
+  categories: Record<string, string[]>;
+};
+
+type CvEducation = {
+  degree: string;
+  institution: string;
+  location?: string | null;
+  period?: string | null;
+  details?: (string | null)[];
+};
+
+type CvData = {
+  _id: 'current';
+  summary: CvSummary;
+  contact: CvContact;
+  experience: CvExperience[];
+  skills: CvSkills;
+  education: CvEducation[];
+  updatedAt: Date;
+};
+
+type SyncStatusDoc = {
+  _id: 'current';
+  status: 'success' | 'failed' | 'pending';
+  timestamp: Date;
+  details: string;
+};
+
+async function upsertResume(data: Omit<CvData, '_id' | 'updatedAt'>): Promise<void> {
+  const now = new Date();
+  await cvColl.updateOne(
+    { _id: "current" as any },
+    { $set: { ...data, updatedAt: now } },
+    { upsert: true },
+  );
+}
+
+async function getResume(): Promise<CvData | null> {
+  const doc = await cvColl.findOne({ _id: 'current' as any });
+  return doc as CvData | null;
+}
+
+async function recordSyncStatus(
+  status: 'success' | 'failed' | 'pending',
+  details: string
+): Promise<void> {
+  await cvSyncStatusColl.updateOne(
+    { _id: 'current' as any },
+    { $set: { status, timestamp: new Date(), details } },
+    { upsert: true }
+  );
+}
+
+async function getLastSyncStatus(): Promise<SyncStatusDoc | null> {
+  const doc = await cvSyncStatusColl.findOne({ _id: 'current' as any });
+  return doc as SyncStatusDoc | null;
+}
+
 export default {
   client,
   persistMessages,
@@ -106,4 +184,8 @@ export default {
   createThreadIdString,
   isInMaintenance,
   setMaintenanceMode,
+  upsertResume,
+  getResume,
+  recordSyncStatus,
+  getLastSyncStatus,
 };

@@ -1,55 +1,13 @@
 import Card from '@/common/components/Card';
 import WithFadeInAnimation from '@/common/components/FadeInOnViewportEntry';
 
-const skills = {
-  "Programming Languages": [
-    "TypeScript",
-    "Java",
-    "Go",
-  ],
-  "Frontend": [
-    "React",
-    "Next.js",
-    "Redux",
-    "Jest",
-    "Storybook",
-    "Tailwind CSS",
-  ],
-  "Backend": [
-    "Node.js",
-    "Fastify",
-    "Express.js",
-    "NestJS",
-    "Bun",
-    "Spring Boot",
-    "Kafka",
-    "Socket.io",
-  ],
-  "Databases": [
-    "MongoDB",
-    "PostgreSQL",
-    "Redis",
-    "BigQuery",
-    "Upstash Vector"
-  ],
-  "Cloud & DevOps": [
-    "AWS",
-    "GCP",
-    "Kubernetes",
-    "Docker",
-    "Terraform",
-    "Grafana",
-    "OpenTelemetry",
-  ],
-  "AI": [
-    "LangChain",
-    "OpenRouter",
-    "Cursor",
-    "Hugging Face",
-  ],
-};
+interface TechStackProps {
+  skills: {
+    categories: Record<string, string[]>;
+  };
+}
 
-const TechStack = () => {
+const TechStack = ({ skills }: TechStackProps) => {
   return (
     <section id="tech-stack" className="py-20 bg-slate-50/50 dark:bg-slate-900/30">
       <WithFadeInAnimation threshold={0.5}>
@@ -57,7 +15,7 @@ const TechStack = () => {
         <p className="text-xl text-center text-slate-600 dark:text-slate-300 mb-12">Technologies and tools I use to ship products</p>
       </WithFadeInAnimation>
       <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-3 gap-8 mx-10 sm:mx-40 lg:mx-60">
-        {Object.entries(skills).map(([category, techList]) => (
+        {Object.entries(skills.categories).map(([category, techList]) => (
           <WithFadeInAnimation key={category} threshold={0.5}>
             <Card>
               <h3 className="text-xl font-bold mb-4">{category}</h3>

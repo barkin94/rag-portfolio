@@ -27,9 +27,27 @@ const notifyAdminDevices = async (threadId: string, prompt: string) => {
   }
 };
 
+const notifyCvSyncResult = async (success: boolean, details: string) => {
+  try {
+    await messaging.send({
+      notification: {
+        title: success ? 'CV Sync Complete' : 'CV Sync Failed',
+        body: details,
+      },
+      data: { type: 'cv_sync', success: String(success) },
+      topic: 'cv_sync'
+    });
+  } catch (error) {
+    logger.error(error, 'push-notification: failed to send CV sync result');
+  }
+};
+
 const subscribeToTopic = async (token: string) => {
   try {
-    await messaging.subscribeToTopic(token, 'prompt_entered');
+    await Promise.all([
+      messaging.subscribeToTopic([token], 'prompt_entered'),
+      messaging.subscribeToTopic([token], 'cv_sync'),
+    ]);
   } catch (error) {
     logger.error(error, 'push-notification: failed to subscribe token to topic');
   }
@@ -37,5 +55,6 @@ const subscribeToTopic = async (token: string) => {
 
 export default {
   notifyAdminDevices,
+  notifyCvSyncResult,
   subscribeToTopic,
 }

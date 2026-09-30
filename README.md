@@ -19,7 +19,7 @@ A Next.js portfolio website with a RAG-powered "Ask Me Anything" (AMA) chat feat
   - LangChain for agent orchestration and tool management
   - Hugging Face Inference API for embeddings
   - Upstash Vector Store for document storage and retrieval
-- **LLM Providers**: Google Gemini, OpenRouter, Ollama
+- **LLM Provider**: OpenRouter
 - **Database**: MongoDB for conversation persistence and checkpoints
 - **Infrastructure**: TypeScript, Zod for configuration validation
 
@@ -57,25 +57,11 @@ UPSTASH_VECTOR_REST_TOKEN=your_upstash_vector_token
 MONGODB_URI=mongodb://localhost:27017  # or your MongoDB connection string
 MONGODB_DBNAME=rag_portfolio  # or your preferred database name
 
-# Choose one LLM provider:
-
-# Option 1: Gemini
-LLM_PROVIDER=gemini
-GEMINI_API_KEY=your_gemini_api_key
-GEMINI_MODEL=gemini-2.5-flash-lite  # optional
-GEMINI_TEMPERATURE=0.1  # optional
-
-# Option 2: OpenRouter
+# LLM Provider: OpenRouter
 LLM_PROVIDER=openrouter
 OPENROUTER_API_KEY=your_openrouter_api_key
-OPENROUTER_MODEL=xiaomi/mimo-v2-flash:free  # optional
+OPENROUTER_MODEL=openrouter/free  # optional
 OPENROUTER_TEMPERATURE=0.1  # optional
-
-# Option 3: Ollama (local)
-LLM_PROVIDER=ollama
-OLLAMA_MODEL=llama3.1:8b-instruct-q4_K_M  # optional
-OLLAMA_BASE_URL=http://localhost:11434  # optional
-OLLAMA_TEMPERATURE=0.1  # optional
 
 ## Optional: Push Notifications (Firebase Cloud Messaging)
 FIREBASE_SERVICE_ACCOUNT_BASE64=  # base64-encoded Firebase service account JSON (server-side)
