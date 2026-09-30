@@ -22,6 +22,10 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Barkin Buyuksagin's Portfolio",
+  themeColor: "#3b82f6",
+  other: {
+    'theme-color': '#3b82f6',
+  },
 };
 
 export default async function RootLayout({

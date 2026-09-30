@@ -30,7 +30,9 @@ export async function proxy(request: NextRequest) {
                        path.startsWith("/_next") ||
                        path.startsWith("/favicon") ||
                        path.startsWith("/sitemap") ||
-                       path.startsWith("/robots");
+                       path.startsWith("/robots") ||
+                       path === "/manifest.webmanifest" ||
+                       path === "/sw.js";
 
     logger.debug({ path, isExcluded }, "proxy: exclusion check");
 
@@ -71,8 +73,8 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    // Maintenance mode: all routes except API, static assets, metadata
-    "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|maintenance).*)",
+    // Maintenance mode: all routes except API, static assets, metadata, PWA files
+    "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|manifest.webmanifest|sw.js|maintenance).*)",
     // Admin routes (also covered by above, but explicit for clarity)
     "/admin/:path*",
     "/api/admin/:path*",
