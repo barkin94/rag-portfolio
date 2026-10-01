@@ -62,6 +62,9 @@ function getStructuredLlm() {
     apiKey: config.RESUME_PARSER_API_KEY,
     maxRetries: config.RESUME_PARSER_MAX_RETRIES,
     timeout: config.RESUME_PARSER_TIMEOUT,
+    configuration: {
+      baseURL: "https://integrate.api.nvidia.com/v1",
+    },
   });
 
   return baseLlm.withStructuredOutput(FullResumeSchema);

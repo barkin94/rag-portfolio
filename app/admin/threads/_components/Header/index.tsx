@@ -84,9 +84,14 @@ export default function AdminHeader({ maintenance: initialMaintenance }: AdminHe
       const res = await fetch('/api/admin/sync-status', { credentials: 'include' });
       if (res.ok) {
         const data: SyncStatusData = await res.json();
-        if (data.synced && data.timestamp) {
-          setLastSyncTimestamp(data.timestamp);
-          setSyncDetails(data.details || '');
+        if (data.synced) {
+          if (data.timestamp) {
+            setLastSyncTimestamp(data.timestamp);
+            setSyncDetails(data.details || '');
+          }
+          if (data.status === 'pending') {
+            setSyncState('pending');
+          }
         }
       }
     } catch {
