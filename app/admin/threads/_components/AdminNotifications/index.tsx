@@ -25,32 +25,24 @@ const AdminNotifications = ({ firebaseConfig, vapidKey }: Props) => {
   };
 
   useEffect(() => {
-    if (!("serviceWorker" in navigator)) {
-      console.log("SW not supported");
-      return;
-    }
+    if (!("serviceWorker" in navigator)) return;
     navigator.serviceWorker
       .register("/firebase-messaging-sw.js", { scope: "/admin/threads" })
       .then(async (reg) => {
-        console.log("SW registered:", reg.scope);
         swRef.current = reg;
         setSwReady(true);
         if (Notification.permission !== "granted") return;
-        await syncToken(reg).catch((e) => console.error("syncToken failed:", e));
+        await syncToken(reg).catch(() => {});
         setSubscribed(true);
       })
-      .catch((err) => {
-        console.error("SW registration failed:", err);
-      });
+      .catch(() => {});
   }, []);
 
   const enable = async () => {
-    console.log("enable clicked, swReady:", swReady, "swRef:", swRef.current);
     if (!swReady) return;
     if (permissionRequested) return;
     setPermissionRequested(true);
     const perm = await Notification.requestPermission();
-    console.log("Permission result:", perm);
     if (perm !== "granted") {
       setPermissionRequested(false);
       return;

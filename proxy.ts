@@ -32,7 +32,8 @@ export async function proxy(request: NextRequest) {
                        path.startsWith("/sitemap") ||
                        path.startsWith("/robots") ||
                        path === "/manifest.webmanifest" ||
-                       path === "/sw.js";
+                       path === "/sw.js" ||
+                       path === "/firebase-messaging-sw.js";
 
     logger.debug({ path, isExcluded }, "proxy: exclusion check");
 
@@ -74,7 +75,7 @@ export async function proxy(request: NextRequest) {
 export const config = {
   matcher: [
     // Maintenance mode: all routes except API, static assets, metadata, PWA files
-    "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|manifest.webmanifest|sw.js|maintenance).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|manifest.webmanifest|sw.js|firebase-messaging-sw.js|maintenance).*)",
     // Admin routes (also covered by above, but explicit for clarity)
     "/admin/:path*",
     "/api/admin/:path*",
