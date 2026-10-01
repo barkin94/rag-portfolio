@@ -9,6 +9,8 @@ type Props = { firebaseConfig: FirebaseOptions; vapidKey: string };
 const AdminNotifications = ({ firebaseConfig, vapidKey }: Props) => {
   const swRef = useRef<ServiceWorkerRegistration | null>(null);
   const [subscribed, setSubscribed] = useState(false);
+  const [swReady, setSwReady] = useState(false);
+  const [permissionRequested, setPermissionRequested] = useState(false);
 
   const syncToken = async (reg: ServiceWorkerRegistration) => {
     const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
@@ -28,6 +30,7 @@ const AdminNotifications = ({ firebaseConfig, vapidKey }: Props) => {
       .register("/firebase-messaging-sw.js", { scope: "/admin/threads" })
       .then(async (reg) => {
         swRef.current = reg;
+        setSwReady(true);
         if (Notification.permission !== "granted") return;
         await syncToken(reg).catch(() => {});
         setSubscribed(true);
@@ -36,8 +39,14 @@ const AdminNotifications = ({ firebaseConfig, vapidKey }: Props) => {
   }, []);
 
   const enable = async () => {
-    if (!swRef.current || (await Notification.requestPermission()) !== "granted") return;
-    await syncToken(swRef.current);
+    if (!swReady) return;
+    if (permissionRequested) return;
+    setPermissionRequested(true);
+    if ((await Notification.requestPermission()) !== "granted") {
+      setPermissionRequested(false);
+      return;
+    }
+    await syncToken(swRef.current!);
     setSubscribed(true);
   };
 
@@ -46,9 +55,10 @@ const AdminNotifications = ({ firebaseConfig, vapidKey }: Props) => {
   return (
     <button
       onClick={enable}
-      className="fixed bottom-4 right-4 bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-2 rounded-full shadow-lg"
+      disabled={!swReady}
+      className="fixed bottom-4 right-4 bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-2 rounded-full shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
     >
-      Enable notifications
+      {swReady ? "Enable notifications" : "Preparing..."}
     </button>
   );
 };
