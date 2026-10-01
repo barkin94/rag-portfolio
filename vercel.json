@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "app/api/queues/sync-cv/route.ts": {
+      "experimentalTriggers": [{ "type": "queue/v2beta", "topic": "cv-sync" }]
+    }
+  }
+}
