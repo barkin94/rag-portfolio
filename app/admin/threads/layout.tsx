@@ -1,8 +1,8 @@
 import { FirebaseOptions } from "firebase/app";
 import AdminHeader from "../threads/_components/Header";
 import AdminNotifications from "./_components/AdminNotifications";
-import config from "@/backend/config";
-import db from "@/backend/mongodb";
+import config from "@/backend/shared/config";
+import * as db from "@/backend/shared/mongodb";
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const firebaseConfig: FirebaseOptions = {

@@ -1,10 +1,9 @@
 import { MongoClient, ObjectId } from "mongodb";
-import Config from "./config";
-import config from "./config";
-import logger from "@/logger";
-import { Message } from "@/common/types";
+import config from "@/backend/shared/config";
+import logger from "@/backend/shared/logger";
+import { Message } from "@/backend/shared/types";
 
-const client = await new MongoClient(Config.MONGODB_URI).connect();
+const client = await new MongoClient(config.MONGODB_URI).connect();
 
 const db = client.db(config.MONGODB_DBNAME);
 

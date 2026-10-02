@@ -1,12 +1,6 @@
 import Link from "next/link";
-import mongodb from "@/backend/mongodb";
-
-type ThreadSummary = {
-  id: string;
-  messageCount: number;
-  preview: string;
-  updatedAt: string;
-};
+import * as mongodb from "@/backend/shared/mongodb";
+import type { ThreadSummary } from "@/backend/shared/types";
 
 const formatDate = (iso: string) =>
   new Date(iso).toLocaleString(undefined, {

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import db from "@/backend/mongodb";
+import * as db from "@/backend/shared/mongodb";
 
 export async function GET() {
   const maintenanceMode = await db.isInMaintenance();

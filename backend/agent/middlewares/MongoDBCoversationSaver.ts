@@ -1,7 +1,7 @@
 import { createMiddleware } from "langchain";
 
 import { stateSchema } from "../schemas";
-import Mongodb from "@/backend/mongodb";
+import * as Mongodb from "@/backend/shared/mongodb";
 
 export default createMiddleware({
     name: 'MongoDBConversationSaver',

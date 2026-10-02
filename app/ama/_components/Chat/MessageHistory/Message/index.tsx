@@ -1,6 +1,6 @@
-import { Message as MessageType } from "@/common/types";
+import { Message } from "@/backend/shared/types";
 
-const Message: React.FC<MessageType> = ({ role, content }) => {
+const MessageComponent: React.FC<Message> = ({ role, content }) => {
   return (
     <div
       className={`flex w-full ${role === "user" ? "justify-end" : "justify-start"
@@ -39,4 +39,4 @@ const Message: React.FC<MessageType> = ({ role, content }) => {
   );
 };
 
-export default Message;
+export default MessageComponent;

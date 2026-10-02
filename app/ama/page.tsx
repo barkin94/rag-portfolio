@@ -1,8 +1,8 @@
 import { cookies } from "next/headers";
 
 import Chat from "./_components/Chat";
-import mongodb from "@/backend/mongodb";
-import { Message } from "@/common/types";
+import * as mongodb from "@/backend/shared/mongodb";
+import { Message } from "@/backend/shared/types";
 
 export default async function AmaPage() {
   const initialMessages = await getInitialMessages();

@@ -6,7 +6,7 @@ import ChatInput from "./ChatInput";
 import MessageHistory from "./MessageHistory";
 import ChatHeader from "./Header";
 import { useStreamingFetch } from "@/common/hooks/useStreamingFetch";
-import { Message } from "@/common/types";
+import { Message } from "@/backend/shared/types";
 import WithFadeInAnimation from "@/common/components/FadeInOnViewportEntry";
 
 export type ChatState = {

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import mongodb from '@/backend/mongodb';
+import * as mongodb from '@/backend/shared/mongodb';
 
 export async function GET() {
   const status = await mongodb.getLastSyncStatus();

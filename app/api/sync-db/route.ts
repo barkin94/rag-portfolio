@@ -1,11 +1,11 @@
 import { Document } from 'langchain';
-import { Topic } from '@/backend/enums';
+import { Topic } from '@/backend/shared/types';
 import portfolioChunks from '@/backend/data-chunks/portfolio';
 import interviewQnAChunks from '@/backend/data-chunks/interview-QnA';
 import behavioralStoryChunks from '@/backend/data-chunks/behavioral-stories';
-import mongodb from '@/backend/mongodb';
-import vectorStore from '@/backend/vector-store';
-import logger from '@/logger';
+import * as mongodb from '@/backend/shared/mongodb';
+import { vectorStore } from '@/backend/shared/vector';
+import logger from '@/backend/shared/logger';
 
 function createSummaryChunk(summary: { location: string; summary: string; workPreferences: string }): Document {
   return new Document({

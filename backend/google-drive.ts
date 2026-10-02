@@ -1,6 +1,6 @@
 import { google } from 'googleapis';
-import config from './config';
-import logger from '@/logger';
+import config from '@/backend/shared/config';
+import logger from '@/backend/shared/logger';
 
 function getDriveClient() {
   const credentials = JSON.parse(

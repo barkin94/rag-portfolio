@@ -3,8 +3,8 @@ import { cookies } from "next/headers";
 import { HumanMessage } from "langchain";
 
 import agent from "@/backend/agent"
-import mongodb from '@/backend/mongodb'
-import config from "@/backend/config";
+import * as mongodb from '@/backend/shared/mongodb'
+import config from "@/backend/shared/config";
 import pushNotification from "@/backend/push-notification";
 
 const textEncoder = new TextEncoder();

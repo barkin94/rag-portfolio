@@ -1,9 +1,9 @@
 import { tool } from 'langchain';
 import { z } from 'zod';
 
-import vectorStore from '@/backend/vector-store';
-import { Topic } from '@/backend/enums';
-import logger from '@/logger';
+import { vectorStore } from '@/backend/shared/vector';
+import { Topic } from '@/backend/shared/types';
+import logger from '@/backend/shared/logger';
 
 export const getInfoTool = tool(
   async ({ query, topics, expandingKeywords }) => {

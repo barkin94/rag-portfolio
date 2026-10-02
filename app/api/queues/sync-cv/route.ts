@@ -1,6 +1,6 @@
 import { handleCallback } from '@vercel/queue';
 import { syncCv } from '@/backend/cv-sync';
-import mongodb from '@/backend/mongodb';
+import * as mongodb from '@/backend/shared/mongodb';
 import pushNotification from '@/backend/push-notification';
 
 export const POST = handleCallback(async () => {

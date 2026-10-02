@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 
-import AppConfig from "@/backend/config";
+import AppConfig from "@/backend/shared/config";
 import { CookieName } from "@/common/enums";
-import db from "@/backend/mongodb";
-import logger from "@/logger";
+import * as db from "@/backend/shared/mongodb";
+import logger from "@/backend/shared/logger";
 
 const secret = AppConfig.ADMIN_PAGE_SECRET;
 

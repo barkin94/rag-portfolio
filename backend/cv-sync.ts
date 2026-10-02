@@ -1,10 +1,10 @@
 import { Document } from 'langchain';
-import { Topic } from './enums';
+import { Topic } from '@/backend/shared/types';
 import { fetchResume } from './google-drive';
 import { parseCvWithLlm } from './cv-parser';
-import mongodb from './mongodb';
-import vectorStore from './vector-store';
-import logger from '@/logger';
+import * as mongodb from '@/backend/shared/mongodb';
+import { vectorStore } from '@/backend/shared/vector';
+import logger from '@/backend/shared/logger';
 
 export interface SyncResult {
   success: boolean;

@@ -1,7 +1,7 @@
 import * as admin from 'firebase-admin';
 
-import config from "./config";
-import logger from "@/logger";
+import config from "@/backend/shared/config";
+import logger from "@/backend/shared/logger";
 
 const firebaseServiceAccount = JSON.parse(atob(config.FIREBASE_SERVICE_ACCOUNT_BASE64));
 

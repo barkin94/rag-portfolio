@@ -1,5 +1,5 @@
 import MessageComponent from "@/app/ama/_components/Chat/MessageHistory/Message";
-import mongodb from "@/backend/mongodb";
+import * as mongodb from "@/backend/shared/mongodb";
 
 export default async function ThreadPage(props: PageProps<"/admin/threads/[threadId]">) {
   const { threadId } = await props.params;

@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 
-import mongodb from "@/backend/mongodb";
-import logger from '@/logger';
+import * as mongodb from "@/backend/shared/mongodb";
+import logger from '@/backend/shared/logger';
 
 export async function DELETE() {
   const cookieStore = await cookies();

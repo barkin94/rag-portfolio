@@ -1,8 +1,8 @@
 import { z } from 'zod';
 import { ChatOpenAI } from "@langchain/openai";
 
-import config from './config';
-import logger from '@/logger';
+import config from '@/backend/shared/config';
+import logger from '@/backend/shared/logger';
 
 const FullResumeSchema = z.object({
   summary: z.object({

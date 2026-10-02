@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 
 import { ChatState } from "..";
-import { Message } from "@/common/types";
+import { Message } from "@/backend/shared/types";
 import MessageComponent from "./Message";
 
 export type StreamingMessage = {

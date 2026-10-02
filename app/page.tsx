@@ -6,7 +6,7 @@ import ScrollUpButton from "@/common/components/ScrollUpButton";
 import { getThemeCookieInServer } from "@/common/utils/cookie";
 import MainHeader from "./_components/Header";
 import Contact from "./_components/Contact";
-import mongodb from "@/backend/mongodb";
+import * as mongodb from "@/backend/shared/mongodb";
 
 export default async function Main() {
   const theme = await getThemeCookieInServer();

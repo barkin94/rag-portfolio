@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { send } from '@vercel/queue';
-import mongodb from '@/backend/mongodb';
+import * as mongodb from '@/backend/shared/mongodb';
 
 export async function POST() {
   await mongodb.recordSyncStatus('pending', 'Sync queued');

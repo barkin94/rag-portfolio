@@ -1,4 +1,4 @@
-import { Topic } from "@/backend/enums";
+import { Topic } from "@/backend/shared/types";
 import { Document } from "langchain";
 
 const portfolioProjectChunks: Document[] = [

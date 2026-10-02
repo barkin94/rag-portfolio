@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
-import AppConfig from "@/backend/config";
+import AppConfig from "@/backend/shared/config";
 import { CookieName } from "@/common/enums";
 import Link from "next/link";
 
