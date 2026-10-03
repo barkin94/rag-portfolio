@@ -83,8 +83,8 @@ No waiting. No batching. Update instantly.
 | 3 | CV Sync Feature Extraction | ✅ Complete | ✅ |
 | 4 | Admin Feature Extraction | ✅ Complete | ✅ |
 | 5 | Notifications Feature | ✅ Complete | ✅ |
-| 6 | Knowledge/Retrieval Shared Assets | ⏳ Pending | ⬜ |
-| 7 | Cleanup & Compatibility | ⏳ Pending | ⬜ |
+| 6 | Knowledge/Retrieval Shared Assets | ⏭️ Skipped | ⬜ |
+| 7 | Cleanup & Compatibility | ✅ Complete | ✅ |
 
 ---
 
@@ -95,7 +95,7 @@ No waiting. No batching. Update instantly.
 - Phase 3: Reference `docs/restructure/phase-3.md` when required
 - Phase 4: Reference `docs/restructure/phase-4.md` when required
 - Phase 5: Reference `docs/restructure/phase-5.md` when required
-- Phase 6: Reference `docs/restructure/phase-6.md` when required
+- Phase 6: Skipped (knowledge chunks remain in data-chunks/)
 - Phase 7: Reference `docs/restructure/phase-7.md` when required
 
 ---

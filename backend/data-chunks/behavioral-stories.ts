@@ -1,5 +1,5 @@
 import { Document } from "langchain";
-import { Topic } from "../enums";
+import { Topic } from "@/backend/shared/types";
 
 const source = "behavioral story";
 
