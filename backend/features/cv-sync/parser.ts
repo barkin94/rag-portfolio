@@ -4,7 +4,7 @@ import { ChatOpenAI } from "@langchain/openai";
 import config from '@/backend/shared/config';
 import logger from '@/backend/shared/logger';
 
-const FullResumeSchema = z.object({
+export const FullResumeSchema = z.object({
   summary: z.object({
     location: z.string(),
     summary: z.string(),
@@ -80,3 +80,5 @@ export async function parseCvWithLlm(rawText: string): Promise<FullResume> {
     throw new Error(`CV parsing failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
 }
+
+export type { FullResume };
