@@ -55,7 +55,8 @@ backend/
 ---
 
 ## Workflow
-See [`../EXECUTION_WORKFLOW.md`](../EXECUTION_WORKFLOW.md)
+
+**Follow `docs/EXECUTION_WORKFLOW.md` strictly.** Read it first before starting any phase work.
 
 ---
 

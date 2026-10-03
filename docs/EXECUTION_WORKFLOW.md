@@ -10,11 +10,10 @@ When working through phased plans in `docs/<plan-name>/`:
 4. When all steps in a phase are complete:
    - Update phase Status to ✅ Complete in `implementation.md`
    - Update Approval to ✅ in `implementation.md`
-   - Commit (approval gate passed)
 
 ## Status Tracking
 
 | File | Tracks |
 |------|--------|
-| `implementation.md` | Phase status (✅ Complete, 🔄 In Progress, ⏳ Pending) + Approval |
-| `phase-N.md` | Step status (✅ Done, 🔄 In Progress, ⏳ Pending) per step |
+| `implementation.md` | Phase status (`✅ Complete`, `🔄 In Progress`, `⏳ Pending`) + Approval (`✅`, `⬜`) |
+| `phase-N.md` | Step status (`✅ Complete`, `🔄 In Progress`, `⏳ Pending`) per step with Files Created/Modified |
