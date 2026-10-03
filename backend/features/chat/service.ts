@@ -4,7 +4,7 @@ import { HumanMessage } from "langchain";
 import agent from './agent';
 import { createThreadIdString } from '@/backend/shared/mongodb';
 import config from '@/backend/shared/config';
-import { notifyAdminDevices } from '@/backend/push-notification';
+import { notifyAdminDevices } from '@/backend/features/notifications';
 
 const textEncoder = new TextEncoder();
 

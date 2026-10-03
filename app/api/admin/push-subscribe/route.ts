@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { subscribeToTopic } from "@/backend/push-notification";
+import { subscribeToTopic } from "@/backend/features/notifications";
 
 export async function POST(request: Request) {
   try {
