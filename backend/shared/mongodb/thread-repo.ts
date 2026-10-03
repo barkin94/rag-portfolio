@@ -1,4 +1,4 @@
-import { ObjectId } from "mongodb";
+import { ObjectId, type UpdateFilter, type Document } from "mongodb";
 import client from './client';
 import config from '../config';
 import type { Message, ThreadSummary } from '../types';
@@ -10,12 +10,13 @@ const checkpointWritesColl = db.collection("checkpoint_writes");
 
 export async function persistMessages(messages: Message[], threadId: string): Promise<string | null> {
   const now = new Date();
+  const update = {
+    $push: { messages: { $each: messages } },
+    $set: { updatedAt: now },
+  } as unknown as UpdateFilter<Document>;
   const result = await threadsColl.updateOne(
     { _id: new ObjectId(threadId) },
-    {
-      $push: { messages: { $each: messages } } as any,
-      $set: { updatedAt: now },
-    },
+    update,
     { upsert: true }
   );
 

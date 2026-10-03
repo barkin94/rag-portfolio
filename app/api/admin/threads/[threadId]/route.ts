@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import * as mongodb from "@/backend/shared/mongodb";
+import * as adminService from "@/backend/features/admin";
 
 export async function GET(
   _request: NextRequest,
@@ -14,11 +14,11 @@ export async function GET(
     );
   }
   try {
-    const messages = await mongodb.getMessages(threadId);
-    if (messages == null) {
+    const threadDetail = await adminService.getThreadDetail(threadId);
+    if (threadDetail == null) {
       return NextResponse.json({ error: "Thread not found" }, { status: 404 });
     }
-    return NextResponse.json({ id: threadId, messages });
+    return NextResponse.json(threadDetail);
   } catch {
     return NextResponse.json(
       { error: "Failed to load thread" },

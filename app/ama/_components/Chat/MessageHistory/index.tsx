@@ -39,9 +39,9 @@ const MessageHistory: React.FC<MessageHistoryProps> = ({
         <div className="flex flex-col items-center justify-center text-center mt-[20%]">
           <div className="text-6xl mb-4 opacity-60">🤖</div>
           <h2 className="text-2xl font-bold text-foreground mb-6">Welcome!</h2>
-          <p className="text-foreground max-w-md mb-6">
-            Ask me anything about my portfolio, experience, or projects. I'm here to help!
-          </p>
+<p className="text-foreground max-w-md mb-6">
+              Ask me anything about my portfolio, experience, or projects. I&apos;m here to help!
+            </p>
           <div
             id="chat-starter-messages"
             className="flex flex-wrap gap-2 justify-center"

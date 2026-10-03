@@ -13,7 +13,7 @@ export interface UseStreamingFetchConfig {
 }
 
 export interface UseStreamingFetchReturn {
-  send: <TRequest = any>(body: TRequest) => Promise<void>;
+  send: <TRequest = unknown>(body: TRequest) => Promise<void>;
   cancel: () => void;
   isActive: () => boolean;
 }
@@ -21,7 +21,7 @@ export interface UseStreamingFetchReturn {
 export function useStreamingFetch(config: UseStreamingFetchConfig): UseStreamingFetchReturn {
   const abortControllerRef = useRef<AbortController | null>(null);
 
-  const send = useCallback(async <TRequest = any>(body: TRequest) => {
+  const send = useCallback(async <TRequest = unknown>(body: TRequest) => {
     // Prevent sending multiple requests at the same time
     if (abortControllerRef.current) {
       abortControllerRef.current = null;

@@ -53,8 +53,4 @@ const subscribeToTopic = async (token: string) => {
   }
 };
 
-export default {
-  notifyAdminDevices,
-  notifyCvSyncResult,
-  subscribeToTopic,
-}
+export { notifyAdminDevices, notifyCvSyncResult, subscribeToTopic };

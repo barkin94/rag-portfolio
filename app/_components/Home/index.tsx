@@ -9,13 +9,9 @@ interface HomeProps {
     summary: string;
     workPreferences: string;
   };
-  contact: {
-    linkedin: string;
-    github?: string | null;
-  };
 }
 
-export default function Home({ summary, contact }: HomeProps) {
+export default function Home({ summary }: HomeProps) {
   return (
     <WithFadeInAnimation threshold={0.5}>
       <section id="home" role="log" aria-live="polite" className="flex flex-col justify-center mx-auto max-w-4xl min-h-screen px-4">
@@ -30,7 +26,7 @@ export default function Home({ summary, contact }: HomeProps) {
               ]}
             />
           </h1>
-          <About summary={summary} contact={contact} />
+          <About summary={summary} />
         </div>
         <ChatInputWithRedirect />
       </section>

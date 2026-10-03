@@ -139,7 +139,7 @@ const Chat: React.FC<ChatProps> = ({ initialMessages }) => {
     dispatch({ type: 'SET_ERROR', payload: null });
 
     await send({ prompt });
-  }, [state.messages, send]);
+  }, [send]);
 
   const cancelStream = useCallback(() => {
     cancel();

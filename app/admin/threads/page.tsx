@@ -1,6 +1,5 @@
 import Link from "next/link";
 import * as mongodb from "@/backend/shared/mongodb";
-import type { ThreadSummary } from "@/backend/shared/types";
 
 const formatDate = (iso: string) =>
   new Date(iso).toLocaleString(undefined, {

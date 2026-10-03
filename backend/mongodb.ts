@@ -1,4 +1,4 @@
-import { MongoClient, ObjectId } from "mongodb";
+import { MongoClient, ObjectId, type Filter, type UpdateFilter, type Document } from "mongodb";
 import config from "@/backend/shared/config";
 import logger from "@/backend/shared/logger";
 import { Message } from "@/backend/shared/types";
@@ -11,17 +11,21 @@ const threadsColl = db.collection("threads");
 const checkpointsColl = db.collection("checkpoints");
 const checkpointWritesColl = db.collection("checkpoint_writes");
 const configColl = db.collection("config");
-const cvColl = db.collection("cv_data");
-const cvSyncStatusColl = db.collection("cv_sync_status");
+const cvColl = db.collection<CvData>("cv_data");
+const cvSyncStatusColl = db.collection<SyncStatusDoc>("cv_sync_status");
+
+const CURRENT_CV_FILTER: Filter<CvData> = { _id: "current" };
+const CURRENT_SYNC_FILTER: Filter<SyncStatusDoc> = { _id: "current" };
 
 async function persistMessages(messages: Message[], threadId: string) {
   const now = new Date();
+  const update = {
+    $push: { messages: { $each: messages } },
+    $set: { updatedAt: now },
+  } as unknown as UpdateFilter<Document>;
   const result = await threadsColl.updateOne(
     { _id: new ObjectId(threadId) },
-    {
-      $push: { messages: { $each: messages } } as any,
-      $set: { updatedAt: now },
-    },
+    update,
     { upsert: true }
   );
 
@@ -147,15 +151,15 @@ type SyncStatusDoc = {
 async function upsertResume(data: Omit<CvData, '_id' | 'updatedAt'>): Promise<void> {
   const now = new Date();
   await cvColl.updateOne(
-    { _id: "current" as any },
+    CURRENT_CV_FILTER,
     { $set: { ...data, updatedAt: now } },
     { upsert: true },
   );
 }
 
 async function getResume(): Promise<CvData | null> {
-  const doc = await cvColl.findOne({ _id: 'current' as any });
-  return doc as CvData | null;
+  const doc = await cvColl.findOne(CURRENT_CV_FILTER);
+  return doc;
 }
 
 async function recordSyncStatus(
@@ -163,18 +167,18 @@ async function recordSyncStatus(
   details: string
 ): Promise<void> {
   await cvSyncStatusColl.updateOne(
-    { _id: 'current' as any },
+    CURRENT_SYNC_FILTER,
     { $set: { status, timestamp: new Date(), details } },
     { upsert: true }
   );
 }
 
 async function getLastSyncStatus(): Promise<SyncStatusDoc | null> {
-  const doc = await cvSyncStatusColl.findOne({ _id: 'current' as any });
-  return doc as SyncStatusDoc | null;
+  const doc = await cvSyncStatusColl.findOne(CURRENT_SYNC_FILTER);
+  return doc;
 }
 
-export default {
+const mongodb = {
   client,
   persistMessages,
   getMessages,
@@ -188,3 +192,5 @@ export default {
   recordSyncStatus,
   getLastSyncStatus,
 };
+
+export default mongodb;

@@ -6,13 +6,9 @@ interface AboutProps {
     summary: string;
     workPreferences: string;
   };
-  contact: {
-    linkedin: string;
-    github?: string | null;
-  };
 }
 
-export default function About({ summary, contact }: AboutProps) {
+export default function About({ summary }: AboutProps) {
   return (
     <div
       aria-label="About"

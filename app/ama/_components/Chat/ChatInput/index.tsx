@@ -1,10 +1,9 @@
 'use client'
 
-import { useState, useRef, useEffect, useLayoutEffect } from "react";
+import { useState, useRef, useLayoutEffect } from "react";
 import Link from "next/link";
 
 import { CancelIcon, SendIcon, ExpandIcon } from "@/common/components/Icons";
-import ConsentDialog, { hasUserConsented } from "@/common/components/ConsentDialog";
 import TextArea from "@/common/components/TextArea";
 
 interface ChatInputProps {
@@ -28,29 +27,17 @@ const ChatInput: React.FC<ChatInputProps> = ({
 }) => {
   const [inputValue, setInputValue] = useState('')
   const textareaRef = useRef<HTMLTextAreaElement>(null)
-  const [isTouchDevice, isSetTouchDevice] = useState(false);
-  const [showConsentDialog, setShowConsentDialog] = useState(false);
-
-  // This code only runs on the client/browser
-  useEffect(() => {
-    const userAgent = navigator.userAgent.toLowerCase();
-    isSetTouchDevice(userAgent.includes('mobile'));
-  }, []);
+  const isTouchDevice = typeof navigator !== 'undefined' && navigator.userAgent.toLowerCase().includes('mobile');
 
   useLayoutEffect(() => {
     if (textareaRef.current && isFocused != undefined) {
-      isFocused ? textareaRef.current.focus() : textareaRef.current.blur()
+      if (isFocused) {
+        textareaRef.current.focus();
+      } else {
+        textareaRef.current.blur();
+      }
     }
-  }, []);
-
-  const handleConsentAccept = async () => {
-    setShowConsentDialog(false);
-    submitPrompt(inputValue.trim());
-  }
-
-  const handleConsentReject = () => {
-    setShowConsentDialog(false);
-  }
+  }, [isFocused]);
 
   const submitPrompt = async (prompt: string) => {
     if (!prompt || isLoading) {
@@ -59,19 +46,10 @@ const ChatInput: React.FC<ChatInputProps> = ({
     
     setInputValue('')
     await onSend?.(prompt);
-    // // Check if user has already consented
-    // if (hasUserConsented()) {
-    //   // User has already consented, submit directly
-    //   setInputValue('')
-    //   await onSend?.(prompt);
-    // } else {
-    //   // Show consent dialog before submitting
-    //   setShowConsentDialog(true);
-    // }
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-if (!isTouchDevice && e.key === 'Enter' && !e.shiftKey) {
+    if (!isTouchDevice && e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
       submitPrompt(inputValue.trim())
     }
@@ -83,12 +61,6 @@ if (!isTouchDevice && e.key === 'Enter' && !e.shiftKey) {
 
   return (
     <>
-      {/* <ConsentDialog
-        isOpen={showConsentDialog}
-        onAccept={handleConsentAccept}
-        onReject={handleConsentReject}
-      /> */}
-
       {error && (
         <div
           className="max-w-4xl mx-auto mb-3 p-3 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900/50 rounded-xl text-red-700 dark:text-red-400 text-sm flex items-center justify-between backdrop-blur-sm"
@@ -162,7 +134,5 @@ if (!isTouchDevice && e.key === 'Enter' && !e.shiftKey) {
     </>
   );
 };
-
-
 
 export default ChatInput;

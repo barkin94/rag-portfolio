@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import * as db from "@/backend/shared/mongodb";
+import * as adminService from "@/backend/features/admin";
 
 export async function GET() {
-  const maintenanceMode = await db.isInMaintenance();
-  return NextResponse.json({ maintenance: maintenanceMode });
+  const maintenanceMode = await adminService.getMaintenanceStatus();
+  return NextResponse.json(maintenanceMode);
 }
 
 export async function POST(request: NextRequest) {
@@ -14,6 +14,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "enabled must be boolean" }, { status: 400 });
   }
 
-  await db.setMaintenanceMode(enabled);
-  return NextResponse.json({ maintenance: enabled });
+  const result = await adminService.setMaintenanceMode(enabled);
+  return NextResponse.json(result);
 }

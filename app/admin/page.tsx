@@ -1,5 +1,7 @@
 import { redirect, RedirectType } from "next/navigation"
 
-export default () => {
-    redirect('/admin/threads', RedirectType.replace)
+const AdminPage = () => {
+  redirect('/admin/threads', RedirectType.replace)
 }
+
+export default AdminPage

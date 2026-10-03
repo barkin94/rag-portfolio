@@ -1,7 +1,7 @@
 import { handleCallback } from '@vercel/queue';
 import { syncCv } from '@/backend/features/cv-sync';
 import * as mongodb from '@/backend/shared/mongodb';
-import pushNotification from '@/backend/push-notification';
+import { notifyCvSyncResult } from '@/backend/push-notification';
 
 export const POST = handleCallback(async () => {
   const result = await syncCv();
@@ -9,10 +9,10 @@ export const POST = handleCallback(async () => {
   if (result.success) {
     const msg = `Synced ${result.experienceCount} roles, ${result.skillsCategories} skill categories`;
     await mongodb.recordSyncStatus('success', msg);
-    await pushNotification.notifyCvSyncResult(true, msg);
+    await notifyCvSyncResult(true, msg);
   } else {
     const msg = result.error || 'Unknown error';
     await mongodb.recordSyncStatus('failed', msg);
-    await pushNotification.notifyCvSyncResult(false, msg);
+    await notifyCvSyncResult(false, msg);
   }
 });

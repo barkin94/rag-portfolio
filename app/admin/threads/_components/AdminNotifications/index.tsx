@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { FirebaseOptions, initializeApp, getApps, getApp } from "firebase/app";
 import { getMessaging, getToken } from "firebase/messaging";
 
@@ -12,7 +12,7 @@ const AdminNotifications = ({ firebaseConfig, vapidKey }: Props) => {
   const [swReady, setSwReady] = useState(false);
   const [permissionRequested, setPermissionRequested] = useState(false);
 
-  const syncToken = async (reg: ServiceWorkerRegistration) => {
+  const syncToken = useCallback(async (reg: ServiceWorkerRegistration) => {
     const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
     const token = await getToken(getMessaging(app), { serviceWorkerRegistration: reg, vapidKey });
     if (!token || token === localStorage.getItem("fcm_token")) return;
@@ -22,7 +22,7 @@ const AdminNotifications = ({ firebaseConfig, vapidKey }: Props) => {
       body: JSON.stringify({ token }),
     });
     localStorage.setItem("fcm_token", token);
-  };
+  }, [firebaseConfig, vapidKey]);
 
   useEffect(() => {
     if (!("serviceWorker" in navigator)) return;
@@ -36,7 +36,7 @@ const AdminNotifications = ({ firebaseConfig, vapidKey }: Props) => {
         setSubscribed(true);
       })
       .catch(() => {});
-  }, []);
+  }, [syncToken]);
 
   const enable = async () => {
     if (!swReady) return;

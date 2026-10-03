@@ -18,7 +18,7 @@ export default async function Main() {
       <main>
         {resume ? (
           <>
-            <Home summary={resume.summary} contact={resume.contact} />
+            <Home summary={resume.summary} />
             <TechStack skills={resume.skills} />
             <Experience experience={resume.experience} />
             <Contact contact={resume.contact} />
@@ -26,7 +26,6 @@ export default async function Main() {
         ) : (
           <Home 
             summary={{ location: '', summary: '', workPreferences: '' }} 
-            contact={{ linkedin: '', github: '' }} 
           />
         )}
       </main>

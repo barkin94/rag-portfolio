@@ -35,7 +35,7 @@ export default function FadeInOnViewportEntry({ children, threshold }: FadeInOnV
         observer.unobserve(currentRef);
       }
     };
-  }, []);
+  }, [threshold]);
 
   return (
     <div ref={sectionRef} className="fading-section fading-out">

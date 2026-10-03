@@ -4,7 +4,7 @@ import { HumanMessage } from "langchain";
 import agent from './agent';
 import { createThreadIdString } from '@/backend/shared/mongodb';
 import config from '@/backend/shared/config';
-import pushNotification from '@/backend/push-notification';
+import { notifyAdminDevices } from '@/backend/push-notification';
 
 const textEncoder = new TextEncoder();
 
@@ -40,7 +40,7 @@ export async function streamChat({ prompt }: StreamChatParams): Promise<StreamCh
   );
 
   if (isNewThread) {
-    pushNotification.notifyAdminDevices(threadId, prompt);
+    notifyAdminDevices(threadId, prompt);
   }
 
   const stream = new ReadableStream({

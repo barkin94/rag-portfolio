@@ -44,7 +44,8 @@ const TypingText: React.FC<TypingTextProps> = ({
         return () => clearTimeout(timer);
       } else {
         // Typing finished, move to pausing phase
-        setPhase('paused');
+        // Use setTimeout to avoid calling setState synchronously in effect
+        setTimeout(() => setPhase('paused'), 0);
       }
     } 
     
@@ -72,8 +73,11 @@ const TypingText: React.FC<TypingTextProps> = ({
       } else {
         // Deleting finished, move to the next string in the array and restart typing
         const nextIndex = (arrayIndex + 1) % textArray.length;
-        setArrayIndex(nextIndex);
-        setPhase('typing');
+        // Use setTimeout to avoid calling setState synchronously in effect
+        setTimeout(() => {
+          setArrayIndex(nextIndex);
+          setPhase('typing');
+        }, 0);
       }
     }
   }, [typedText, phase, arrayIndex, textArray, currentText, typingSpeed, deletingSpeed, pauseTime]);

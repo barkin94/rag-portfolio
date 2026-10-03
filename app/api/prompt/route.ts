@@ -11,7 +11,7 @@ export async function POST(request: Request) {
     const { stream } = await streamChat({ prompt });
 
     return new Response(stream, { headers: { 'Content-Type': 'text/plain' } });
-  } catch (error) {
+  } catch {
     return new Response("Internal server error", { status: 500 });
   }
 }
