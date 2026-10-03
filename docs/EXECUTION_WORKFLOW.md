@@ -2,18 +2,16 @@
 
 ## Execution Model
 
-When working through phased plans in `docs/<plan-name>/`:
+**Immediate status updates — mark the moment you start/finish.**
 
-1. Complete one step in the phase file
-2. Update that step's Status to ✅ Done in `phase-N.md`
-3. Move to next step
-4. When all steps in a phase are complete:
-   - Update phase Status to ✅ Complete in `implementation.md`
-   - Update Approval to ✅ in `implementation.md`
+| Action | Mark Now | File |
+|--------|----------|------|
+| Start phase | Phase → `🔄 In Progress` | `implementation.md` |
+| Start step | Step → `🔄 In Progress` | `phase-N.md` |
+| Finish step | Step → `✅ Complete` + files | `phase-N.md` |
+| All steps done | Phase → `✅ Complete` | `implementation.md` |
+| Phase approved | Approval → `✅` | `implementation.md` |
 
-## Status Tracking
+Default state: `⏳ Pending` (requires no action — just don't mark yet).
 
-| File | Tracks |
-|------|--------|
-| `implementation.md` | Phase status (`✅ Complete`, `🔄 In Progress`, `⏳ Pending`) + Approval (`✅`, `⬜`) |
-| `phase-N.md` | Step status (`✅ Complete`, `🔄 In Progress`, `⏳ Pending`) per step with Files Created/Modified |
+No waiting. No batching. Update instantly.
