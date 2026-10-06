@@ -8,9 +8,14 @@
           "includeCompletionsForModuleExports": true
         }
       }
-    },
-    "eslint": {
-      "command": ["vscode-eslint-language-server", "--stdio"]
+    }
+  },
+  "mcp": {
+    "playwright": {
+      "type": "local",
+      "command": ["npx", "@playwright/mcp@latest"],
+      "enabled": true
     }
   }
 }
+

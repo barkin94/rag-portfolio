@@ -31,9 +31,11 @@
     "nodemailer": "^6.9.16",
     "pino": "^10.1.0",
     "react": "19.2.0",
-    "react-dom": "19.2.0"
+    "react-dom": "19.2.0",
+    "swiper": "^14.3.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.63.0",
     "@tailwindcss/postcss": "^4",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/nodemailer": "^7.0.5",
