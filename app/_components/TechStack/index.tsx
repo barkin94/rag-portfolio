@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import Card from '@/common/components/Card';
-import WithFadeInAnimation from '@/common/components/FadeInOnViewportEntry';
-import Carousel from '@/common/components/Carousel';
+import Card from "@/common/components/Card";
+import WithFadeInAnimation from "@/common/components/FadeInOnViewportEntry";
+import Carousel from "@/common/components/Carousel";
 
 interface TechStackProps {
   skills: {
@@ -24,7 +24,6 @@ const TechStack = ({ skills }: TechStackProps) => {
       <Carousel
         autoplay
         loop
-        showIndicators
         className="mx-10 sm:mx-40 lg:mx-60"
         slides={categories.map(([category, techList]) => (
           <Card key={category}>
@@ -47,3 +46,4 @@ const TechStack = ({ skills }: TechStackProps) => {
 };
 
 export default TechStack;
+

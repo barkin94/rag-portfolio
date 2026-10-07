@@ -1,14 +1,23 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "lsp": {
-    "typescript": {
-      "command": ["typescript-language-server", "--stdio"],
-      "initialization": {
-        "preferences": {
-          "includeCompletionsForModuleExports": true
-        }
-      }
-    }
+    // "typescript": {
+    //   "command": [
+    //     "typescript-language-server",
+    //     "--stdio"
+    //   ],
+    //   "initialization": {
+    //     "preferences": {
+    //       "includeCompletionsForModuleExports": true
+    //     }
+    //   }
+    // },
+    // "eslint": {
+    //   "command": [
+    //     "vscode-eslint-language-server",
+    //     "--stdio"
+    //   ]
+    // }
   },
   "mcp": {
     "playwright": {
@@ -18,4 +27,3 @@
     }
   }
 }
-

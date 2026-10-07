@@ -1,12 +1,10 @@
 "use client";
 
-import React, { useRef, useCallback } from "react";
-import { Swiper as SwiperComponent, SwiperSlide } from "swiper/react";
-import { Autoplay, Pagination, FreeMode } from "swiper/modules";
-import type { Swiper as SwiperClass } from "swiper/types";
-import type { SwiperRef } from "swiper/react";
-import "swiper/css";
-import "swiper/css/pagination";
+import React, { useCallback, useEffect, useState } from "react";
+import useEmblaCarousel from "embla-carousel-react";
+import Autoplay from "embla-carousel-autoplay";
+import { useBreakpoints } from "../../hooks/useBreakpoints";
+import type { EmblaCarouselType } from "embla-carousel";
 
 interface CarouselProps {
   slides: React.ReactNode[];
@@ -25,62 +23,134 @@ export default function Carousel({
   className = "",
   scrollSpeed = 12000,
 }: CarouselProps) {
-  const swiperRef = useRef<SwiperRef | null>(null);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
+  const [api, setApi] = useState<EmblaCarouselType | undefined>();
+
+  const isMobile = useBreakpoints(640);
+  const isTablet = useBreakpoints(1024);
+
+  const getSlidesPerView = useCallback(() => {
+    if (isTablet) return 3;
+    if (isMobile) return 2;
+    return 1;
+  }, [isMobile, isTablet]);
+
+  const getSpaceBetween = useCallback(() => {
+    if (isTablet) return 32;
+    if (isMobile) return 16;
+    return 32;
+  }, [isMobile, isTablet]);
+
+  const [emblaRef, emblaApi] = useEmblaCarousel(
+    { loop, align: "start", slidesToScroll: 1, watchDrag: true, duration: scrollSpeed, containScroll: "keepSnaps", watchResize: true, watchSlides: true, slides: ".embla__slide" },
+    [Autoplay({ playOnInit: autoplay, delay: 0, stopOnInteraction: false, stopOnMouseEnter: true, stopOnFocusIn: true })]
+  );
+
+  useEffect(() => {
+    if (emblaApi) setApi(emblaApi);
+  }, [emblaApi]);
+
+  const autoplayApi = api?.plugins().autoplay;
 
   const handleMouseEnter = useCallback(() => {
-    swiperRef.current?.swiper.autoplay.stop();
-  }, []);
+    autoplayApi?.stop();
+  }, [autoplayApi]);
 
   const handleMouseLeave = useCallback(() => {
-    swiperRef.current?.swiper.autoplay.start();
-  }, []);
+    autoplayApi?.play();
+  }, [autoplayApi]);
 
-  return (
+  useEffect(() => {
+    if (!api) return;
+
+    const onInit = () => {
+      const snaps = api.scrollSnapList();
+      setScrollSnaps(snaps);
+      setSelectedIndex(api.selectedScrollSnap());
+    };
+    const onSelect = () => {
+      setSelectedIndex(api.selectedScrollSnap());
+    };
+    const onResize = () => {
+      const snaps = api.scrollSnapList();
+      setScrollSnaps(snaps);
+    };
+
+    api.on("init", onInit);
+    api.on("select", onSelect);
+    api.on("resize", onResize);
+
+    onInit();
+
+    return () => {
+      api.off("init", onInit);
+      api.off("select", onSelect);
+      api.off("resize", onResize);
+    };
+  }, [api]);
+
+  const slidesToShow = getSlidesPerView();
+  const spaceBetween = getSpaceBetween();
+
+return (
     <div
       className={`${className} overflow-visible`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <SwiperComponent
-        ref={swiperRef}
-        modules={[Autoplay, Pagination, FreeMode]}
-        spaceBetween={32}
-        slidesPerView={1}
-        breakpoints={{
-          640: {
-            slidesPerView: 2,
-            spaceBetween: 16,
-          },
-          1024: {
-            slidesPerView: 3,
-            spaceBetween: 32,
-          },
-        }}
-        freeMode={{ sticky: false }}
-        autoplay={{
-          enabled: autoplay,
-          delay: 1,
-          disableOnInteraction: false,
-          pauseOnMouseEnter: true,
-        }}
-        speed={scrollSpeed}
-        loop={loop}
-        pagination={{
-          enabled: showIndicators,
-          clickable: true,
-          bulletClass:
-            "swiper-pagination-bullet w-2 h-2 rounded-full !bg-slate-300 dark:!bg-slate-600 transition-colors duration-200",
-          bulletActiveClass: "swiper-pagination-bullet-active !bg-slate-900 dark:!bg-slate-100",
-        }}
-        wrapperClass="overflow-visible"
-        className="max-w-[1200px] mx-auto relative overflow-visible"
-      >
-        {slides.map((slide, index) => (
-          <SwiperSlide key={index} className="h-auto overflow-visible">
-            {slide}
-          </SwiperSlide>
-        ))}
-      </SwiperComponent>
+      <div className="max-w-[1200px] mx-auto relative overflow-visible">
+        <div
+          className="overflow-hidden"
+          ref={emblaRef}
+        >
+          <div
+            className="flex"
+            style={{
+              gap: `${spaceBetween}px`,
+              margin: `0 calc(${spaceBetween}px / -2)`,
+            }}
+          >
+            {slides.map((slide, index) => (
+              <div
+                key={index}
+                className="embla__slide flex-[0_0_auto] h-auto overflow-visible"
+                style={{
+                  width: `calc(100% / ${slidesToShow} - ${spaceBetween}px)`,
+                  padding: `0 calc(${spaceBetween}px / 2)`,
+                }}
+              >
+                {slide}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {showIndicators && scrollSnaps.length > 1 && (
+          <div
+            className="flex justify-center gap-2 mt-6"
+            role="tablist"
+            aria-label="Carousel pagination"
+          >
+            {scrollSnaps.map((_, snapIndex) => (
+              <button
+                key={snapIndex}
+                className={`
+                  w-2 h-2 rounded-full transition-colors duration-200
+                  ${selectedIndex === snapIndex
+                    ? "bg-slate-900 dark:bg-slate-100"
+                    : "bg-slate-300 dark:bg-slate-600"
+                  }
+                `}
+                onClick={() => api?.scrollTo(snapIndex)}
+                role="tab"
+                aria-selected={selectedIndex === snapIndex}
+                aria-label={`Go to slide ${snapIndex + 1}`}
+              />
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
