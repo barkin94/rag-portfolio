@@ -9,7 +9,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 
 interface CarouselProps {
-  children: React.ReactNode;
+  slides: React.ReactNode[];
   autoplay?: boolean;
   loop?: boolean;
   showIndicators?: boolean;
@@ -18,7 +18,7 @@ interface CarouselProps {
 }
 
 export default function Carousel({
-  children,
+  slides,
   autoplay = true,
   loop = true,
   showIndicators = true,
@@ -26,7 +26,6 @@ export default function Carousel({
   scrollSpeed = 12000,
 }: CarouselProps) {
   const swiperRef = useRef<SwiperRef | null>(null);
-  const slides = React.Children.toArray(children);
 
   const handleMouseEnter = useCallback(() => {
     swiperRef.current?.swiper.autoplay.stop();
@@ -70,8 +69,8 @@ export default function Carousel({
           enabled: showIndicators,
           clickable: true,
           bulletClass:
-            "swiper-pagination-bullet w-2 h-2 rounded-full bg-slate-300 dark:bg-slate-600 transition-colors duration-200",
-          bulletActiveClass: "swiper-pagination-bullet-active bg-slate-900 dark:bg-slate-100",
+            "swiper-pagination-bullet w-2 h-2 rounded-full !bg-slate-300 dark:!bg-slate-600 transition-colors duration-200",
+          bulletActiveClass: "swiper-pagination-bullet-active !bg-slate-900 dark:!bg-slate-100",
         }}
         wrapperClass="overflow-visible"
         className="max-w-[1200px] mx-auto relative overflow-visible"

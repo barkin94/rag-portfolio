@@ -21,8 +21,12 @@ const TechStack = ({ skills }: TechStackProps) => {
           Technologies and tools I use to ship products
         </p>
       </WithFadeInAnimation>
-      <Carousel autoplay loop showIndicators className="mx-10 sm:mx-40 lg:mx-60">
-        {categories.map(([category, techList]) => (
+      <Carousel
+        autoplay
+        loop
+        showIndicators
+        className="mx-10 sm:mx-40 lg:mx-60"
+        slides={categories.map(([category, techList]) => (
           <Card key={category}>
             <h3 className="text-xl font-bold mb-4">{category}</h3>
             <div className="flex flex-wrap gap-2">
@@ -37,7 +41,7 @@ const TechStack = ({ skills }: TechStackProps) => {
             </div>
           </Card>
         ))}
-      </Carousel>
+      />
     </section>
   );
 };
