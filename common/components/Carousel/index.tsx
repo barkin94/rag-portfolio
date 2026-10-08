@@ -3,7 +3,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
-import { useBreakpoints } from "../../hooks/useBreakpoints";
 import type { EmblaCarouselType } from "embla-carousel";
 
 interface CarouselProps {
@@ -13,6 +12,7 @@ interface CarouselProps {
   showIndicators?: boolean;
   className?: string;
   scrollSpeed?: number;
+  slideWidth?: number;
 }
 
 export default function Carousel({
@@ -22,25 +22,12 @@ export default function Carousel({
   showIndicators = true,
   className = "",
   scrollSpeed = 12000,
+  slideWidth = 320,
 }: CarouselProps) {
+  const spaceBetween = 32;
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
   const [api, setApi] = useState<EmblaCarouselType | undefined>();
-
-  const isMobile = useBreakpoints(640);
-  const isTablet = useBreakpoints(1024);
-
-  const getSlidesPerView = useCallback(() => {
-    if (isTablet) return 3;
-    if (isMobile) return 2;
-    return 1;
-  }, [isMobile, isTablet]);
-
-  const getSpaceBetween = useCallback(() => {
-    if (isTablet) return 32;
-    if (isMobile) return 16;
-    return 32;
-  }, [isMobile, isTablet]);
 
   const [emblaRef, emblaApi] = useEmblaCarousel(
     { loop, align: "start", slidesToScroll: 1, watchDrag: true, duration: scrollSpeed, containScroll: "keepSnaps", watchResize: true, watchSlides: true, slides: ".embla__slide" },
@@ -66,6 +53,7 @@ export default function Carousel({
 
     const onInit = () => {
       const snaps = api.scrollSnapList();
+      console.log('[Carousel] init - scrollSnapList:', snaps, 'slidesInView:', api.slidesInView(), 'slideNodes:', api.slideNodes().length);
       setScrollSnaps(snaps);
       setSelectedIndex(api.selectedScrollSnap());
     };
@@ -90,9 +78,6 @@ export default function Carousel({
     };
   }, [api]);
 
-  const slidesToShow = getSlidesPerView();
-  const spaceBetween = getSpaceBetween();
-
 return (
     <div
       className={`${className} overflow-visible`}
@@ -107,17 +92,16 @@ return (
           <div
             className="flex"
             style={{
-              gap: `${spaceBetween}px`,
-              margin: `0 calc(${spaceBetween}px / -2)`,
+              columnGap: `${spaceBetween}px`,
             }}
           >
             {slides.map((slide, index) => (
               <div
                 key={index}
-                className="embla__slide flex-[0_0_auto] h-auto overflow-visible"
+                className="embla__slide flex-[0_0_auto] h-auto overflow-visible shrink-0"
                 style={{
-                  width: `calc(100% / ${slidesToShow} - ${spaceBetween}px)`,
-                  padding: `0 calc(${spaceBetween}px / 2)`,
+                  width: `${slideWidth}px`,
+                  padding: `0 calc(${spaceBetween}px / 2) 24px`,
                 }}
               >
                 {slide}

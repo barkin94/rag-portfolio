@@ -24,9 +24,10 @@ const TechStack = ({ skills }: TechStackProps) => {
       <Carousel
         autoplay
         loop
+        slideWidth={320}
         className="mx-10 sm:mx-40 lg:mx-60"
         slides={categories.map(([category, techList]) => (
-          <Card key={category}>
+          <Card key={category} hoverScale={false}>
             <h3 className="text-xl font-bold mb-4">{category}</h3>
             <div className="flex flex-wrap gap-2">
               {techList.map((tech) => (

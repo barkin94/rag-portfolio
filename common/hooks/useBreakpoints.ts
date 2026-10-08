@@ -1,20 +1,26 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useLayoutEffect } from "react";
 
 export function useBreakpoints(breakpoint: number): boolean {
   const [isBelowBreakpoint, setIsBelowBreakpoint] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    const checkBreakpoint = () => {
-      setIsBelowBreakpoint(window.innerWidth < breakpoint);
-    };
+    const mediaQuery = window.matchMedia(`(max-width: ${breakpoint - 1}px)`);
+    const handler = () => setIsBelowBreakpoint(mediaQuery.matches);
 
-    checkBreakpoint();
-    window.addEventListener("resize", checkBreakpoint);
+    handler();
+    mediaQuery.addEventListener("change", handler);
 
-    return () => window.removeEventListener("resize", checkBreakpoint);
+    return () => mediaQuery.removeEventListener("change", handler);
   }, [breakpoint]);
 
-  return isBelowBreakpoint;
+   
+  useLayoutEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMounted(true);
+  }, []);
+
+  return mounted ? isBelowBreakpoint : false;
 }
