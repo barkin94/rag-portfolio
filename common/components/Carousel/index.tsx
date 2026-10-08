@@ -7,21 +7,9 @@ import type { EmblaCarouselType } from "embla-carousel";
 
 const carouselStyles = `
   .embla__slide {
-    flex: 0 0 calc((100% - 32px) / 3);
-    min-width: 280px;
-    max-width: 380px;
-  }
-  @media (max-width: 1024px) {
-    .embla__slide {
-      flex: 0 0 calc((100% - 16px) / 2);
-      min-width: 260px;
-    }
-  }
-  @media (max-width: 640px) {
-    .embla__slide {
-      flex: 0 0 100%;
-      min-width: 100%;
-    }
+    flex: 0 0 320px;
+    min-width: 320px;
+    max-width: 320px;
   }
 `;
 
@@ -32,7 +20,6 @@ interface CarouselProps {
   showIndicators?: boolean;
   className?: string;
   scrollSpeed?: number;
-  slideWidth?: number;
 }
 
 export default function Carousel({
@@ -60,6 +47,7 @@ export default function Carousel({
       watchSlides: true,
       slides: ".embla__slide",
       startIndex: 0,
+
     },
     [
       Autoplay({
@@ -155,7 +143,7 @@ return (
             aria-label="Carousel pagination"
           >
             {scrollSnaps.map((_, snapIndex) => (
-<button
+              <button
                   key={snapIndex}
                   className={`
                     w-2 h-2 rounded-full transition-colors duration-200 cursor-pointer
