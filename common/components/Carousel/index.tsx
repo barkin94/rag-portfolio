@@ -5,6 +5,26 @@ import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import type { EmblaCarouselType } from "embla-carousel";
 
+const carouselStyles = `
+  .embla__slide {
+    flex: 0 0 calc((100% - 32px) / 3);
+    min-width: 280px;
+    max-width: 380px;
+  }
+  @media (max-width: 1024px) {
+    .embla__slide {
+      flex: 0 0 calc((100% - 16px) / 2);
+      min-width: 260px;
+    }
+  }
+  @media (max-width: 640px) {
+    .embla__slide {
+      flex: 0 0 100%;
+      min-width: 100%;
+    }
+  }
+`;
+
 interface CarouselProps {
   slides: React.ReactNode[];
   autoplay?: boolean;
@@ -22,7 +42,6 @@ export default function Carousel({
   showIndicators = true,
   className = "",
   scrollSpeed = 800,
-  slideWidth = 320,
 }: CarouselProps) {
   const spaceBetween = 32;
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -98,7 +117,11 @@ export default function Carousel({
   }, [api]);
 
   return (
-    <div
+    <>
+      <style
+        dangerouslySetInnerHTML={{ __html: carouselStyles }}
+      />
+      <div
       className={`${className} overflow-visible`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -116,7 +139,6 @@ export default function Carousel({
                 key={index}
                 className="embla__slide flex-[0_0_auto] h-auto overflow-visible shrink-0"
                 style={{
-                  width: `${slideWidth}px`,
                   padding: `0 calc(${spaceBetween}px / 2) 24px`,
                 }}
               >
@@ -133,24 +155,25 @@ export default function Carousel({
             aria-label="Carousel pagination"
           >
             {scrollSnaps.map((_, snapIndex) => (
-              <button
-                key={snapIndex}
-                className={`
-                  w-2 h-2 rounded-full transition-colors duration-200
-                  ${selectedIndex === snapIndex
-                    ? "bg-slate-900 dark:bg-slate-100"
-                    : "bg-slate-300 dark:bg-slate-600"
-                  }
-                `}
-                onClick={() => api?.scrollTo(snapIndex)}
-                role="tab"
-                aria-selected={selectedIndex === snapIndex}
-                aria-label={`Go to slide ${snapIndex + 1}`}
-              />
+<button
+                  key={snapIndex}
+                  className={`
+                    w-2 h-2 rounded-full transition-colors duration-200 cursor-pointer
+                    ${selectedIndex === snapIndex
+                      ? "bg-slate-900 dark:bg-slate-100"
+                      : "bg-slate-300 dark:bg-slate-600"
+                    }
+                  `}
+                  onClick={() => api?.scrollTo(snapIndex)}
+                  role="tab"
+                  aria-selected={selectedIndex === snapIndex}
+                  aria-label={`Go to slide ${snapIndex + 1}`}
+                />
             ))}
           </div>
         )}
       </div>
     </div>
+  </>
   );
 }
