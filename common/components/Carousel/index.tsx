@@ -116,18 +116,18 @@ export default function Carousel({
     };
   }, [api]);
 
-  return (
+return (
     <>
       <style
         dangerouslySetInnerHTML={{ __html: carouselStyles }}
       />
       <div
-      className={`${className} overflow-visible`}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-    >
-      <div className="max-w-[1200px] mx-auto relative overflow-visible">
-        <div className="overflow-hidden" ref={emblaRef}>
+        className={`${className} overflow-visible`}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
+        <div className="container px-4 max-w-4xl relative overflow-visible">
+          <div className="overflow-hidden" ref={emblaRef}>
           <div
             className="flex"
             style={{
