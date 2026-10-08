@@ -1,17 +1,14 @@
 "use client";
 
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import type { EmblaCarouselType } from "embla-carousel";
 
-const carouselStyles = `
-  .embla__slide {
-    flex: 0 0 320px;
-    min-width: 320px;
-    max-width: 320px;
-  }
-`;
+export interface CarouselLayout {
+  slidesPerView: { base: number; sm?: number; md?: number; lg?: number };
+  gap: number;
+}
 
 interface CarouselProps {
   slides: React.ReactNode[];
@@ -20,6 +17,35 @@ interface CarouselProps {
   showIndicators?: boolean;
   className?: string;
   scrollSpeed?: number;
+  layout: CarouselLayout;
+}
+
+function computeSlideWidths(
+  layout: CarouselLayout,
+  containerWidth: number
+): { width: string; media?: string }[] {
+  const { slidesPerView, gap } = layout;
+  const gapPx = gap * 4;
+  const breakpoints = { sm: 640, md: 768, lg: 1024 };
+  const result: { width: string; media?: string }[] = [];
+
+  const baseWidth = `calc((100% - ${gapPx * (slidesPerView.base - 1)}px) / ${slidesPerView.base})`;
+  result.push({ width: baseWidth });
+
+  if (slidesPerView.sm) {
+    const w = `calc((100% - ${gapPx * (slidesPerView.sm - 1)}px) / ${slidesPerView.sm})`;
+    result.push({ width: w, media: `(min-width: ${breakpoints.sm}px)` });
+  }
+  if (slidesPerView.md) {
+    const w = `calc((100% - ${gapPx * (slidesPerView.md - 1)}px) / ${slidesPerView.md})`;
+    result.push({ width: w, media: `(min-width: ${breakpoints.md}px)` });
+  }
+  if (slidesPerView.lg) {
+    const w = `calc((100% - ${gapPx * (slidesPerView.lg - 1)}px) / ${slidesPerView.lg})`;
+    result.push({ width: w, media: `(min-width: ${breakpoints.lg}px)` });
+  }
+
+  return result;
 }
 
 export default function Carousel({
@@ -29,8 +55,9 @@ export default function Carousel({
   showIndicators = true,
   className = "",
   scrollSpeed = 800,
+  layout,
 }: CarouselProps) {
-  const spaceBetween = 32;
+  const gapPx = layout.gap * 4;
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
   const [api, setApi] = useState<EmblaCarouselType | undefined>();
@@ -45,9 +72,8 @@ export default function Carousel({
       containScroll: "keepSnaps",
       watchResize: true,
       watchSlides: true,
-      slides: ".embla__slide",
+      slides: "[data-embla-slide]",
       startIndex: 0,
-
     },
     [
       Autoplay({
@@ -104,35 +130,44 @@ export default function Carousel({
     };
   }, [api]);
 
-return (
+  const slideWidthConfigs = computeSlideWidths(layout, 0);
+
+  const styleSheet = slideWidthConfigs
+    .filter((c) => c.media)
+    .map((c) => `@media ${c.media} { [data-embla-slide] { width: ${c.width}; } }`)
+    .join(" ");
+
+  const baseWidth = slideWidthConfigs[0]?.width || "auto";
+
+  const css = `[data-embla-slide]{width:${baseWidth};flex-shrink:0}${styleSheet}`;
+
+  return (
     <>
       <style
-        dangerouslySetInnerHTML={{ __html: carouselStyles }}
+        id="carousel-layout"
+        dangerouslySetInnerHTML={{ __html: css }}
       />
       <div
         className={`${className} overflow-visible`}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
-        <div className="container px-4 max-w-4xl relative overflow-visible">
+        <div className="overflow-visible">
           <div className="overflow-hidden" ref={emblaRef}>
-          <div
-            className="flex"
-            style={{
-              columnGap: `${spaceBetween}px`,
-            }}
-          >
-            {slides.map((slide, index) => (
-              <div
-                key={index}
-                className="embla__slide flex-[0_0_auto] h-auto overflow-visible shrink-0"
-                style={{
-                  padding: `0 calc(${spaceBetween}px / 2) 24px`,
-                }}
-              >
-                {slide}
-              </div>
-            ))}
+            <div className="flex" style={{ columnGap: `${gapPx}px` }}>
+              {slides.map((slide, index) => (
+                <div
+                  key={index}
+                  data-embla-slide
+                  className="h-auto overflow-visible"
+                  style={{
+                    padding: `0 calc(${gapPx}px / 2) 24px`,
+                  }}
+                >
+                  {slide}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
@@ -144,24 +179,23 @@ return (
           >
             {scrollSnaps.map((_, snapIndex) => (
               <button
-                  key={snapIndex}
-                  className={`
-                    w-2 h-2 rounded-full transition-colors duration-200 cursor-pointer
-                    ${selectedIndex === snapIndex
-                      ? "bg-slate-900 dark:bg-slate-100"
-                      : "bg-slate-300 dark:bg-slate-600"
-                    }
-                  `}
-                  onClick={() => api?.scrollTo(snapIndex)}
-                  role="tab"
-                  aria-selected={selectedIndex === snapIndex}
-                  aria-label={`Go to slide ${snapIndex + 1}`}
-                />
+                key={snapIndex}
+                className={`
+                  w-2 h-2 rounded-full transition-colors duration-200 cursor-pointer
+                  ${selectedIndex === snapIndex
+                    ? "bg-slate-900 dark:bg-slate-100"
+                    : "bg-slate-300 dark:bg-slate-600"
+                  }
+                `}
+                onClick={() => api?.scrollTo(snapIndex)}
+                role="tab"
+                aria-selected={selectedIndex === snapIndex}
+                aria-label={`Go to slide ${snapIndex + 1}`}
+              />
             ))}
           </div>
         )}
       </div>
-    </div>
-  </>
+    </>
   );
 }

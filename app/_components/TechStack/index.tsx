@@ -27,6 +27,7 @@ return (
           <Carousel
           autoplay
           loop
+          layout={{ slidesPerView: { base: 1, sm: 2, md: 3 }, gap: 8 }}
           slides={categories.map(([category, techList]) => (
             <Card key={category} hoverScale>
               <h3 className="text-xl font-bold mb-4">{category}</h3>
