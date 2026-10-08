@@ -10,6 +10,7 @@
     "lint": "eslint --fix"
   },
   "dependencies": {
+    "@huggingface/inference": "^4.13.30",
     "@langchain/community": "^1.1.1",
     "@langchain/core": "^1.2.13",
     "@langchain/langgraph-checkpoint-mongodb": "^1.1.6",
