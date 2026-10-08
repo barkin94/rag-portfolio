@@ -30,8 +30,27 @@ export default function Carousel({
   const [api, setApi] = useState<EmblaCarouselType | undefined>();
 
   const [emblaRef, emblaApi] = useEmblaCarousel(
-    { loop, align: "start", slidesToScroll: 1, watchDrag: true, duration: scrollSpeed, containScroll: "keepSnaps", watchResize: true, watchSlides: true, slides: ".embla__slide" },
-    [Autoplay({ playOnInit: autoplay, delay: 3000, stopOnInteraction: false, stopOnMouseEnter: true, stopOnFocusIn: true })]
+    {
+      loop,
+      align: "start",
+      slidesToScroll: 1,
+      watchDrag: true,
+      duration: scrollSpeed,
+      containScroll: "keepSnaps",
+      watchResize: true,
+      watchSlides: true,
+      slides: ".embla__slide",
+      startIndex: 0,
+    },
+    [
+      Autoplay({
+        playOnInit: autoplay,
+        delay: 3000,
+        stopOnInteraction: false,
+        stopOnMouseEnter: true,
+        stopOnFocusIn: true,
+      }),
+    ],
   );
 
   useEffect(() => {
@@ -53,7 +72,6 @@ export default function Carousel({
 
     const onInit = () => {
       const snaps = api.scrollSnapList();
-      console.log('[Carousel] init - scrollSnapList:', snaps, 'slidesInView:', api.slidesInView(), 'slideNodes:', api.slideNodes().length);
       setScrollSnaps(snaps);
       setSelectedIndex(api.selectedScrollSnap());
     };
@@ -79,17 +97,14 @@ export default function Carousel({
     };
   }, [api]);
 
-return (
+  return (
     <div
       className={`${className} overflow-visible`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
       <div className="max-w-[1200px] mx-auto relative overflow-visible">
-        <div
-          className="overflow-hidden"
-          ref={emblaRef}
-        >
+        <div className="overflow-hidden" ref={emblaRef}>
           <div
             className="flex"
             style={{
