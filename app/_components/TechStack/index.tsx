@@ -15,7 +15,7 @@ const TechStack = ({ skills }: TechStackProps) => {
 
 return (
     <section id="tech-stack" className="py-20 bg-slate-50/50 dark:bg-slate-900/30">
-      <div className="container mx-auto px-4 max-w-4xl">
+      <div className="mx-auto px-4" style={{ maxWidth: '1400px' }}>
         <WithFadeInAnimation threshold={0.5}>
           <h2 className="text-3xl font-bold text-center mb-4">My Tech Stack</h2>
           <p className="text-xl text-center text-slate-600 dark:text-slate-300 mb-12">
