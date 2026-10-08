@@ -21,7 +21,7 @@ export default function Carousel({
   loop = true,
   showIndicators = true,
   className = "",
-  scrollSpeed = 12000,
+  scrollSpeed = 800,
   slideWidth = 320,
 }: CarouselProps) {
   const spaceBetween = 32;
@@ -31,7 +31,7 @@ export default function Carousel({
 
   const [emblaRef, emblaApi] = useEmblaCarousel(
     { loop, align: "start", slidesToScroll: 1, watchDrag: true, duration: scrollSpeed, containScroll: "keepSnaps", watchResize: true, watchSlides: true, slides: ".embla__slide" },
-    [Autoplay({ playOnInit: autoplay, delay: 0, stopOnInteraction: false, stopOnMouseEnter: true, stopOnFocusIn: true })]
+    [Autoplay({ playOnInit: autoplay, delay: 3000, stopOnInteraction: false, stopOnMouseEnter: true, stopOnFocusIn: true })]
   );
 
   useEffect(() => {
@@ -58,7 +58,8 @@ export default function Carousel({
       setSelectedIndex(api.selectedScrollSnap());
     };
     const onSelect = () => {
-      setSelectedIndex(api.selectedScrollSnap());
+      const newIndex = api.selectedScrollSnap();
+      setSelectedIndex((prev) => (prev === newIndex ? prev : newIndex));
     };
     const onResize = () => {
       const snaps = api.scrollSnapList();
