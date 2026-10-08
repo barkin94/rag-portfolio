@@ -29,7 +29,7 @@ return (
           loop
           layout={{ slidesPerView: { base: 1, sm: 2, md: 3 }, gap: 8 }}
           slides={categories.map(([category, techList]) => (
-            <Card key={category} hoverScale>
+            <Card key={category} hoverScale={false}>
               <h3 className="text-xl font-bold mb-4">{category}</h3>
               <div className="flex flex-wrap gap-2">
                 {techList.map((tech) => (
