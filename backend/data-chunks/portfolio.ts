@@ -103,7 +103,6 @@ const portfolioProjectChunks: Document[] = [
     },
     id: "rag-portfolio-architecture-decisions",
   }),
-
 ];
 
 export default portfolioProjectChunks;

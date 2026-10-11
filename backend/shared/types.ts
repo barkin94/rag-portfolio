@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 export type Message = {
   role: "assistant" | "user";
   content: string;
@@ -12,6 +14,20 @@ export enum Topic {
   Projects = "projects",
   Achievements = "achievements",
 }
+
+export const TopicDefs = {
+  [Topic.GeneralInfo]: "Location, summary, preferences",
+  [Topic.Contact]: "Email, LinkedIn, GitHub",
+  [Topic.WorkExperience]: "Roles, companies, achievements",
+  [Topic.Skills]: "Tech stack, languages, categories",
+  [Topic.Education]: "Degrees, certifications",
+  [Topic.Projects]: "Portfolio, RAG details",
+  [Topic.Achievements]: "Metrics, awards",
+} as const satisfies Record<Topic, string>;
+
+export const TopicSchemaDescription = Object.entries(TopicDefs)
+  .map(([k, v]) => `${k}=${v}`)
+  .join(", ");
 
 export type ThreadSummary = {
   id: string;

@@ -54,7 +54,7 @@ reliable.
       source
     },
     id: "interview-typescript-backend",
-  },),
+  }),
 
   new Document({
     pageContent: `
@@ -153,7 +153,7 @@ A: At Getir, I built a self-hosted mock HTTP response server using Mockoon CLI t
 up manual end-to-end testing of our mobile application. Previously, our QA engineers had
 to manipulate databases or coordinate with other teams to simulate specific responses
 from their microservices.
- 
+  
 My tool allowed QA engineers to intercept requests to these external microservices and
 short-circuit them with custom responses on-demand. By moving this to a self-service model,
 the QA team could independently simulate edge cases—like server timeouts or specific error
@@ -172,10 +172,10 @@ our release testing much faster.
 Q: What is your experience working in cloud-native or containerized environments (Docker,
 Kubernetes, cloud platforms like AWS)?
 
-A: I've always utilized containerization with Docker in my work. Currently, I’m comfortable
+A: I've always utilized containerization with Docker in my work. Currently, I'm comfortable
 managing the lifecycle of a service—from building Docker images for local development to
 deploying and debugging services in a cloud-native environment.
- 
+  
 At Getir, I operated within a Kubernetes-managed microservices architecture where our entire
 stack was containerized using Docker, and environmental configurations and secrets were managed
 with standard CI/CD flows.

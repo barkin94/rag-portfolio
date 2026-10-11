@@ -2,7 +2,7 @@ import { tool } from 'langchain';
 import { z } from 'zod';
 
 import { vectorStore } from '@/backend/shared/vector';
-import { Topic } from '@/backend/shared/types';
+import { Topic, TopicSchemaDescription } from '@/backend/shared/types';
 import logger from '@/backend/shared/logger';
 
 export const getInfoTool = tool(
@@ -35,7 +35,7 @@ export const getInfoTool = tool(
       Use this whenever a question requires factual data about Barkin that is not in the current chat transcript.`,
     schema: z.object({
       query: z.string().describe("The semantic search string."),
-      topics: z.array(z.nativeEnum(Topic)),
+      topics: z.array(z.nativeEnum(Topic).describe(TopicSchemaDescription)),
       expandingKeywords: z.string().describe(
         "A space-separated list of synonyms, related keywords, or acronyms to improve search recall (e.g., 'React.js javascript frontend web-development UI')."
       ),
