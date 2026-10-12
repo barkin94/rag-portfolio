@@ -1,4 +1,4 @@
-const CACHE_NAME = 'portfolio-v1';
+const CACHE_NAME = 'portfolio-v2';
 const STATIC_ASSETS = [
   '/manifest.webmanifest',
   '/icon-192.png',
@@ -23,6 +23,17 @@ self.addEventListener('activate', (event) => {
           .filter((name) => name !== CACHE_NAME)
           .map((name) => caches.delete(name))
       );
+    }).then(() => {
+      // Also clear all cached HTML pages on activation
+      return caches.open(CACHE_NAME).then(cache => {
+        return cache.keys().then(requests => {
+          return Promise.all(
+            requests
+              .filter(req => req.mode === 'navigate' || req.headers.get('accept')?.includes('text/html'))
+              .map(req => cache.delete(req))
+          );
+        });
+      });
     }).then(() => self.clients.claim())
   );
 });
@@ -36,6 +47,11 @@ self.addEventListener('fetch', (event) => {
 
   // Skip cross-origin requests
   if (url.origin !== location.origin) return;
+
+  // Admin routes: always bypass SW, go straight to network
+  if (url.pathname.startsWith('/admin/')) {
+    return;
+  }
 
   // API routes: network-first
   if (url.pathname.startsWith('/api/')) {
