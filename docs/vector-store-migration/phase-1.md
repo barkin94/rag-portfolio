@@ -8,7 +8,7 @@
 
 | Step | Action | Status | Files Created | Files Modified |
 |------|--------|--------|---------------|----------------|
-| 1.1 | Install `@langchain/mongodb` dependency | ⏳ Pending | - | `package.json` |
+| 1.1 | Install `@langchain/mongodb` dependency | ✅ Complete | - | `package.json` |
 | 1.2 | Remove `@upstash/vector` dependency | ⏳ Pending | - | `package.json` |
 | 1.3 | Update `config.ts`: remove Upstash vars, add hybrid alpha & Atlas index name | ⏳ Pending | - | `backend/shared/config.ts` |
 | 1.4 | Verify config validation passes | ⏳ Pending | | |

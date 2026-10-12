@@ -11,10 +11,11 @@ backend/
 │   ├── config.ts              # - UPSTASH_VECTOR_*, + HYBRID_SEARCH_ALPHA, + MONGODB_ATLAS_INDEX_NAME
 │   └── vector/
 │       ├── embeddings.ts      # Replace: MongoDBAtlasVectorSearch + NVIDIA embeddings
+│       ├── repository.ts      # NEW: VectorRepository (encapsulates vector store ops)
 │       └── upstash-repo.ts    # DELETE (no longer needed)
 ├── features/
 │   └── chat/
-│       └── retrieval.ts       # Refactor: hybridSearch + MongoDB filter syntax
+│       └── retrieval.ts       # Refactor: use VectorRepository.hybridSearch()
 ```
 
 ## Workflow
@@ -26,8 +27,8 @@ backend/
 | Phase | Description | Status | Approval |
 |-------|-------------|--------|----------|
 | 1 | Config & Dependencies Update | `⏳ Pending` | `⬜` |
-| 2 | Vector Store & Embeddings Replacement | `⏳ Pending` | `⬜` |
-| 3 | Retrieval Tool Refactor (Hybrid Search + Filters) | `⏳ Pending` | `⬜` |
+| 2 | Vector Store & Embeddings Replacement + Repository Layer | `⏳ Pending` | `⬜` |
+| 3 | Retrieval Tool Refactor (Hybrid Search + Filters via Repository) | `⏳ Pending` | `⬜` |
 | 4 | Atlas Search Index Creation & Re-indexing | `⏳ Pending` | `⬜` |
 | 5 | Verification & Alpha Tuning | `⏳ Pending` | `⬜` |
 
@@ -46,6 +47,7 @@ backend/
 3. **Full re-index required**: Dimension change (384 → 1024) makes old embeddings incompatible
 4. **Hybrid search parameter mapping**: Upstash `alpha` (0=BM25, 1=vector) → MongoDB `vectorWeight` (same semantics)
 5. **Filter syntax conversion**: Upstash `tags CONTAINS 'x'` → MongoDB `{ tags: { $in: ['x'] } }`
+6. **Repository pattern**: `VectorRepository` encapsulates vector store operations; retrieval tool depends on repository interface, not vector store implementation. Repository accepts `tags: string[]` and handles MongoDB `$in` conversion internally.
 
 ## Config Changes
 

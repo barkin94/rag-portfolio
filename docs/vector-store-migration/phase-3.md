@@ -1,6 +1,6 @@
-# Phase 3: Retrieval Tool Refactor (Hybrid Search + Filters)
+# Phase 3: Retrieval Tool Refactor (Hybrid Search + Filters via Repository)
 
-**Goal**: Update `getInfoTool` to use MongoDB Atlas native hybrid search with correct filter syntax
+**Goal**: Update `getInfoTool` to use `VectorRepository` for hybrid search with correct filter syntax
 
 ---
 
@@ -8,11 +8,10 @@
 
 | Step | Action | Status | Files Created | Files Modified |
 |------|--------|--------|---------------|----------------|
-| 3.1 | Import `config` in `retrieval.ts` | ⏳ Pending | - | `backend/features/chat/retrieval.ts` |
-| 3.2 | Replace `similaritySearch` with `hybridSearch` | ⏳ Pending | - | `backend/features/chat/retrieval.ts` |
-| 3.3 | Convert filter syntax: Upstash `CONTAINS` → MongoDB `$in` | ⏳ Pending | - | `backend/features/chat/retrieval.ts` |
-| 3.4 | Pass `vectorWeight: config.HYBRID_SEARCH_ALPHA` | ⏳ Pending | - | `backend/features/chat/retrieval.ts` |
-| 3.5 | Verify tool compiles and types correctly | ⏳ Pending | | |
+| 3.1 | Import `vectorRepository` in `retrieval.ts` | ⏳ Pending | - | `backend/features/chat/retrieval.ts` |
+| 3.2 | Replace direct `vectorStore` calls with `vectorRepository.hybridSearch()` | ⏳ Pending | - | `backend/features/chat/retrieval.ts` |
+| 3.3 | Pass `topics` array directly (repository handles `$in` conversion) | ⏳ Pending | - | `backend/features/chat/retrieval.ts` |
+| 3.4 | Verify tool compiles and types correctly | ⏳ Pending | | |
 
 ---
 
@@ -24,10 +23,9 @@
 import { tool } from 'langchain';
 import { z } from 'zod';
 
-import { vectorStore } from '@/backend/shared/vector';
+import { vectorRepository } from '@/backend/shared/vector/repository';  // CHANGED
 import { Topic, TopicSchemaDescription } from '@/backend/shared/types';
 import logger from '@/backend/shared/logger';
-import config from '@/backend/shared/config';  // ADD
 ```
 
 ### Replace Retrieval Call (lines 11-15)
@@ -41,29 +39,25 @@ const topicFilters = topics.length > 0
 const results = await vectorStore.similaritySearch(`${query} ${expandingKeywords}`, 6, topicFilters);
 ```
 
-**After (MongoDB Atlas)**:
+**After (MongoDB Atlas via Repository)**:
 ```typescript
-const filter = topics.length > 0
-  ? { tags: { $in: topics } }
-  : undefined;
-
-const results = await vectorStore.hybridSearch(
+const results = await vectorRepository.hybridSearch(
   `${query} ${expandingKeywords}`,
   {
     k: 6,
-    filter,
-    vectorWeight: config.HYBRID_SEARCH_ALPHA,
+    tags: topics,  // Repository converts to { tags: { $in: topics } }
+    // vectorWeight defaults to config.HYBRID_SEARCH_ALPHA in repository
   }
 );
 ```
 
 **Key Changes**:
-| Aspect | Upstash | MongoDB Atlas |
-|--------|---------|---------------|
-| Method | `similaritySearch(query, k, filter?)` | `hybridSearch(query, { k, filter, vectorWeight })` |
-| Filter | SQL-like string: `tags CONTAINS 'x'` | MongoDB query object: `{ tags: { $in: ['x'] } }` |
-| Hybrid weight | `alpha` (0=BM25, 1=vector) | `vectorWeight` (same semantics) |
-| Top-K param | Positional (2nd arg) | `k` in options object |
+| Aspect | Before (Direct vectorStore) | After (via Repository) |
+|--------|----------------------------|------------------------|
+| Import | `vectorStore` from `@/backend/shared/vector` | `vectorRepository` from `@/backend/shared/vector/repository` |
+| Filter | Manual `{ tags: { $in: topics } }` | Pass `tags: topics` array |
+| Hybrid weight | Manual `vectorWeight: config.HYBRID_SEARCH_ALPHA` | Defaults in repository |
+| Coupling | Tool knows vector store implementation | Tool only knows repository interface |
 
 ---
 
@@ -73,8 +67,8 @@ const results = await vectorStore.hybridSearch(
 # Type-check
 npx tsc --noEmit backend/features/chat/retrieval.ts
 
-# Verify hybridSearch usage
+# Verify repository usage
+grep -n "vectorRepository" backend/features/chat/retrieval.ts
 grep -n "hybridSearch" backend/features/chat/retrieval.ts
-grep -n "vectorWeight" backend/features/chat/retrieval.ts
-grep -n '\$in' backend/features/chat/retrieval.ts
+grep -n "tags:" backend/features/chat/retrieval.ts
 ```
