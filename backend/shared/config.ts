@@ -14,16 +14,16 @@ const BaseSchema = z.object({
 
   CONTEXT_TURNS: z.coerce.number().default(2),
 
-  HF_EMBEDDINGS_MODEL: z
-    .string()
-    .default("sentence-transformers/all-MiniLM-L6-v2"),
-  HF_EMBEDDINGS_API_KEY: z.string().min(1),
+  // Embedding Model Config (generic, provider-agnostic)
+  EMBEDDING_API_KEY: z.string().min(1),
+  EMBEDDING_MODEL: z.string().default("nvidia/nemotron-3-embed-1b"),
+  EMBEDDING_BASE_URL: z.string().url().default("https://openrouter.ai/api/v1"),
+
+  HYBRID_SEARCH_ALPHA: z.coerce.number().min(0).max(1).default(0.5),
+  MONGODB_ATLAS_INDEX_NAME: z.string().default("embeddings_index"),
 
   MONGODB_URI: z.string().url(),
   MONGODB_DBNAME: z.string().min(1),
-
-  UPSTASH_VECTOR_REST_URL: z.string().url(),
-  UPSTASH_VECTOR_REST_TOKEN: z.string().min(1),
 
   CONTACT_EMAIL: z.string().email(),
 

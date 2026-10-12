@@ -28,7 +28,7 @@ backend/
 
 | Phase | Description | Status | Approval |
 |-------|-------------|--------|----------|
-| 1 | Config & Dependencies Update | `⏳ Pending` | `⬜` |
+| 1 | Config & Dependencies Update | `✅ Complete` | `✅` |
 | 2 | Vector Store & Embeddings Replacement + Chunk Repository | `⏳ Pending` | `⬜` |
 | 3 | Retrieval Tool Refactor (Hybrid Search via Chunk Repository) | `⏳ Pending` | `⬜` |
 | 4 | Atlas Search Index Creation & Re-indexing | `⏳ Pending` | `⬜` |
