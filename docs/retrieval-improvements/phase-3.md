@@ -1,6 +1,6 @@
 # Phase 3: Retrieval Eval Set
 
-**Goal**: 25 labeled queries with chunk IDs + alpha sweep script for data-driven tuning
+**Goal**: 25 labeled queries with chunk IDs + eval script for measuring vector search recall@6
 
 ---
 
@@ -10,8 +10,8 @@
 |------|--------|--------|---------------|----------------|
 | 3.1 | Create `backend/eval/` directory | ⏳ Pending | `backend/eval/` | - |
 | 3.2 | Create `retrieval-eval.ts` with 25 labeled queries | ⏳ Pending | `backend/eval/retrieval-eval.ts` | - |
-| 3.3 | Create `run-eval.ts` alpha sweep script | ⏳ Pending | `backend/eval/run-eval.ts` | - |
-| 3.4 | **Verify**: Script runs, outputs recall@6 per alpha | ⏳ Pending | | |
+| 3.3 | Create `run-eval.ts` (single run, no alpha sweep) | ⏳ Pending | `backend/eval/run-eval.ts` | - |
+| 3.4 | **Verify**: Script runs, outputs recall@6 | ⏳ Pending | | |
 
 ---
 
@@ -52,29 +52,22 @@ export const retrievalEvalSet = [
 
 ```typescript
 import { retrievalEvalSet } from './retrieval-eval';
-import { indexWithEmbeddings } from '@/backend/shared/vector/upstash-repo';
+import { findChunks } from '@/backend/shared/repositories/chunk';
 
-async function runEval(alpha: number) {
+async function runEval() {
   let totalRecall = 0;
   for (const { query, relevantChunkIds } of retrievalEvalSet) {
-    const results = await indexWithEmbeddings.hybridSearch(query, {
-      topK: 6,
-      alpha,
-    });
-    const found = results.filter(r => relevantChunkIds.includes(r.id)).length;
+    const results = await findChunks(query, { k: 6 });
+    const found = results.filter(r => relevantChunkIds.includes(r._id)).length;
     totalRecall += found / relevantChunkIds.length;
   }
-  console.log(`alpha=${alpha}: recall@6 = ${(totalRecall / retrievalEvalSet.length * 100).toFixed(1)}%`);
-}
-
-async function main() {
-  for (const alpha of [0.0, 0.2, 0.4, 0.5, 0.6, 0.8, 1.0]) {
-    await runEval(alpha);
-  }
+  console.log(`recall@6 = ${(totalRecall / retrievalEvalSet.length * 100).toFixed(1)}%`);
 }
 
 main().catch(console.error);
 ```
+
+**Note**: Uses `findChunks()` from chunk repository (pure vector search via `similaritySearch()`). Returns `ChunkResult[]` with `_id` field (not `id`).
 
 ---
 
@@ -85,13 +78,7 @@ main().catch(console.error);
 npx tsx backend/eval/run-eval.ts
 
 # Expected output:
-# alpha=0.0: recall@6 = XX.X%
-# alpha=0.2: recall@6 = XX.X%
-# alpha=0.4: recall@6 = XX.X%
-# alpha=0.5: recall@6 = XX.X%
-# alpha=0.6: recall@6 = XX.X%
-# alpha=0.8: recall@6 = XX.X%
-# alpha=1.0: recall@6 = XX.X%
+# recall@6 = XX.X%
 ```
 
-**Approval Gate**: Script runs without errors, outputs recall@6 for each alpha. Use results to pick optimal alpha.
+**Approval Gate**: Script runs without errors, outputs recall@6 for vector search. Baseline established for future retrieval improvements.
