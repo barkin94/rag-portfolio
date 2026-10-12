@@ -1,6 +1,5 @@
 const CACHE_NAME = 'portfolio-v1';
 const STATIC_ASSETS = [
-  '/',
   '/manifest.webmanifest',
   '/icon-192.png',
   '/icon-512.png',
@@ -98,16 +97,10 @@ async function networkFirst(request) {
 async function networkFirstWithOfflineFallback(request) {
   try {
     const response = await fetch(request);
-    if (response.ok) {
-      const cache = await caches.open(CACHE_NAME);
-      cache.put(request, response.clone());
-    }
+    // Don't cache HTML navigation responses to avoid stale content
     return response;
   } catch {
-    const cached = await caches.match(request);
-    if (cached) return cached;
-
-    // Offline fallback for navigation
+    // Offline fallback for navigation - try to serve cached root
     const offlineCache = await caches.match('/');
     return offlineCache || new Response('Offline', { status: 503 });
   }
