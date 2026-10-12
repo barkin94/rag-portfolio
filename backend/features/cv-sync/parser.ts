@@ -58,10 +58,10 @@ RESUME TEXT:
 
 function getStructuredLlm() {
   const baseLlm = new ChatOpenAI({
-    model: config.RESUME_PARSER_MODEL,
-    apiKey: config.RESUME_PARSER_API_KEY,
-    maxRetries: config.RESUME_PARSER_MAX_RETRIES,
-    timeout: config.RESUME_PARSER_TIMEOUT,
+    model: config.RESUME_PARSER_AGENT_MODEL,
+    apiKey: config.RESUME_PARSER_AGENT_API_KEY,
+    maxRetries: config.RESUME_PARSER_AGENT_MAX_RETRIES,
+    timeout: config.RESUME_PARSER_AGENT_TIMEOUT,
     configuration: {
       baseURL: "https://integrate.api.nvidia.com/v1",
     },

@@ -57,11 +57,13 @@ UPSTASH_VECTOR_REST_TOKEN=your_upstash_vector_token
 MONGODB_URI=mongodb://localhost:27017  # or your MongoDB connection string
 MONGODB_DBNAME=rag_portfolio  # or your preferred database name
 
-# LLM Provider: OpenRouter
-LLM_PROVIDER=openrouter
-OPENROUTER_API_KEY=your_openrouter_api_key
-OPENROUTER_MODEL=openrouter/free  # optional
-OPENROUTER_TEMPERATURE=0.1  # optional
+# Chat Agent LLM Config (provider-agnostic)
+CHAT_AGENT_API_KEY=your_api_key
+CHAT_AGENT_MODEL=openrouter/free  # optional
+CHAT_AGENT_TEMPERATURE=0.1  # optional
+CHAT_AGENT_MAX_RETRIES=3  # optional
+CHAT_AGENT_TIMEOUT=60000  # optional
+CHAT_AGENT_BASE_URL=https://openrouter.ai/api/v1  # optional, default for OpenRouter
 
 ## Optional: Push Notifications (Firebase Cloud Messaging)
 FIREBASE_SERVICE_ACCOUNT_BASE64=  # base64-encoded Firebase service account JSON (server-side)

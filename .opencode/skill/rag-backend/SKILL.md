@@ -8,7 +8,7 @@ description: Complete RAG backend: agent orchestration, vector store (Upstash + 
 ## Mental Model
 
 ```
-Agent (agent/index.ts) → getInfoTool (tools.ts) → Vector Store (vector-store.ts)
+Agent (backend/features/chat/agent.ts) → getInfoTool (tools.ts) → Vector Store (vector-store.ts)
                                                       ↓
                     MongoDB (mongodb.ts) ← Data Chunks (data-chunks/*.ts)
                     Topic enum (enums.ts) filters retrieval
@@ -20,7 +20,7 @@ Config (`config.ts`) drives LLM provider, embeddings, DB connections.
 
 | Task | Search For |
 |------|------------|
-| LLM provider / model | `OpenRouterSchema` `getModelFromConfig` `agent/index.ts` |
+| LLM provider / model | `CHAT_AGENT_*` env vars `backend/features/chat/agent.ts` |
 | Retrieval logic | `getInfoTool` `Topic` filter `vector-store.ts` |
 | Add chunk type | `data-chunks/*.ts` `Topic` enum `sync-db/route.ts` |
 | Conversation persistence | `MongoDBConversationSaver` `checkpointer` `mongodb.ts` |
@@ -30,18 +30,18 @@ Config (`config.ts`) drives LLM provider, embeddings, DB connections.
 
 | Layer | Files |
 |-------|-------|
-| **Agent** | `backend/agent/index.ts` (setup, prompt, tools), `schemas.ts` (state), `middlewares/MongoDBConversationSaver.ts` |
-| **Config** | `backend/config.ts` (Zod: `BaseSchema`, `OpenRouterSchema`, `LLMProviderUnion`, `getModelFromConfig`) |
-| **Retrieval** | `backend/tools.ts` (`getInfoTool`), `backend/vector-store.ts` (Upstash + HF embeddings), `backend/enums.ts` (`Topic`) |
-| **Content** | `backend/data-chunks/{resume,portfolio,interview-QnA,behavioral-stories}.ts` |
-| **Persistence** | `backend/mongodb.ts` (client, threads, checkpointer), `app/api/sync-db/route.ts` (re-index), `app/api/prompt/route.ts` (chat endpoint) |
+| **Agent** | `backend/features/chat/agent.ts` (setup, prompt, tools), `schemas.ts` (state), `middlewares/MongoDBConversationSaver.ts` |
+| **Config** | `backend/shared/config.ts` (Zod: `BaseSchema` with `CHAT_AGENT_*` vars) |
+| **Retrieval** | `backend/features/chat/tools.ts` (`getInfoTool`), `backend/shared/vector-store.ts` (Upstash + HF embeddings), `backend/shared/enums.ts` (`Topic`) |
+| **Content** | `backend/features/chat/data-chunks/{resume,portfolio,interview-QnA,behavioral-stories}.ts` |
+| **Persistence** | `backend/shared/mongodb.ts` (client, threads, checkpointer), `app/api/sync-db/route.ts` (re-index), `app/api/prompt/route.ts` (chat endpoint) |
 
 ## Critical Patterns
 
 - **New chunk type**: Create `data-chunks/new.ts` → add Topic if needed → import in `sync-db/route.ts` → `PUT /api/sync-db`
 - **Retrieval tuning**: Edit `getInfoTool` in `tools.ts` (k, scoreThreshold, Topic filter)
-- **New LLM**: Extend `LLMProviderUnion` in `config.ts` → update `getModelFromConfig()` in `agent/index.ts`
+- **New LLM provider**: Update `CHAT_AGENT_BASE_URL` and `CHAT_AGENT_API_KEY` in `.env` (provider-agnostic config)
 
 ## Env Vars
 
-`OPENROUTER_API_KEY`, `OPENROUTER_MODEL`, `UPSTASH_VECTOR_REST_URL`, `UPSTASH_VECTOR_REST_TOKEN`, `HF_EMBEDDINGS_MODEL`, `HF_EMBEDDINGS_URL`, `MONGODB_URI`, `MONGODB_DB_NAME`
+`CHAT_AGENT_API_KEY`, `CHAT_AGENT_MODEL`, `CHAT_AGENT_TEMPERATURE`, `CHAT_AGENT_MAX_RETRIES`, `CHAT_AGENT_TIMEOUT`, `CHAT_AGENT_BASE_URL`, `UPSTASH_VECTOR_REST_URL`, `UPSTASH_VECTOR_REST_TOKEN`, `HF_EMBEDDINGS_MODEL`, `HF_EMBEDDINGS_API_KEY`, `MONGODB_URI`, `MONGODB_DBNAME`

@@ -8,23 +8,19 @@ import MongoDBConversationSaver from './middlewares/conversation-saver';
 import config from '@/backend/shared/config';
 import { client } from '@/backend/shared/mongodb';
 
-const getModelFromConfig = () => {
-  return new ChatOpenAI(
-    {
-      model: config.OPENROUTER_MODEL,
-      temperature: config.OPENROUTER_TEMPERATURE,
-      apiKey: config.OPENROUTER_API_KEY,
-      maxRetries: 3,
-      configuration: {
-        baseURL: 'https://openrouter.ai/api/v1',
-      },
-    }
-  );
-};
-
+const model = new ChatOpenAI({
+  model: config.CHAT_AGENT_MODEL,
+  temperature: config.CHAT_AGENT_TEMPERATURE,
+  apiKey: config.CHAT_AGENT_API_KEY,
+  maxRetries: config.CHAT_AGENT_MAX_RETRIES,
+  timeout: config.CHAT_AGENT_TIMEOUT,
+  configuration: {
+    baseURL: config.CHAT_AGENT_BASE_URL,
+  },
+});
 
 const agent = createAgent({
-  model: getModelFromConfig(),
+  model,
   checkpointer: new MongoDBSaver({
     client: client,
     dbName: config.MONGODB_DBNAME,
@@ -32,7 +28,7 @@ const agent = createAgent({
   stateSchema,
   middleware: [
     summarizationMiddleware({
-      model: getModelFromConfig(),
+      model,
       keep: {
         messages: 4
       }

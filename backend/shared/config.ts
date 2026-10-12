@@ -12,6 +12,8 @@ const BaseSchema = z.object({
     .enum(["fatal", "error", "warn", "info", "debug", "trace", "silent"])
     .default("info"),
 
+  CONTEXT_TURNS: z.coerce.number().default(2),
+
   HF_EMBEDDINGS_MODEL: z
     .string()
     .default("sentence-transformers/all-MiniLM-L6-v2"),
@@ -30,7 +32,7 @@ const BaseSchema = z.object({
   SMTP_USER: z.string().min(1),
   SMTP_PASSWORD: z.string().min(1),
 
-  FIREBASE_SERVICE_ACCOUNT_BASE64: z.string().min(1),
+  FIREBASE_SERVICE_ACCOUNT_BASE64: z.string().default(""),
   FIREBASE_VAPID_KEY: z.string().min(1),
 
   ADMIN_PAGE_SECRET: z.string().min(1),
@@ -40,23 +42,22 @@ const BaseSchema = z.object({
   GOOGLE_SERVICE_ACCOUNT_JSON: z.string().default(""),
   GOOGLE_DOC_ID: z.string().default(""),
 
-  RESUME_PARSER_API_KEY: z.string().default(""),
-  RESUME_PARSER_MODEL: z.string().default(""),
-  RESUME_PARSER_MAX_RETRIES: z.coerce.number().default(3),
-  RESUME_PARSER_TIMEOUT: z.coerce.number().default(60000),
+  RESUME_PARSER_AGENT_API_KEY: z.string().default(""),
+  RESUME_PARSER_AGENT_MODEL: z.string().default(""),
+  RESUME_PARSER_AGENT_MAX_RETRIES: z.coerce.number().default(3),
+  RESUME_PARSER_AGENT_TIMEOUT: z.coerce.number().default(60000),
+
+  // Chat Agent LLM Config (generic, provider-agnostic)
+  CHAT_AGENT_API_KEY: z.string().min(1),
+  CHAT_AGENT_MODEL: z.string().default("openrouter/free"),
+  CHAT_AGENT_TEMPERATURE: z.coerce.number().default(0.1),
+  CHAT_AGENT_MAX_RETRIES: z.coerce.number().default(3),
+  CHAT_AGENT_TIMEOUT: z.coerce.number().default(60000),
+  CHAT_AGENT_BASE_URL: z.string().url().default("https://openrouter.ai/api/v1"),
 });
 
 
-const OpenRouterSchema = z.object({
-    LLM_PROVIDER: z.literal('openrouter'),
-    OPENROUTER_API_KEY: z.string().min(1),
-    OPENROUTER_MODEL: z.string().default('openrouter/free'),
-    OPENROUTER_TEMPERATURE: z.coerce.number().default(0.1),
-});
-
-const LLMProviderUnion = OpenRouterSchema;
-
-const configSchema = BaseSchema.and(LLMProviderUnion);
+const configSchema = BaseSchema;
 
 let config: z.infer<typeof configSchema>
 

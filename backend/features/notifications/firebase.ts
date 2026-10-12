@@ -3,15 +3,23 @@ import * as admin from 'firebase-admin';
 import config from "@/backend/shared/config";
 import logger from "@/backend/shared/logger";
 
-const firebaseServiceAccount = JSON.parse(atob(config.FIREBASE_SERVICE_ACCOUNT_BASE64));
+const firebaseServiceAccountBase64 = config.FIREBASE_SERVICE_ACCOUNT_BASE64;  
+let messaging: admin.messaging.Messaging | undefined
 
-admin.initializeApp({
-  credential: admin.credential.cert(firebaseServiceAccount)
-});
+if(firebaseServiceAccountBase64) {
+  admin.initializeApp({
+    credential: JSON.parse(atob(firebaseServiceAccountBase64)),
+  });
 
-const messaging = await admin.messaging()
+  messaging = await admin.messaging();
+}
 
 const notifyAdminDevices = async (threadId: string, prompt: string) => {
+  if(!messaging) {
+    logger.warn('push-notification: Firebase service account not configured, skipping notification');
+    return;
+  }
+
   const preview = prompt.length > 120 ? prompt.slice(0, 120) + '…' : prompt;
   try {
     await messaging.send({
@@ -28,6 +36,13 @@ const notifyAdminDevices = async (threadId: string, prompt: string) => {
 };
 
 const notifyCvSyncResult = async (success: boolean, details: string) => {
+  if (!messaging) {
+    logger.warn(
+      "push-notification: Firebase service account not configured, skipping notification",
+    );
+    return;
+  }
+
   try {
     await messaging.send({
       notification: {
@@ -43,6 +58,13 @@ const notifyCvSyncResult = async (success: boolean, details: string) => {
 };
 
 const subscribeToTopic = async (token: string) => {
+  if (!messaging) {
+    logger.warn(
+      "push-notification: Firebase service account not configured, skipping notification",
+    );
+    return;
+  }
+
   try {
     await Promise.all([
       messaging.subscribeToTopic([token], 'prompt_entered'),
