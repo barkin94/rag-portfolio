@@ -31,7 +31,7 @@ backend/
 | 1 | Config & Dependencies Update | `✅ Complete` | `✅` |
 | 2 | Vector Store & Embeddings Replacement + Chunk Repository | `✅ Complete` | `✅` |
 | 3 | Retrieval Tool Refactor (Hybrid Search via Chunk Repository) | `✅ Complete` | `✅` |
-| 4 | Atlas Search Index Creation & Re-indexing | `⏳ Pending` | `⬜` |
+| 4 | Atlas Search Index Creation & Re-indexing (via sync-db API) | `⏳ Pending` | `⬜` |
 | 5 | Verification & Alpha Tuning | `⏳ Pending` | `⬜` |
 
 ## Migration Phases
@@ -80,3 +80,22 @@ backend/
 
 - **Blocks**: Retrieval Improvements Phase 2 (Hybrid Search) — requires MongoDB Atlas hybrid search
 - **Requires**: MongoDB Atlas cluster with Search enabled, NVIDIA embeddings endpoint access
+
+## Blocked on Manual Steps
+
+**Phase 4** requires manual Atlas Search index creation in MongoDB Atlas UI:
+1. Database → Atlas Search → Create Search Index → JSON Editor
+2. Use index definition from `phase-4.md` (knnVector 1024-dim cosine, token fields for tags/source, string for content)
+3. Index name: `embeddings_index`
+
+**Phase 4** re-indexing uses existing API route:
+```bash
+# After Atlas index created, call the sync-db endpoint:
+curl -X PUT http://localhost:3000/api/sync-db
+```
+This invokes `app/api/sync-db/route.ts` which:
+- Loads resume from MongoDB + static data chunks (portfolio, interview Q&A, behavioral stories)
+- Creates LangChain Documents with `pageContent` and `metadata.tags`/`source`
+- Calls `vectorStore.addDocuments(documents)` → embeds with NVIDIA 1024-dim → stores in Atlas
+
+**Phase 5** runs only after Phase 4 completes — tests `HYBRID_SEARCH_ALPHA` tuning (0.0/0.5/1.0) with real data.

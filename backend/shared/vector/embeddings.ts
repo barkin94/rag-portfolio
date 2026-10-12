@@ -12,9 +12,7 @@ export const embeddings = new OpenAIEmbeddings({
   }
 });
 
-export const vectorStore = new MongoDBAtlasVectorSearch({
+export const vectorStore = new MongoDBAtlasVectorSearch(embeddings, {
   collection: mongodbClient.db(config.MONGODB_DBNAME).collection("embeddings"),
   indexName: config.MONGODB_ATLAS_INDEX_NAME,
 });
-
-vectorStore.embeddings = embeddings;

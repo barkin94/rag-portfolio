@@ -1,4 +1,4 @@
-import { Document } from 'langchain';
+import { Document } from '@langchain/core/documents';
 import { Topic } from '@/backend/shared/types';
 import portfolioChunks from '@/backend/data-chunks/portfolio';
 import interviewQnAChunks from '@/backend/data-chunks/interview-QnA';
