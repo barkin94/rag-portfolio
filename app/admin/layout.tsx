@@ -1,6 +1,6 @@
 import { FirebaseOptions } from "firebase/app";
-import AdminHeader from "../threads/_components/Header";
-import AdminNotifications from "./_components/AdminNotifications";
+import AdminHeader from "./threads/_components/Header";
+import AdminNotifications from "./threads/_components/AdminNotifications";
 import config from "@/backend/shared/config";
 import * as db from "@/backend/shared/mongodb";
 

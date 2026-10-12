@@ -5,6 +5,7 @@ import HeaderContainer from '@/common/components/HeaderContainer';
 import { LeftArrowIcon, RefreshIcon, WrenchIcon } from '@/common/components/Icons';
 import Link from 'next/link';
 import AdminSideBar from '../SideBar';
+import { usePathname } from 'next/navigation';
 
 interface AdminHeaderProps {
   maintenance: boolean;
@@ -36,6 +37,7 @@ function formatTimestamp(iso: string): string {
 }
 
 export default function AdminHeader({ maintenance: initialMaintenance }: AdminHeaderProps) {
+  const pathname = usePathname();
   const [maintenance, setMaintenance] = useState(initialMaintenance);
   const [syncState, setSyncState] = useState<SyncState>('idle');
   const [lastSyncTimestamp, setLastSyncTimestamp] = useState<string | null>(null);
@@ -210,7 +212,7 @@ export default function AdminHeader({ maintenance: initialMaintenance }: AdminHe
           <span>{maintenance ? 'Maintenance ON' : 'Maintenance OFF'}</span>
         </button>
 
-        <AdminSideBar />
+        <AdminSideBar currentPage={pathname} />
       </div>
     </HeaderContainer>
   );

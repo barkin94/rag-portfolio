@@ -1,20 +1,42 @@
 'use client';
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import ToggleableSideBar from "@/common/components/SideBar";
 import Link from "next/link";
-import { useParams } from "next/navigation";
 
-type ThreadSummary = {
-  id: string;
-  messageCount: number;
-  preview: string;
-  updatedAt: string;
+type NavItem = {
+  href: string;
+  label: string;
+  icon: React.ReactNode;
 };
 
-const AdminSideBar: React.FC = () => {
-  const { threadId } = useParams()
+const navItems: NavItem[] = [
+  {
+    href: "/admin/chunks",
+    label: "Chunks",
+    icon: (
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h7" />
+      </svg>
+    ),
+  },
+  {
+    href: "/admin/threads",
+    label: "Threads",
+    icon: (
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+      </svg>
+    ),
+  },
+];
+
+interface AdminSideBarProps {
+  currentPage?: string;
+}
+
+const AdminSideBar: React.FC<AdminSideBarProps> = ({ currentPage }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const onHamburgerClick = () => {
@@ -23,22 +45,14 @@ const AdminSideBar: React.FC = () => {
 
   const closeSideBar = () => setIsOpen(false);
 
-  const [threads, setThreads] = useState<ThreadSummary[]>([]);
-  const [loading, setLoading] = useState(true);
+  const getActiveHref = () => {
+    const path = currentPage || '';
+    if (path.startsWith('/admin/chunks')) return '/admin/chunks';
+    if (path.startsWith('/admin/threads')) return '/admin/threads';
+    return '/admin/chunks';
+  };
 
-  useEffect(() => {
-    fetch("/api/admin/threads", { credentials: "include" })
-      .then((r) => (r.ok ? r.json() : []))
-      .then(setThreads)
-      .catch(() => setThreads([]))
-      .finally(() => setLoading(false));
-  }, []);
-
-  const formatDate = (iso: string) =>
-    new Date(iso).toLocaleString(undefined, {
-      dateStyle: "short",
-      timeStyle: "short",
-    });
+  const activeHref = getActiveHref();
 
   return (
     <ToggleableSideBar
@@ -46,34 +60,28 @@ const AdminSideBar: React.FC = () => {
       onHamburgerClick={onHamburgerClick}
       onCloseClick={closeSideBar}
     >
-       {loading ? (
-            <p className="text-foreground/60 text-sm">Loading threads…</p>
-          ) : threads.length === 0 ? (
-            <p className="text-foreground/60 text-sm">No threads yet.</p>
-          ) : (
-            <ul className="py-2">
-              {threads.map((t) => (
-                <li className="flex" key={t.id}>
-                  <Link
-                    href={`/admin/threads/${t.id}`}
-                    //disabled={loadingThread !== null}
-                    className={`w-full text-left rounded-lg px-3 py-2.5 text-sm transition-colors ${threadId === t.id
-                        ? "bg-foreground/10 text-foreground"
-                        : "text-foreground/80 hover:bg-foreground/5"
-                      }`}
-                  >
-                    <span className="line-clamp-1 font-medium">
-                      {t.preview || "(no messages)"}
-                    </span>
-                    <span className="block mt-0.5 text-xs text-foreground/50">
-                      {t.messageCount} messages · {formatDate(t.updatedAt)}
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          )}
-
+      <nav className="py-2">
+        <ul className="space-y-1">
+          {navItems.map((item) => {
+            const isActive = activeHref === item.href;
+            return (
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  className={`w-full flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors ${
+                    isActive
+                      ? "bg-foreground/10 text-foreground"
+                      : "text-foreground/80 hover:bg-foreground/5"
+                  }`}
+                >
+                  <span className="flex-shrink-0">{item.icon}</span>
+                  <span className="font-medium">{item.label}</span>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
     </ToggleableSideBar>
   );
 };

@@ -1,6 +1,6 @@
-import type { ThreadSummary, SyncStatusDoc } from '@/backend/shared/types';
+import type { ThreadSummary, SyncStatusDoc, Topic } from '@/backend/shared/types';
 
-export type { ThreadSummary, SyncStatusDoc };
+export type { ThreadSummary, SyncStatusDoc, Topic };
 
 export type MaintenanceStatus = {
   maintenance: boolean;
