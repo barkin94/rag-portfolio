@@ -1,4 +1,5 @@
 import { vectorStore } from '../vector/embeddings';
+import { Document as MongoDocument } from 'mongodb';
 
 interface ChunkResult {
   text: string;
@@ -10,12 +11,11 @@ interface ChunkResult {
   _id?: string;
 }
 
-type AtlasSearchFilter = {
-  in?: {
-    path: string;
-    value: string[];
-  };
-};
+type MongoDBAtlasFilter = {
+  preFilter?: MongoDocument;
+  postFilterPipeline?: MongoDocument[];
+  includeEmbeddings?: boolean;
+} & MongoDocument;
 
 export async function findChunks(
   query: string,
@@ -27,11 +27,11 @@ export async function findChunks(
 ): Promise<ChunkResult[]> {
   const { k, tags } = options;
 
-  const filter: AtlasSearchFilter = tags && tags.length > 0
-    ? { in: { path: 'tags', value: tags } }
+  const filter: MongoDBAtlasFilter = tags && tags.length > 0
+    ? { preFilter: { tags: { $in: tags } } }
     : {};
 
-  const results = await vectorStore.similaritySearch(query, k, filter as unknown as never);
+  const results = await vectorStore.similaritySearch(query, k, filter);
 
   return results.map(doc => ({
     text: doc.pageContent,
