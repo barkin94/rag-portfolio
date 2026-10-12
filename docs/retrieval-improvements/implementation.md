@@ -36,7 +36,8 @@ backend/
 |-------|-------------|--------|----------|
 | 0 | Shared Topic Definitions (SSOT) | `✅ Complete` | `✅` |
 | 1 | Query Contextualization (Zero-LLM-Call) | `✅ Complete` | `✅` |
-| 2 | Hybrid Search (Upstash Native) | `⏳ Pending` | `⬜` |
+| — | **Vector Store Migration (Upstash → MongoDB Atlas)** | `🔄 In Progress` | `⬜` |
+| 2 | Hybrid Search (MongoDB Atlas Native) | `⏳ Blocked` | `⬜` |
 | 3 | Retrieval Eval Set | `⏳ Pending` | `⬜` |
 | 4 | Generation Quality (Minimal Tokens) | `⏳ Pending` | `⬜` |
 | 5 | Tool Description (Minimal) | `⏳ Pending` | `⬜` |
@@ -47,6 +48,7 @@ backend/
 
 - Phase 0: Reference `docs/retrieval-improvements/phase-0.md` when required
 - Phase 1: Reference `docs/retrieval-improvements/phase-1.md` when required
+- **Prerequisite**: Vector Store Migration (Upstash → MongoDB Atlas) — Reference `docs/vector-store-migration/implementation.md`
 - Phase 2: Reference `docs/retrieval-improvements/phase-2.md` when required
 - Phase 3: Reference `docs/retrieval-improvements/phase-3.md` when required
 - Phase 4: Reference `docs/retrieval-improvements/phase-4.md` when required
@@ -72,6 +74,8 @@ backend/
 | `CONTEXT_TURNS` | 2 | 0-10 |
 | `HYBRID_SEARCH_ALPHA` | 0.5 | 0.0-1.0 |
 
+*Managed in `docs/vector-store-migration/implementation.md`*
+
 ---
 
 ## Verification Criteria
@@ -80,7 +84,8 @@ backend/
 |-------|--------|
 | 0 | `TopicDefs` exports work; adding entry auto-updates Zod schema description |
 | 1 | Follow-up "What about the second one?" retrieves relevant context from history |
-| 2 | Hybrid search works; `HYBRID_SEARCH_ALPHA` tunable via env var |
+| Migration | Atlas hybrid search works; `HYBRID_SEARCH_ALPHA` tunable via env var |
+| 2 | Hybrid search eval runs; alpha sweep outputs recall@6 per alpha |
 | 3 | `npx tsx backend/eval/run-eval.ts` runs, outputs recall@6 per alpha |
 | 4 | Responses include `[Source: ...]` citations; format matches examples |
 | 5 | LLM uses `topics` parameter correctly (check tool call logs) |
