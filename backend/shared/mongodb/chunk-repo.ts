@@ -38,7 +38,7 @@ export async function getChunks(filter: ChunkFilter = {}, limit = 100, skip = 0)
   }
 
   const docs = await embeddingsColl
-    .find(query)
+    .find(query, { projection: { embedding: 0 } })
     .sort({ _id: -1 })
     .skip(skip)
     .limit(limit)
@@ -68,8 +68,10 @@ export async function countChunks(filter: ChunkFilter = {}): Promise<number> {
 export async function getChunkById(id: string): Promise<ChunkResponse | null> {
   let doc: WithId<any> | null = null;
   
+  const projection = { embedding: 0 };
+  
   if (ObjectId.isValid(id)) {
-    doc = await embeddingsColl.findOne({ _id: new ObjectId(id) } as Filter<any>);
+    doc = await embeddingsColl.findOne({ _id: new ObjectId(id) } as Filter<any>, { projection });
   }
   
   if (!doc) {
@@ -79,7 +81,7 @@ export async function getChunkById(id: string): Promise<ChunkResponse | null> {
         { "metadata.id": id },
         { id: id }
       ]
-    } as Filter<any>);
+    } as Filter<any>, { projection });
   }
   
   return doc ? toResponse(doc) : null;
@@ -104,7 +106,7 @@ export async function createChunk(input: {
   // Get the created document
   const createdDoc = await embeddingsColl.findOne({ 
     _id: new ObjectId(doc.id) 
-  } as Filter<any>);
+  } as Filter<any>, { projection: { embedding: 0 } });
   
   return createdDoc ? toResponse(createdDoc) : toResponse({ 
     _id: new ObjectId(doc.id),
@@ -118,7 +120,7 @@ export async function updateChunk(id: string, input: {
   pageContent?: string; 
   metadata?: { tags?: Topic[]; source?: string };
 }): Promise<ChunkResponse | null> {
-  const existingDoc = await embeddingsColl.findOne({ _id: new ObjectId(id) } as Filter<any>);
+  const existingDoc = await embeddingsColl.findOne({ _id: new ObjectId(id) } as Filter<any>, { projection: { embedding: 0 } });
   if (!existingDoc) return null;
 
   const updatedPageContent = input.pageContent ?? existingDoc.text ?? existingDoc.pageContent;
@@ -138,7 +140,7 @@ export async function updateChunk(id: string, input: {
 
   await vectorStore.addDocuments([updatedDoc], { ids: [new ObjectId(id) as any] });
   
-  const result = await embeddingsColl.findOne({ _id: new ObjectId(id) } as Filter<any>);
+  const result = await embeddingsColl.findOne({ _id: new ObjectId(id) } as Filter<any>, { projection: { embedding: 0 } });
   return result ? toResponse(result) : null;
 }
 
