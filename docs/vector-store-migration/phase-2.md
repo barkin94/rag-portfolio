@@ -69,7 +69,6 @@ export const vectorStore = new MongoDBAtlasVectorSearch({
 vectorStore.embeddings = new OpenAIEmbeddings({
   model: config.EMBEDDING_MODEL,
   apiKey: config.EMBEDDING_API_KEY,
-  dimensions: config.EMBEDDING_DIMENSIONS,
   configuration: {
     baseURL: config.EMBEDDING_BASE_URL,
   }
@@ -79,7 +78,7 @@ vectorStore.embeddings = new OpenAIEmbeddings({
 **Notes**:
 - Uses `MongoDBAtlasVectorSearch` from `@langchain/mongodb`
 - `OpenAIEmbeddings` with generic config (provider-agnostic)
-- Dimensions from `EMBEDDING_DIMENSIONS` config
+- Dimensions inferred from model (not configured)
 - Collection: `embeddings` in configured database
 - Index name from config (`embeddings_index` default)
 

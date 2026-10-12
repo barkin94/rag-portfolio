@@ -62,7 +62,6 @@ backend/
 | `EMBEDDING_API_KEY` | Add (required) | Generic embedding provider API key |
 | `EMBEDDING_MODEL` | Add (default: `nvidia/nemotron-3-embed-1b`) | Embedding model name |
 | `EMBEDDING_BASE_URL` | Add (default: `https://openrouter.ai/api/v1`) | OpenAI-compatible base URL |
-| `EMBEDDING_DIMENSIONS` | Add (default: `1024`) | Embedding vector dimensions |
 | `HYBRID_SEARCH_ALPHA` | Add (default 0.5) | Maps to MongoDB `vectorWeight` |
 | `MONGODB_ATLAS_INDEX_NAME` | Add (default "embeddings_index") | Atlas Search index name |
 | `CHAT_AGENT_*` | Keep | Unchanged, used for LLM |
