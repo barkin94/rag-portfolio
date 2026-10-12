@@ -146,7 +146,7 @@ export async function updateChunk(id: string, input: {
 
 export async function deleteChunk(id: string): Promise<boolean> {
   try {
-    await vectorStore.delete({ ids: [id] });
+    await vectorStore.delete({ ids: [new ObjectId(id) as any] });
     return true;
   } catch (error) {
     // Fallback: try direct delete
