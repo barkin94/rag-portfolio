@@ -16,3 +16,6 @@ export const vectorStore = new MongoDBAtlasVectorSearch(embeddings, {
   collection: mongodbClient.db(config.MONGODB_DBNAME).collection("embeddings"),
   indexName: config.MONGODB_ATLAS_INDEX_NAME,
 });
+
+// Re-export for repository layer
+export { mongodbClient };

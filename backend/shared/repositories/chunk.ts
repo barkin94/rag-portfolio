@@ -1,20 +1,21 @@
-import { embeddings } from '../vector/embeddings';
-import config from '../config';
-import mongodbClient from '../mongodb/client';
-import { Collection, Document as MongoDocument, WithId } from 'mongodb';
+import { vectorStore } from '../vector/embeddings';
 
-interface ChunkDocument extends WithId<MongoDocument> {
+interface ChunkResult {
   text: string;
-  embedding: number[];
   metadata: {
     tags: string[];
     source: string;
     [key: string]: unknown;
   };
-  score?: number;
+  _id?: string;
 }
 
-type AtlasSearchFilter = Record<string, unknown>;
+type AtlasSearchFilter = {
+  in?: {
+    path: string;
+    value: string[];
+  };
+};
 
 export async function findChunks(
   query: string,
@@ -23,54 +24,18 @@ export async function findChunks(
     tags?: string[];
     vectorWeight?: number;
   }
-): Promise<ChunkDocument[]> {
-  const { k, tags, vectorWeight = config.HYBRID_SEARCH_ALPHA } = options;
+): Promise<ChunkResult[]> {
+  const { k, tags } = options;
 
   const filter: AtlasSearchFilter = tags && tags.length > 0
-    ? { tags: { $in: tags } }
+    ? { in: { path: 'tags', value: tags } }
     : {};
 
-  const collection: Collection<ChunkDocument> = mongodbClient.db(config.MONGODB_DBNAME).collection<ChunkDocument>('embeddings');
+  const results = await vectorStore.similaritySearch(query, k, filter as unknown as never);
 
-  // Build the $search aggregation pipeline for hybrid search
-  const searchStage = {
-    $search: {
-      index: config.MONGODB_ATLAS_INDEX_NAME,
-      compound: {
-        should: [
-          {
-            knnBeta: {
-              vector: await embeddings.embedQuery(query),
-              path: 'embedding',
-              k: k * 2,
-              score: { vectorWeight },
-            },
-          },
-          {
-            text: {
-              query: query,
-              path: 'text',
-              score: { bm25: { k1: 1.2, b: 0.75 } },
-            },
-          },
-        ],
-        ...(Object.keys(filter).length > 0 && { filter }),
-      },
-    },
-  };
-
-  const pipeline = [
-    searchStage,
-    { $limit: k },
-    {
-      $project: {
-        _id: 1,
-        text: 1,
-        metadata: 1,
-        score: { $meta: 'searchScore' },
-      },
-    },
-  ];
-
-  return collection.aggregate<ChunkDocument>(pipeline).toArray();
+  return results.map(doc => ({
+    text: doc.pageContent,
+    metadata: doc.metadata as ChunkResult['metadata'],
+    _id: doc.id,
+  }));
 }
