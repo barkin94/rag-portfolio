@@ -19,7 +19,6 @@ const BaseSchema = z.object({
   EMBEDDING_MODEL: z.string().default("nvidia/nemotron-3-embed-1b"),
   EMBEDDING_BASE_URL: z.string().url().default("https://openrouter.ai/api/v1"),
 
-  HYBRID_SEARCH_ALPHA: z.coerce.number().min(0).max(1).default(0.5),
   MONGODB_ATLAS_INDEX_NAME: z.string().default("embeddings_index"),
 
   MONGODB_URI: z.string().url(),

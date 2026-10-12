@@ -22,7 +22,6 @@ export async function findChunks(
   options: {
     k: number;
     tags?: string[];
-    vectorWeight?: number;
   }
 ): Promise<ChunkResult[]> {
   const { k, tags } = options;

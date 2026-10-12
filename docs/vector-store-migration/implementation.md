@@ -30,9 +30,9 @@ backend/
 |-------|-------------|--------|----------|
 | 1 | Config & Dependencies Update | `✅ Complete` | `✅` |
 | 2 | Vector Store & Embeddings Replacement + Chunk Repository | `✅ Complete` | `✅` |
-| 3 | Retrieval Tool Refactor (Hybrid Search via Chunk Repository) | `✅ Complete` | `✅` |
-| 4 | Atlas Search Index Creation & Re-indexing (via sync-db API) | `⏳ Pending` | `⬜` |
-| 5 | Verification & Alpha Tuning | `⏳ Pending` | `⬜` |
+| 3 | Retrieval Tool Refactor (Vector Search via Chunk Repository) | `✅ Complete` | `✅` |
+| 4 | Atlas Search Index Creation & Re-indexing (via sync-db API) | `✅ Complete` | `✅` |
+| 5 | Verification (Vector Search + Filtering) | `⏳ Pending` | `⬜` |
 
 ## Migration Phases
 
@@ -44,12 +44,12 @@ backend/
 
 ## Key Decisions
 
-1. **MongoDB Atlas over Upstash**: Native hybrid search, unified infra (already using MongoDB for chat history), no separate vector DB cost
+1. **MongoDB Atlas over Upstash**: Native vector search, unified infra (already using MongoDB for chat history), no separate vector DB cost
 2. **NVIDIA Nemotron-3-embed-1b (1024-dim)**: Higher quality embeddings than MiniLM (384-dim), OpenAI-compatible API via custom `CHAT_AGENT_BASE_URL`
 3. **Full re-index required**: Dimension change (384 → 1024) makes old embeddings incompatible
-4. **Hybrid search parameter mapping**: Upstash `alpha` (0=BM25, 1=vector) → MongoDB `vectorWeight` (same semantics)
-5. **Filter syntax conversion**: Upstash `tags CONTAINS 'x'` → MongoDB `{ tags: { $in: ['x'] } }`
-6. **Repository pattern (functional)**: `shared/repositories/chunk.ts` exports pure functions (`findChunks`) that encapsulate vector store operations. Retrieval tool depends on repository functions, not vector store implementation. Repository accepts `tags: string[]` and handles MongoDB `$in` conversion internally. No classes — just functions.
+4. **Filter syntax conversion**: Upstash `tags CONTAINS 'x'` → MongoDB `{ tags: { $in: ['x'] } }` via `preFilter`
+5. **Repository pattern (functional)**: `shared/repositories/chunk.ts` exports pure functions (`findChunks`) that encapsulate vector store operations. Retrieval tool depends on repository functions, not vector store implementation. Repository accepts `tags: string[]` and handles MongoDB `$in` conversion internally. No classes — just functions.
+6. **Pure vector search**: Using `MongoDBAtlasVectorSearch.similaritySearch()` directly. BM25/hybrid search removed for simplicity; Atlas handles vector search natively.
 
 ## Config Changes
 
@@ -62,7 +62,6 @@ backend/
 | `EMBEDDING_API_KEY` | Add (required) | Generic embedding provider API key |
 | `EMBEDDING_MODEL` | Add (default: `nvidia/nemotron-3-embed-1b`) | Embedding model name |
 | `EMBEDDING_BASE_URL` | Add (default: `https://openrouter.ai/api/v1`) | OpenAI-compatible base URL |
-| `HYBRID_SEARCH_ALPHA` | Add (default 0.5) | Maps to MongoDB `vectorWeight` |
 | `MONGODB_ATLAS_INDEX_NAME` | Add (default "embeddings_index") | Atlas Search index name |
 | `CHAT_AGENT_*` | Keep | Unchanged, used for LLM |
 
@@ -72,30 +71,20 @@ backend/
 |-------|--------|
 | 1 | Config validates; `@langchain/mongodb` installed; Upstash vars removed |
 | 2 | `embeddings.ts` exports `vectorStore` (MongoDBAtlasVectorSearch) with NVIDIA embeddings |
-| 3 | `retrieval.ts` uses `findChunks` with `vectorWeight` and MongoDB `$in` filter |
+| 3 | `retrieval.ts` uses `findChunks` with MongoDB `$in` filter via `preFilter` |
 | 4 | Atlas Search index created; data re-indexed with 1024-dim embeddings |
-| 5 | `HYBRID_SEARCH_ALPHA=0.0/0.5/1.0` changes search behavior; keyword queries work |
+| 5 | Vector search returns relevant results; topic filtering works; citations appear |
 
 ## Dependencies
 
 - **Blocks**: Retrieval Improvements Phase 2 (Hybrid Search) — requires MongoDB Atlas hybrid search
 - **Requires**: MongoDB Atlas cluster with Search enabled, NVIDIA embeddings endpoint access
 
-## Blocked on Manual Steps
+## Phase 4 & 5 Status
 
-**Phase 4** requires manual Atlas Search index creation in MongoDB Atlas UI:
-1. Database → Atlas Search → Create Search Index → JSON Editor
-2. Use index definition from `phase-4.md` (knnVector 1024-dim cosine, token fields for tags/source, string for content)
-3. Index name: `embeddings_index`
+**Phase 4** (Atlas Search Index + Re-indexing):
+1. Manual: Create Atlas Search index `embeddings_index` in MongoDB Atlas UI (knnVector 1024-dim cosine, token fields for tags/source, string for text)
+2. Run: `curl -X PUT http://localhost:3000/api/sync-db` — invokes `app/api/sync-db/route.ts` which embeds all chunks via NVIDIA 1024-dim and stores in Atlas
+3. Verify: `db.embeddings.findOne({}, { embedding: 1 })` → array length 1024
 
-**Phase 4** re-indexing uses existing API route:
-```bash
-# After Atlas index created, call the sync-db endpoint:
-curl -X PUT http://localhost:3000/api/sync-db
-```
-This invokes `app/api/sync-db/route.ts` which:
-- Loads resume from MongoDB + static data chunks (portfolio, interview Q&A, behavioral stories)
-- Creates LangChain Documents with `pageContent` and `metadata.tags`/`source`
-- Calls `vectorStore.addDocuments(documents)` → embeds with NVIDIA 1024-dim → stores in Atlas
-
-**Phase 5** runs only after Phase 4 completes — tests `HYBRID_SEARCH_ALPHA` tuning (0.0/0.5/1.0) with real data.
+**Phase 5** (Verification): Run after Phase 4 — test vector search relevance and topic filtering.
