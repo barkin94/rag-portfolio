@@ -1,18 +1,17 @@
 import { tool } from 'langchain';
 import { z } from 'zod';
 
-import { vectorStore } from '@/backend/shared/vector';
+import { findChunks } from '@/backend/shared/repositories/chunk';
 import { Topic, TopicSchemaDescription } from '@/backend/shared/types';
 import logger from '@/backend/shared/logger';
 
 export const getInfoTool = tool(
   async ({ query, topics, expandingKeywords }) => {
     try {
-      const topicFilters = topics.length > 0
-        ? topics.map(t => `tags CONTAINS '${t}'`).join(' OR ')
-        : undefined;
-
-      const results = await vectorStore.similaritySearch(`${query} ${expandingKeywords}`, 6, topicFilters);
+      const results = await findChunks(`${query} ${expandingKeywords}`, {
+        k: 6,
+        tags: topics.length > 0 ? topics : undefined,
+      });
 
       if (results.length === 0) {
         return "No specific records found for those topics. Try a broader search.";
@@ -20,7 +19,7 @@ export const getInfoTool = tool(
 
       return results.map(chunk => {
         const source = chunk.metadata.source ? `[Source: ${chunk.metadata.source}]` : "";
-        return `${source}\n${chunk.pageContent}`;
+        return `${source}\n${chunk.text}`;
       }).join("\n\n---\n\n");
 
     } catch (error) {

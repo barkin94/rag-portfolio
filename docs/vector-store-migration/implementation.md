@@ -14,10 +14,10 @@ backend/
 │   │   ├── index.ts                 # Update: export only from embeddings
 │   │   └── upstash-repo.ts          # DELETE (no longer needed)
 │   └── repositories/
-│       └── chunk.ts                 # NEW: hybridSearchChunks() function
+│       └── chunk.ts                 # NEW: findChunks() function
 ├── features/
 │   └── chat/
-│       └── retrieval.ts             # Refactor: use hybridSearchChunks()
+│       └── retrieval.ts             # Refactor: use findChunks()
 ```
 
 ## Workflow
@@ -29,8 +29,8 @@ backend/
 | Phase | Description | Status | Approval |
 |-------|-------------|--------|----------|
 | 1 | Config & Dependencies Update | `✅ Complete` | `✅` |
-| 2 | Vector Store & Embeddings Replacement + Chunk Repository | `⏳ Pending` | `⬜` |
-| 3 | Retrieval Tool Refactor (Hybrid Search via Chunk Repository) | `⏳ Pending` | `⬜` |
+| 2 | Vector Store & Embeddings Replacement + Chunk Repository | `✅ Complete` | `✅` |
+| 3 | Retrieval Tool Refactor (Hybrid Search via Chunk Repository) | `✅ Complete` | `✅` |
 | 4 | Atlas Search Index Creation & Re-indexing | `⏳ Pending` | `⬜` |
 | 5 | Verification & Alpha Tuning | `⏳ Pending` | `⬜` |
 
@@ -49,7 +49,7 @@ backend/
 3. **Full re-index required**: Dimension change (384 → 1024) makes old embeddings incompatible
 4. **Hybrid search parameter mapping**: Upstash `alpha` (0=BM25, 1=vector) → MongoDB `vectorWeight` (same semantics)
 5. **Filter syntax conversion**: Upstash `tags CONTAINS 'x'` → MongoDB `{ tags: { $in: ['x'] } }`
-6. **Repository pattern (functional)**: `shared/repositories/chunk.ts` exports pure functions (`hybridSearchChunks`) that encapsulate vector store operations. Retrieval tool depends on repository functions, not vector store implementation. Repository accepts `tags: string[]` and handles MongoDB `$in` conversion internally. No classes — just functions.
+6. **Repository pattern (functional)**: `shared/repositories/chunk.ts` exports pure functions (`findChunks`) that encapsulate vector store operations. Retrieval tool depends on repository functions, not vector store implementation. Repository accepts `tags: string[]` and handles MongoDB `$in` conversion internally. No classes — just functions.
 
 ## Config Changes
 
@@ -72,7 +72,7 @@ backend/
 |-------|--------|
 | 1 | Config validates; `@langchain/mongodb` installed; Upstash vars removed |
 | 2 | `embeddings.ts` exports `vectorStore` (MongoDBAtlasVectorSearch) with NVIDIA embeddings |
-| 3 | `retrieval.ts` uses `hybridSearch` with `vectorWeight` and MongoDB `$in` filter |
+| 3 | `retrieval.ts` uses `findChunks` with `vectorWeight` and MongoDB `$in` filter |
 | 4 | Atlas Search index created; data re-indexed with 1024-dim embeddings |
 | 5 | `HYBRID_SEARCH_ALPHA=0.0/0.5/1.0` changes search behavior; keyword queries work |
 
