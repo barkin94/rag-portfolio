@@ -38,7 +38,12 @@ function formatTimestamp(iso: string): string {
 
 export default function AdminHeader({ maintenance: initialMaintenance }: AdminHeaderProps) {
   const pathname = usePathname();
+  const [mounted, setMounted] = useState(false);
   const [maintenance, setMaintenance] = useState(initialMaintenance);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   const [syncState, setSyncState] = useState<SyncState>('idle');
   const [lastSyncTimestamp, setLastSyncTimestamp] = useState<string | null>(null);
   const [syncDetails, setSyncDetails] = useState<string>('');
@@ -212,7 +217,7 @@ export default function AdminHeader({ maintenance: initialMaintenance }: AdminHe
           <span>{maintenance ? 'Maintenance ON' : 'Maintenance OFF'}</span>
         </button>
 
-        <AdminSideBar currentPage={pathname} />
+        <AdminSideBar currentPage={mounted ? pathname : '/admin/chunks'} />
       </div>
     </HeaderContainer>
   );
