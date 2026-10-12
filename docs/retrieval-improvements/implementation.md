@@ -35,7 +35,7 @@ backend/
 | Phase | Description | Status | Approval |
 |-------|-------------|--------|----------|
 | 0 | Shared Topic Definitions (SSOT) | `✅ Complete` | `✅` |
-| 1 | Query Contextualization (Zero-LLM-Call) | `⏳ Pending` | `⬜` |
+| 1 | Query Contextualization (Zero-LLM-Call) | `✅ Complete` | `✅` |
 | 2 | Hybrid Search (Upstash Native) | `⏳ Pending` | `⬜` |
 | 3 | Retrieval Eval Set | `⏳ Pending` | `⬜` |
 | 4 | Generation Quality (Minimal Tokens) | `⏳ Pending` | `⬜` |
