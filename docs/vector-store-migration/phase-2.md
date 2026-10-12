@@ -1,6 +1,6 @@
 # Phase 2: Vector Store & Embeddings Replacement + Repository Layer
 
-**Goal**: Replace Upstash vector store with MongoDB Atlas Vector Search, switch to NVIDIA Nemotron embeddings, and introduce a repository layer that encapsulates vector store operations
+**Goal**: Replace Upstash vector store with MongoDB Atlas Vector Search, switch to NVIDIA Nemotron embeddings, and introduce a repository layer in `shared/repositories/`
 
 ---
 
@@ -8,53 +8,49 @@
 
 | Step | Action | Status | Files Created | Files Modified |
 |------|--------|--------|---------------|----------------|
-| 2.1 | Create `repository.ts` with `VectorRepository` class | ⏳ Pending | `backend/shared/vector/repository.ts` | - |
+| 2.1 | Create `shared/repositories/chunk.ts` with chunk repository functions | ⏳ Pending | `backend/shared/repositories/chunk.ts` | - |
 | 2.2 | Replace `embeddings.ts` to export `vectorStore` (MongoDBAtlasVectorSearch) | ⏳ Pending | - | `backend/shared/vector/embeddings.ts` |
 | 2.3 | Delete `upstash-repo.ts` (no longer needed) | ⏳ Pending | - | `backend/shared/vector/upstash-repo.ts` |
-| 2.4 | Wire `VectorRepository` to use `vectorStore` from `embeddings.ts` | ⏳ Pending | - | `backend/shared/vector/repository.ts` |
-| 2.5 | Verify exports: `VectorRepository` and `vectorStore` | ⏳ Pending | | |
+| 2.4 | Update `shared/vector/index.ts` to export from `embeddings` only | ⏳ Pending | - | `backend/shared/vector/index.ts` |
+| 2.5 | Verify exports: `vectorStore` from embeddings, chunk functions from repositories | ⏳ Pending | | |
 
 ---
 
 ## Implementation Details
 
-### `backend/shared/vector/repository.ts` — NEW FILE
+### `backend/shared/repositories/chunk.ts` — NEW FILE
 
 ```typescript
-import { vectorStore } from './embeddings';
+import { vectorStore } from '../vector/embeddings';
 import { Document } from '@langchain/core/documents';
 import config from '@/backend/shared/config';
 
-export class VectorRepository {
-  async hybridSearch(
-    query: string,
-    options: {
-      k: number;
-      tags?: string[];
-      vectorWeight?: number;
-    }
-  ): Promise<Document[]> {
-    const filter = options.tags && options.tags.length > 0
-      ? { tags: { $in: options.tags } }
-      : undefined;
-
-    return vectorStore.hybridSearch(query, {
-      k: options.k,
-      filter,
-      vectorWeight: options.vectorWeight ?? config.HYBRID_SEARCH_ALPHA,
-    });
+export async function hybridSearchChunks(
+  query: string,
+  options: {
+    k: number;
+    tags?: string[];
+    vectorWeight?: number;
   }
-}
+): Promise<Document[]> {
+  const filter = options.tags && options.tags.length > 0
+    ? { tags: { $in: options.tags } }
+    : undefined;
 
-export const vectorRepository = new VectorRepository();
+  return vectorStore.hybridSearch(query, {
+    k: options.k,
+    filter,
+    vectorWeight: options.vectorWeight ?? config.HYBRID_SEARCH_ALPHA,
+  });
+}
 ```
 
 **Key Points**:
-- Encapsulates all vector store operations
+- No class — just pure functions
 - Accepts `tags: string[]` for filtering (converts to MongoDB `$in`)
 - Defaults `vectorWeight` from config (`HYBRID_SEARCH_ALPHA`)
 - Returns `Document[]` (LangChain standard)
-- Single export: `vectorRepository` instance
+- Named `hybridSearchChunks` — clear purpose
 
 ### `backend/shared/vector/embeddings.ts` — Full Replacement
 
@@ -91,6 +87,12 @@ vectorStore.embeddings = new OpenAIEmbeddings({
 
 File no longer needed. MongoDB Atlas handles hybrid search natively.
 
+### `backend/shared/vector/index.ts` — Update
+
+```typescript
+export * from './embeddings';
+```
+
 ---
 
 ## Verification
@@ -98,13 +100,15 @@ File no longer needed. MongoDB Atlas handles hybrid search natively.
 ```bash
 # Type-check
 npx tsc --noEmit backend/shared/vector/embeddings.ts
-npx tsc --noEmit backend/shared/vector/repository.ts
+npx tsc --noEmit backend/shared/repositories/chunk.ts
 
 # Verify exports
 grep -r "export.*vectorStore" backend/shared/vector/embeddings.ts
-grep -r "export.*vectorRepository" backend/shared/vector/repository.ts
-grep -r "class VectorRepository" backend/shared/vector/repository.ts
+grep -r "export.*hybridSearchChunks" backend/shared/repositories/chunk.ts
 
 # Confirm upstash-repo.ts deleted
 test ! -f backend/shared/vector/upstash-repo.ts && echo "Deleted"
+
+# Confirm index.ts updated
+grep -v "upstash-repo" backend/shared/vector/index.ts
 ```
