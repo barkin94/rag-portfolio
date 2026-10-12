@@ -42,7 +42,6 @@ export const vectorStore = new MongoDBAtlasVectorSearch({
 vectorStore.embeddings = new OpenAIEmbeddings({
     model: "nvidia/nemotron-3-embed-1b",
     apiKey: config.CHAT_AGENT_API_KEY,
-    dimensions: 1024,
     configuration: {
       baseURL: config.CHAT_AGENT_BASE_URL,
     }

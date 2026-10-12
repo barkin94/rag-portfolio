@@ -67,19 +67,19 @@ export const vectorStore = new MongoDBAtlasVectorSearch({
 });
 
 vectorStore.embeddings = new OpenAIEmbeddings({
-  model: "nvidia/nemotron-3-embed-1b",
-  apiKey: config.CHAT_AGENT_API_KEY,
-  dimensions: 1024,
+  model: config.EMBEDDING_MODEL,
+  apiKey: config.EMBEDDING_API_KEY,
+  dimensions: config.EMBEDDING_DIMENSIONS,
   configuration: {
-    baseURL: config.CHAT_AGENT_BASE_URL,
+    baseURL: config.EMBEDDING_BASE_URL,
   }
 });
 ```
 
 **Notes**:
 - Uses `MongoDBAtlasVectorSearch` from `@langchain/mongodb`
-- `OpenAIEmbeddings` with NVIDIA model via custom `baseURL` (OpenAI-compatible)
-- 1024 dimensions — matches `nemotron-3-embed-1b`
+- `OpenAIEmbeddings` with generic config (provider-agnostic)
+- Dimensions from `EMBEDDING_DIMENSIONS` config
 - Collection: `embeddings` in configured database
 - Index name from config (`embeddings_index` default)
 

@@ -55,13 +55,17 @@ backend/
 
 | Key | Action | Notes |
 |-----|--------|-------|
+| `HF_EMBEDDINGS_MODEL` | Remove | Replaced by generic `EMBEDDING_MODEL` |
+| `HF_EMBEDDINGS_API_KEY` | Remove | Replaced by generic `EMBEDDING_API_KEY` |
 | `UPSTASH_VECTOR_REST_URL` | Remove | No longer used |
 | `UPSTASH_VECTOR_REST_TOKEN` | Remove | No longer used |
+| `EMBEDDING_API_KEY` | Add (required) | Generic embedding provider API key |
+| `EMBEDDING_MODEL` | Add (default: `nvidia/nemotron-3-embed-1b`) | Embedding model name |
+| `EMBEDDING_BASE_URL` | Add (default: `https://openrouter.ai/api/v1`) | OpenAI-compatible base URL |
+| `EMBEDDING_DIMENSIONS` | Add (default: `1024`) | Embedding vector dimensions |
 | `HYBRID_SEARCH_ALPHA` | Add (default 0.5) | Maps to MongoDB `vectorWeight` |
 | `MONGODB_ATLAS_INDEX_NAME` | Add (default "embeddings_index") | Atlas Search index name |
-| `CHAT_AGENT_API_KEY` | Keep | Used for NVIDIA embeddings endpoint |
-| `CHAT_AGENT_BASE_URL` | Keep | Must point to NVIDIA-compatible endpoint |
-| `HF_EMBEDDINGS_*` | Keep (legacy) | Remove after verification |
+| `CHAT_AGENT_*` | Keep | Unchanged, used for LLM |
 
 ## Verification Criteria
 
