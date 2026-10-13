@@ -6,11 +6,11 @@ import ScrollUpButton from "@/common/components/ScrollUpButton";
 import { getThemeCookieInServer } from "@/common/utils/cookie";
 import MainHeader from "./_components/Header";
 import Contact from "./_components/Contact";
-import * as mongodb from "@/backend/shared/mongodb";
+import * as cvRepo from "@/backend/features/cv-sync/repository";
 
 export default async function Main() {
   const theme = await getThemeCookieInServer();
-  const resume = await mongodb.getResume();
+  const resume = await cvRepo.getResume();
 
   return (
     <div className="mx-auto">

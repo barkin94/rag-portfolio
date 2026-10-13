@@ -1,9 +1,10 @@
 import { Document } from 'langchain';
 import { FullResume } from './parser';
+import type { CvData } from './types';
 
 import { fetchResume } from './google-drive';
 import { parseCvWithLlm } from './parser';
-import * as mongodb from '@/backend/shared/mongodb';
+import * as cvRepo from './repository';
 import { vectorStore } from '@/backend/shared/vector';
 import { createSummaryChunk, createContactChunk, createExperienceChunks, createSkillsChunk, createEducationChunks } from './document-builders';
 import logger from '@/backend/shared/logger';
@@ -42,12 +43,12 @@ export async function syncCv(): Promise<SyncResult> {
     );
 
     await Promise.all([
-      mongodb.upsertResume(parsed),
+      cvRepo.upsertResume(parsed),
       updateVectorStore(parsed),
     ]);
 
     const details = `Synced ${parsed.experience.length} roles, ${Object.keys(parsed.skills.categories).length} skill categories`;
-    await mongodb.recordSyncStatus('success', details);
+    await cvRepo.recordSyncStatus('success', details);
 
     logger.info({ details }, 'CV sync completed successfully');
 
@@ -60,7 +61,7 @@ export async function syncCv(): Promise<SyncResult> {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     logger.error({ error }, 'CV sync failed');
 
-    await mongodb.recordSyncStatus('failed', errorMessage);
+    await cvRepo.recordSyncStatus('failed', errorMessage);
 
     return {
       success: false,

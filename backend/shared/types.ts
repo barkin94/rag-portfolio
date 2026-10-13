@@ -69,16 +69,6 @@ export type CvEducation = {
   details?: (string | null)[];
 };
 
-export type CvData = {
-  _id: 'current';
-  summary: CvSummary;
-  contact: CvContact;
-  experience: CvExperience[];
-  skills: CvSkills;
-  education: CvEducation[];
-  updatedAt: Date;
-};
-
 export type SyncStatusDoc = {
   _id: 'current';
   status: 'success' | 'failed' | 'pending';

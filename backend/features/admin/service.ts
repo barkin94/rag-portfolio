@@ -1,3 +1,5 @@
+import * as adminRepo from './repository';
+import * as cvRepo from '@/backend/features/cv-sync/repository';
 import * as mongodb from '@/backend/shared/mongodb';
 import { send } from '@vercel/queue';
 import type {
@@ -31,7 +33,7 @@ export async function setMaintenanceMode(enabled: boolean): Promise<MaintenanceS
 }
 
 export async function getSyncStatus(): Promise<SyncStatusResponse> {
-  const status = await mongodb.getLastSyncStatus();
+  const status = await adminRepo.getLastSyncStatus();
 
   if (!status) {
     return { synced: false };
@@ -46,7 +48,7 @@ export async function getSyncStatus(): Promise<SyncStatusResponse> {
 }
 
 export async function triggerCvSync(): Promise<SyncCvResponse> {
-  await mongodb.recordSyncStatus('pending', 'Sync queued');
+  await cvRepo.recordSyncStatus('pending', 'Sync queued');
 
   await send('cv-sync', { triggeredAt: Date.now() }, {
     idempotencyKey: 'cv-sync-manual',
