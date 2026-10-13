@@ -18,11 +18,6 @@ export async function upsertResume(data: Omit<CvData, '_id' | 'updatedAt'>): Pro
   );
 }
 
-export async function getResume(): Promise<CvData | null> {
-  const doc = await cvColl.findOne(CURRENT_ID_FILTER);
-  return doc;
-}
-
 export async function recordSyncStatus(
   status: 'success' | 'failed' | 'pending',
   details: string
