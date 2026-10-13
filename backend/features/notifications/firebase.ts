@@ -6,12 +6,12 @@ import logger from "@/backend/shared/logger";
 const firebaseServiceAccountBase64 = config.FIREBASE_SERVICE_ACCOUNT_BASE64;  
 let messaging: admin.messaging.Messaging | undefined
 
-if(firebaseServiceAccountBase64) {
+if (firebaseServiceAccountBase64) {
   admin.initializeApp({
-    credential: JSON.parse(atob(firebaseServiceAccountBase64)),
+    credential: admin.credential.cert(JSON.parse(atob(firebaseServiceAccountBase64))),
   });
 
-  messaging = await admin.messaging();
+  messaging = admin.messaging();
 }
 
 const notifyAdminDevices = async (threadId: string, prompt: string) => {
