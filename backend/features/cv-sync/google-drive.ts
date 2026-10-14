@@ -38,3 +38,27 @@ export async function fetchResume(): Promise<string> {
     );
   }
 }
+
+export async function fetchResumePdf(): Promise<Buffer> {
+  try {
+    const drive = await getDriveClient();
+
+    const response = await drive.files.export(
+      {
+        fileId: config.GOOGLE_DOC_ID,
+        mimeType: "application/pdf",
+      },
+      { responseType: "arraybuffer" },
+    );
+
+    return Buffer.from(response.data as ArrayBuffer);
+  } catch (error) {
+    logger.error(
+      { error, docId: config.GOOGLE_DOC_ID },
+      "Failed to fetch Google Doc as PDF",
+    );
+    throw new Error(
+      `Failed to fetch Google Doc as PDF: ${error instanceof Error ? error.message : "Unknown error"}`,
+    );
+  }
+}

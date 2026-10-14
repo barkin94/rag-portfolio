@@ -1,6 +1,6 @@
 import Image from "next/image";
 import WithFadeInAnimation from "@/common/components/FadeInOnViewportEntry";
-import { LinkedInIcon, GitHubIcon } from "@/common/components/Icons";
+import { GitHubIcon, DownloadIcon } from "@/common/components/Icons";
 
 interface AboutProps {
   summary: {
@@ -15,6 +15,24 @@ const DEFAULT_AVATAR = "https://api.dicebear.com/7.x/avataaars/svg?seed=Barkin&b
 
 
 export default function About({ summary, imageSrc }: AboutProps) {
+  const handleDownloadResume = async () => {
+    try {
+      const response = await fetch('/api/resume');
+      if (!response.ok) throw new Error('Failed to download resume');
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'Barkin_Buyuksagin_Resume.pdf';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error('Failed to download resume:', error);
+    }
+  };
+
   return (
     <section id="about" className="py-20 bg-slate-50/50 dark:bg-slate-900/30">
       <div className="mx-auto max-w-6xl px-4">
@@ -71,17 +89,15 @@ export default function About({ summary, imageSrc }: AboutProps) {
                 </dl>
               </div>
 
-              {/* Social Links */}
+              {/* Social Links & Download Resume */}
               <div className="flex items-center justify-center md:justify-start gap-4">
-                <a
-                  href="https://linkedin.com/in/barkinsagin"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <button
+                  onClick={handleDownloadResume}
                   className="p-3 rounded-full border-2 border-slate-400 dark:border-slate-600 text-slate-700 dark:text-slate-300 hover:bg-slate-400 dark:hover:bg-slate-600 hover:text-slate-900 dark:hover:text-slate-100 transition-all duration-300 hover:scale-110 shadow-md hover:shadow-lg"
-                  aria-label="LinkedIn Profile"
+                  aria-label="Download Resume"
                 >
-                  <LinkedInIcon className="w-6 h-6" />
-                </a>
+                  <DownloadIcon className="w-6 h-6" />
+                </button>
                 <a
                   href="https://github.com/barkin94"
                   target="_blank"
