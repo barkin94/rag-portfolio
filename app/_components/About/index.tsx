@@ -51,7 +51,7 @@ export default function About({ summary, imageSrc }: AboutProps) {
               </div>
 
               {/* Basic Info Table-like Area */}
-              <div className="bg-white/50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700 p-6 md:p-8 mb-8">
+              {/* <div className="bg-white/50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700 p-6 md:p-8 mb-8">
                 <dl className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
                   <div className="flex flex-col sm:flex-row sm:items-center gap-2">
                     <dt className="text-sm font-semibold text-slate-500 dark:text-slate-400 shrink-0">
@@ -70,7 +70,7 @@ export default function About({ summary, imageSrc }: AboutProps) {
                     </dd>
                   </div>
                 </dl>
-              </div>
+              </div> */}
 
               {/* Social Links & Download Resume */}
               <div className="flex items-center justify-center md:justify-start gap-4">
