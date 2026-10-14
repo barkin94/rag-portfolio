@@ -8,7 +8,7 @@ A Next.js portfolio website with a RAG-powered "Ask Me Anything" (AMA) chat feat
 - **AMA Chat**: Interactive Q&A powered by RAG (Retrieval-Augmented Generation)
 - **Streaming Responses**: Real-time streaming chat interface
 - **Multiple LLM Providers**: Support for Gemini, OpenRouter, and Ollama
-- **Vector Store**: Embeddings-based retrieval system
+- **Vector Store**: MongoDB Atlas Vector Search for embeddings-based retrieval
 - **PWA**: Installable app (manifest, service worker). Add `icon-192.png` and `icon-512.png` in `public/` for better install icons (optional; `favicon.ico` is used otherwise).
 - **Admin page** (optional): Secure `/admin` view of all AMA chat threads from MongoDB when `ADMIN_PAGE_SECRET` is set.
 
@@ -17,8 +17,8 @@ A Next.js portfolio website with a RAG-powered "Ask Me Anything" (AMA) chat feat
 - **Frontend**: Next.js 16, React 19, Tailwind CSS
 - **Backend & AI**:
   - LangChain for agent orchestration and tool management
-  - Hugging Face Inference API for embeddings
-  - Upstash Vector Store for document storage and retrieval
+  - OpenAI-compatible embeddings (configurable provider)
+  - MongoDB Atlas Vector Search for document storage and retrieval
 - **LLM Provider**: OpenRouter
 - **Database**: MongoDB for conversation persistence and checkpoints
 - **Infrastructure**: TypeScript, Zod for configuration validation
@@ -46,16 +46,14 @@ npm install
 3. Set up environment variables:
 ```bash
 # Required for all providers
-HF_EMBEDDINGS_API_KEY=your_huggingface_api_key
-HF_EMBEDDINGS_MODEL=sentence-transformers/all-MiniLM-L6-v2  # optional
-
-# Vector Store (Upstash)
-UPSTASH_VECTOR_REST_URL=your_upstash_vector_url
-UPSTASH_VECTOR_REST_TOKEN=your_upstash_vector_token
+EMBEDDING_API_KEY=your_embedding_api_key
+EMBEDDING_MODEL=text-embedding-3-small  # optional
+EMBEDDING_BASE_URL=https://api.openai.com/v1  # optional, for Azure/OpenAI-compatible
 
 # MongoDB
 MONGODB_URI=mongodb://localhost:27017  # or your MongoDB connection string
 MONGODB_DBNAME=rag_portfolio  # or your preferred database name
+MONGODB_ATLAS_INDEX_NAME=vector_index  # Atlas Search index name
 
 # Chat Agent LLM Config (provider-agnostic)
 CHAT_AGENT_API_KEY=your_api_key
@@ -113,7 +111,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 │   │   ├── resume.ts             # Resume information chunks
 │   │   ├── portfolio.ts          # Portfolio project chunks
 │   │   └── interview-QnA.ts      # Interview Q&A chunks
-│   ├── vector-store.ts  # Upstash vector store configuration
+│   ├── vector-store.ts  # MongoDB Atlas Vector Search configuration
 │   ├── tools.ts        # RAG retrieval tools (getInfoTool)
 │   ├── config.ts       # Environment configuration with Zod validation
 │   ├── mongodb.ts      # MongoDB client and conversation persistence
@@ -135,10 +133,10 @@ The core of the RAG system is a LangChain agent that orchestrates conversations:
   - **MongoDB Conversation Saver**: Persists user and assistant messages to MongoDB for history
   - **Notification Middleware** (optional): Sends a push notification when a new AMA thread is created
 
-### Vector Store (`backend/vector-store.ts`)
+### Vector Store (`backend/shared/vector/embeddings.ts`)
 
-- Uses **Upstash Vector Store** for document storage and retrieval
-- Employs **Hugging Face Inference API** for embeddings (configurable model)
+- Uses **MongoDB Atlas Vector Search** for document storage and retrieval
+- Employs **OpenAI-compatible embeddings** (configurable model and provider)
 - Supports semantic search with metadata filtering
 
 ### Tools (`backend/tools.ts`)
@@ -159,11 +157,11 @@ Structured document chunks with metadata tags for precise retrieval:
 Each chunk is tagged with `Topic` enum values for filtering:
 - `GeneralInfo`, `Contact`, `WorkExperience`, `Skills`, `Education`, `Projects`, `Achievements`
 
-### Configuration (`backend/config.ts`)
+### Configuration (`backend/shared/config.ts`)
 
 Comprehensive environment variable validation using Zod:
 
-- **Base Configuration**: MongoDB, Upstash Vector Store, Hugging Face embeddings, logging
+- **Base Configuration**: MongoDB, MongoDB Atlas Vector Search, OpenAI-compatible embeddings, logging
 - **LLM Provider Configuration**: Discriminated union supporting Gemini, OpenRouter, or Ollama
 - **Optional Features**: Push notification integration via Firebase Cloud Messaging (disabled by default)
 

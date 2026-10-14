@@ -1,6 +1,6 @@
 ---
 name: rag-backend
-description: Complete RAG backend: agent orchestration, vector store (Upstash + HF embeddings), retrieval tools with Topic filtering, MongoDB persistence, OpenRouter LLM config, and data chunks (resume, portfolio, interview Q&A, behavioral stories). Use for any backend RAG pipeline changes.
+description: Complete RAG backend: agent orchestration, vector store (MongoDB Atlas + OpenAI-compatible embeddings), retrieval tools with Topic filtering, MongoDB persistence, OpenRouter LLM config, and data chunks (resume, portfolio, interview Q&A, behavioral stories). Use for any backend RAG pipeline changes.
 ---
 
 # RAG Backend
@@ -32,7 +32,7 @@ Config (`config.ts`) drives LLM provider, embeddings, DB connections.
 |-------|-------|
 | **Agent** | `backend/features/chat/agent.ts` (setup, prompt, tools), `schemas.ts` (state), `middlewares/MongoDBConversationSaver.ts` |
 | **Config** | `backend/shared/config.ts` (Zod: `BaseSchema` with `CHAT_AGENT_*` vars) |
-| **Retrieval** | `backend/features/chat/tools.ts` (`getInfoTool`), `backend/shared/vector-store.ts` (Upstash + HF embeddings), `backend/shared/enums.ts` (`Topic`) |
+| **Retrieval** | `backend/features/chat/tools.ts` (`getInfoTool`), `backend/shared/vector/embeddings.ts` (MongoDB Atlas + OpenAI-compatible embeddings), `backend/shared/enums.ts` (`Topic`) |
 | **Content** | `backend/features/chat/data-chunks/{resume,portfolio,interview-QnA,behavioral-stories}.ts` |
 | **Persistence** | `backend/shared/mongodb.ts` (client, threads, checkpointer), `app/api/sync-db/route.ts` (re-index), `app/api/prompt/route.ts` (chat endpoint) |
 

@@ -25,6 +25,16 @@ async function updateVectorStore(parsed: FullResume): Promise<void> {
     ...createEducationChunks(parsed.education),
   ];
 
+  // Delete existing resume chunks first (clean slate)
+  const { mongodbClient } = await import('@/backend/shared/vector/embeddings');
+  const config = (await import('@/backend/shared/config')).default;
+  const db = mongodbClient.db(config.MONGODB_DBNAME);
+  const embeddingsColl = db.collection('embeddings');
+  
+  await embeddingsColl.deleteMany({ source: { $regex: '^resume ' } });
+  logger.info('Deleted existing resume chunks from vector store');
+
+  // Insert fresh chunks (no upsert needed after delete)
   await vectorStore.addDocuments(chunks);
   logger.info({ chunkCount: chunks.length }, 'Vector store updated with CV data');
 }

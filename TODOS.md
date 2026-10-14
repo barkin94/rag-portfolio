@@ -23,7 +23,7 @@ See `BACKEND_RESTRUCTURE_PLAN.md` and `RESTRUCTURE_PROGRESS.md` for detailed pla
 - [ ] Move `logger.ts` → `shared/logger.ts`
 - [ ] Move `common/types.ts` → `shared/types.ts`
 - [ ] Create `shared/mongodb/` with repos (client, thread-repo, cv-repo, config-repo)
-- [ ] Create `shared/vector/` with repos (upstash-repo, embeddings)
+- [ ] Create `shared/vector/` with repos (embeddings)
 - [ ] Add `backend/index.ts` barrel
 - [ ] Add `shared/index.ts` barrel
 - [ ] Verify build passes
@@ -92,7 +92,7 @@ See `BACKEND_RESTRUCTURE_PLAN.md` and `RESTRUCTURE_PROGRESS.md` for detailed pla
 - [ ] Config-driven provider selection
 
 ### Caching Layer
-- [ ] Add Redis/Upstash for embedding cache
+- [ ] Add Redis for embedding cache
 - [ ] Add query cache
 - [ ] Add LLM response cache
 - [ ] Cache invalidation on CV sync
@@ -118,7 +118,7 @@ See `BACKEND_RESTRUCTURE_PLAN.md` and `RESTRUCTURE_PROGRESS.md` for detailed pla
 - [ ] Versioned vector store (namespace by version)
 - [ ] Diff-based updates instead of full replace
 - [ ] Rollback capability
-- [ ] Scheduled sync with cron (Vercel Cron or Upstash Queue)
+- [ ] Scheduled sync with cron (Vercel Cron)
 
 ### Error Handling
 - [ ] Structured error types

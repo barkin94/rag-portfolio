@@ -8,9 +8,8 @@ Summary: ${summary.summary}
 Work Preferences: ${summary.workPreferences}`,
     metadata: {
       tags: [Topic.GeneralInfo],
-      source: 'resume summary section',
+      source: 'resume - summary section',
     },
-    id: 'resume-summary',
   });
 }
 
@@ -20,9 +19,8 @@ export function createContactChunk(contact: { email: string; linkedin: string; g
 LinkedIn: ${contact.linkedin}`,
     metadata: {
       tags: [Topic.Contact],
-      source: 'resume contact section',
+      source: 'resume - contact section',
     },
-    id: 'resume-contact',
   });
 }
 
@@ -38,9 +36,8 @@ Details:
 ${exp.bullets.map(b => `• ${b}`).join('\n')}`,
     metadata: {
       tags: [Topic.WorkExperience, Topic.Achievements],
-      source: 'resume work experience section',
+      source: `resume - work experience - ${exp.company}`,
     },
-    id: `resume-work-${exp.company.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${i}`,
   }));
 }
 
@@ -53,9 +50,8 @@ export function createSkillsChunk(skills: { categories: Record<string, string[]>
     pageContent: content,
     metadata: {
       tags: [Topic.Skills],
-      source: 'resume skills section',
+      source: 'resume - skills section',
     },
-    id: 'resume-skills',
   });
 }
 
@@ -66,8 +62,7 @@ ${edu.institution}${edu.location ? `, ${edu.location}` : ''}
 ${edu.period ?? ''}`.trim(),
     metadata: {
       tags: [Topic.Education],
-      source: 'resume education and certifications section',
+      source: `resume - education - ${edu.institution}`,
     },
-    id: `resume-education-${i}`,
   }));
 }
