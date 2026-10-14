@@ -2,6 +2,15 @@
   "functions": {
     "app/api/queues/sync-cv/route.ts": {
       "experimentalTriggers": [{ "type": "queue/v2beta", "topic": "cv-sync" }]
+    },
+    "app/api/cron/cleanup-stale-sync/route.ts": {
+      "maxDuration": 30
     }
-  }
+  },
+  "crons": [
+    {
+      "path": "/api/cron/cleanup-stale-sync",
+      "schedule": "*/5 * * * *"
+    }
+  ]
 }
