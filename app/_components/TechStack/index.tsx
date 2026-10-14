@@ -14,7 +14,7 @@ const TechStack = ({ skills }: TechStackProps) => {
   const categories = Object.entries(skills.categories);
 
 return (
-    <section id="tech-stack" className="py-20 bg-slate-50/50 dark:bg-slate-900/30">
+    <section id="tech-stack" className="py-20">
       <div className="mx-auto px-4" style={{ maxWidth: '1400px' }}>
         <WithFadeInAnimation threshold={0.5}>
           <h2 className="text-3xl font-bold text-center mb-4">My Tech Stack</h2>

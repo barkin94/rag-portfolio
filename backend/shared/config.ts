@@ -53,6 +53,8 @@ const BaseSchema = z.object({
   CHAT_AGENT_MAX_RETRIES: z.coerce.number().default(3),
   CHAT_AGENT_TIMEOUT: z.coerce.number().default(60000),
   CHAT_AGENT_BASE_URL: z.string().url().default("https://openrouter.ai/api/v1"),
+
+  PROFILE_IMAGE_URL: z.string().url().optional(),
 });
 
 

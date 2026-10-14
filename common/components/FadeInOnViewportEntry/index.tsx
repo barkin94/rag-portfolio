@@ -5,9 +5,10 @@ import { useEffect, useRef } from 'react';
 interface FadeInOnViewportEntryProps {
   children: React.ReactNode;
   threshold?: number;
+  delay?: number;
 }
 
-export default function FadeInOnViewportEntry({ children, threshold }: FadeInOnViewportEntryProps) {
+export default function FadeInOnViewportEntry({ children, threshold, delay = 0 }: FadeInOnViewportEntryProps) {
   const sectionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -15,9 +16,10 @@ export default function FadeInOnViewportEntry({ children, threshold }: FadeInOnV
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            entry.target.classList.remove('fading-out');
-            entry.target.classList.add('fading-in');
-            // Optionally disconnect after first appearance
+            setTimeout(() => {
+              entry.target.classList.remove('fading-out');
+              entry.target.classList.add('fading-in');
+            }, delay);
             observer.unobserve(entry.target);
           }
         });
@@ -35,7 +37,7 @@ export default function FadeInOnViewportEntry({ children, threshold }: FadeInOnV
         observer.unobserve(currentRef);
       }
     };
-  }, [threshold]);
+  }, [threshold, delay]);
 
   return (
     <div ref={sectionRef} className="fading-section fading-out">

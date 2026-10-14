@@ -11,7 +11,7 @@ interface ContactProps {
 
 export default function ContactSection({ contact }: ContactProps) {
   return (
-    <section id="contact" className="px-4 py-20 bg-slate-50/50 dark:bg-slate-900/30">
+    <section id="contact" className="px-4 py-20">
       <div className="mx-auto max-w-4xl text-center">
         <WithFadeInAnimation threshold={0.5}>
           <h1 className="text-4xl font-bold text-center mb-4">
