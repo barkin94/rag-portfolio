@@ -5,7 +5,7 @@ export async function GET() {
   try {
     const pdfBuffer = await fetchResumePdf();
 
-    return new NextResponse(pdfBuffer, {
+    return new NextResponse(new Uint8Array(pdfBuffer), {
       headers: {
         'Content-Type': 'application/pdf',
         'Content-Disposition': 'attachment; filename="Barkin_Buyuksagin_Resume.pdf"',
