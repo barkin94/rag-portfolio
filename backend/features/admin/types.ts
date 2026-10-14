@@ -15,7 +15,7 @@ export type SyncStatusResponse = {
 
 export type SyncCvResponse = {
   success: boolean;
-  status: 'pending';
+  status: 'pending' | 'failed';
   message: string;
 };
 

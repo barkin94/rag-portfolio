@@ -2,6 +2,8 @@ import * as adminRepo from './repository';
 import * as cvRepo from '@/backend/features/cv-sync/repository';
 import * as mongodb from '@/backend/shared/mongodb';
 import { send } from '@vercel/queue';
+import logger from '@/backend/shared/logger';
+import { withPendingStatus } from '@/backend/shared/queue-utils';
 import type {
   ThreadSummary,
   MaintenanceStatus,
@@ -48,16 +50,25 @@ export async function getSyncStatus(): Promise<SyncStatusResponse> {
 }
 
 export async function triggerCvSync(): Promise<SyncCvResponse> {
-  await cvRepo.recordSyncStatus('pending', 'Sync queued');
+  const idempotencyKey = `cv-sync-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  const triggeredAt = Date.now();
 
-  await send('cv-sync', { triggeredAt: Date.now() }, {
-    idempotencyKey: 'cv-sync-manual',
-    retentionSeconds: 3600,
-  });
+  const result = await withPendingStatus(
+    (details) => cvRepo.recordSyncStatus('pending', details),
+    (details) => cvRepo.recordSyncStatus('failed', details),
+    async () => {
+      await send('cv-sync', { triggeredAt }, {
+        idempotencyKey,
+        retentionSeconds: 300,
+      });
+      logger.info({ idempotencyKey, triggeredAt }, 'CV sync job enqueued');
+    },
+    'Failed to enqueue CV sync job'
+  );
 
-  return {
-    success: true,
-    status: 'pending',
-    message: 'Sync queued',
-  };
+  if (!result.success) {
+    return { success: false, status: 'failed', message: result.message };
+  }
+
+  return { success: true, status: 'pending', message: 'Sync queued' };
 }

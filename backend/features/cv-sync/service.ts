@@ -57,10 +57,7 @@ export async function syncCv(): Promise<SyncResult> {
       updateVectorStore(parsed),
     ]);
 
-    const details = `Synced ${parsed.experience.length} roles, ${Object.keys(parsed.skills.categories).length} skill categories`;
-    await cvRepo.recordSyncStatus('success', details);
-
-    logger.info({ details }, 'CV sync completed successfully');
+    logger.info({ expCount: parsed.experience.length, skillCats: Object.keys(parsed.skills.categories).length }, 'CV sync completed successfully');
 
     return {
       success: true,
@@ -70,8 +67,6 @@ export async function syncCv(): Promise<SyncResult> {
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     logger.error({ error }, 'CV sync failed');
-
-    await cvRepo.recordSyncStatus('failed', errorMessage);
 
     return {
       success: false,
