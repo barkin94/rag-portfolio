@@ -6,10 +6,10 @@ import { Topic, TopicSchemaDescription } from '@/backend/shared/types';
 import logger from '@/backend/shared/logger';
 
 export const getInfoTool = tool(
-  async ({ query, topics, expandingKeywords }) => {
+  async ({ query, topics, expandingKeywords, k }) => {
     try {
       const results = await findChunks(`${query} ${expandingKeywords}`, {
-        k: 6,
+        k: k ?? 6,
         tags: topics.length > 0 ? topics : undefined,
       });
 
@@ -37,6 +37,9 @@ export const getInfoTool = tool(
       topics: z.array(z.nativeEnum(Topic).describe(TopicSchemaDescription)),
       expandingKeywords: z.string().describe(
         "A space-separated list of synonyms, related keywords, or acronyms to improve search recall (e.g., 'React.js javascript frontend web-development UI')."
+      ),
+      k: z.number().int().min(1).max(20).optional().describe(
+        "Number of chunks to retrieve. Default 6. Use fewer (2-4) for simple factual questions. Use more (8-15) for complex/comparative/broad questions."
       ),
     })
   }
