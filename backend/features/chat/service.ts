@@ -3,7 +3,6 @@ import { HumanMessage } from "langchain";
 
 import agent from './agent';
 import { createThreadIdString } from '@/backend/shared/mongodb';
-import { getMessages } from '@/backend/shared/mongodb/thread-repo';
 import config from '@/backend/shared/config';
 import { notifyAdminDevices } from '@/backend/features/notifications';
 
@@ -26,13 +25,11 @@ export async function streamChat({ prompt }: StreamChatParams): Promise<StreamCh
 
   const { threadId, isNewThread } = await getThreadId();
 
-  // Phase 1: Query Contextualization - concatenate last N user turns
-  const history = await getMessages(threadId);
-  const contextualizedPrompt = buildContextualizedPrompt(prompt, history ?? []);
-
+  // The checkpointer (MongoDBSaver) automatically restores full conversation history
+  // for this threadId. No need to manually concatenate previous messages - that causes duplication.
   const asyncStream = await agent.stream(
     {
-      messages: [new HumanMessage(contextualizedPrompt)],
+      messages: [new HumanMessage(prompt)],
       threadId,
     },
     {
@@ -81,21 +78,4 @@ async function getThreadId() {
   }
 
   return { threadId, isNewThread: false };
-}
-
-function buildContextualizedPrompt(currentPrompt: string, history: { role: string; content: string }[]): string {
-  const contextTurns = config.CONTEXT_TURNS ?? 2;
-  
-  // Get last N user messages from history (excluding the current prompt which isn't saved yet)
-  const userMessages = history
-    .filter(m => m.role === 'user')
-    .slice(-contextTurns)
-    .map(m => m.content);
-
-  if (userMessages.length === 0) {
-    return currentPrompt;
-  }
-
-  // Concatenate: "Previous user msg 1 | Previous user msg 2 | Current prompt"
-  return [...userMessages, currentPrompt].join(' | ');
 }
